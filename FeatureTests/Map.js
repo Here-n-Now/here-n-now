@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import {View, StyleSheet, Button, Linking, Text, Image} from 'react-native'
 import MapView from 'react-native-maps';
+import GoogleSearch from './GoogleSearch'
 
 export default class MapComp extends React.Component {
+  // static navigationOptions = {
+  //   header: {
+  //     visible: false,
+  //   }
+  // }
   constructor(props) {
     super(props)
     this.state = {
@@ -27,10 +33,22 @@ export default class MapComp extends React.Component {
     //   const { auto, on, off } = Camera.constants.FlashMode;
     // }
     this.onRegionChange = this.onRegionChange.bind(this)
+    this.onSearch = this.onSearch.bind(this)
+
   }
   onRegionChange(region){
     this.setState({region})
   }
+
+    onSearch(coords){
+    this.setState({region: {
+      latitude: coords.lat,
+      longitude: coords.lng,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+    }})
+  }
+
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
@@ -64,24 +82,21 @@ export default class MapComp extends React.Component {
               coordinate={marker.latlng}
               identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
               onSelect={() => {
-                this.props.navigation.navigate('Details')
+                this.props.navigation.navigate('RenderVideoTest')
               }}
               // onSelect={evt => console.log('Select', evt.nativeEvent)}
               // onSelect={() => console.log('Nav', this.props)}
               // onCalloutPress={evt => Linking.openURL(evt.nativeEvent.id)}
               >
-              <MapView.Callout>
+              {/*<MapView.Callout>
                 <Image source={marker.photo} />
                 <Text>{marker.title}</Text>
                 <Text>{marker.description}</Text>
-              </MapView.Callout>
+              </MapView.Callout>*/}
             </MapView.Marker>
           ))}
-        <Button
-          title= "Post"
-          onPress={() => {console.log('clicked')}}
-        />
         </MapView>
+        <GoogleSearch onSearch={this.onSearch} />
       </View>
     )
   }

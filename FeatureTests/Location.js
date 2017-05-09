@@ -44,14 +44,7 @@ const styles = StyleSheet.create({
 export default class Location extends React.Component {
     constructor(props){
         super(props)
-        this.state = {
-            region: {
-                latitude: null,
-                longitude: null,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421
-            }
-        }
+        this.state = {}
     }
     render(){
         console.log('props', this.props)

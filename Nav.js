@@ -10,6 +10,8 @@ import User from './auth/SingleUser.js';
 // import Post from './database/Post';
 // import SinglePost from './database/SinglePost';
 
+import RenderVideoTest from './FeatureTests/RenderVideoTest';
+
 
 import * as firebase from 'firebase';
 
@@ -79,66 +81,7 @@ export default class Nav extends React.Component {
         });
     }
 
-//     if (user) {
-//         Tabs = TabNavigator({
-//             LocationTest: {
-//                 screen: Location
-//             },
-//             // FirebaseTest: {
-//             //     screen: FirebaseTest
-//             // },
-//             PictureTest: {
-//                 screen: PictureTest
-//             },
-//             VideoTest: {
-//                 screen: VideoTest
-//             },
-//             LiveTest: {
-//                 screen: App
-//             },
-//             StyleTest: {
-//                 screen: PostDetail
-//             },
-//             User: {
-//                 screen: User
-//             }
-//         });
-//     } else {
-//         Tabs = TabNavigator({
-//             LoginTest: {
-//                 screen: Login
-//             }
-//         });
-//     }
-// });
 
-
-// const Tabs =  TabNavigator({
-//     LocationTest: {
-//         screen: Location
-//     },
-//     // FirebaseTest: {
-//     //     screen: FirebaseTest
-//     // },
-//     PictureTest: {
-//         screen: PictureTest
-//     },
-//     VideoTest: {
-//         screen: VideoTest
-//     },
-//     LiveTest: {
-//         screen: App
-//     },
-//     StyleTest: {
-//         screen: PostDetail
-//     },
-//     LoginTest: {
-//         screen: Login
-//     },
-//     User: {
-//         screen: User
-//     }
-// });
 
     render () {
         return (
