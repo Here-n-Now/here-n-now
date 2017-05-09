@@ -14,6 +14,9 @@ import {
 import Video from 'react-native-video';
 
 export default class RenderVideoTest extends Component {
+  static navigationOptions = {
+    header: null
+  }
   constructor(props) {
     super(props);
     this.onLoad = this.onLoad.bind(this);
@@ -57,12 +60,12 @@ export default class RenderVideoTest extends Component {
   renderSkin() {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
-    const video = this.props.navigation.navigate.state
+    const navState = this.props.navigation.state.params
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
-            source={video ? {uri: video.video} : require('../broadchurch.mp4')}
+            source={navState ? {uri: navState.video} : require('../broadchurch.mp4')}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}

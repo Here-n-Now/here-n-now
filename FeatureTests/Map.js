@@ -4,11 +4,6 @@ import MapView from 'react-native-maps';
 import GoogleSearch from './GoogleSearch'
 
 export default class MapComp extends React.Component {
-  // static navigationOptions = {
-  //   header: {
-  //     visible: false,
-  //   }
-  // }
   constructor(props) {
     super(props)
     this.state = {

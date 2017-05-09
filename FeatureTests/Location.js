@@ -2,6 +2,8 @@
 var React = require('react');
 var ReactNative = require('react-native');
 var { StyleSheet, Text, View, Button } = ReactNative;
+import { Icon } from 'native-base';
+
 exports.framework = 'React';
 exports.title = 'Geolocation';
 exports.description = 'Examples of using the Geolocation API.';
@@ -42,6 +44,12 @@ const styles = StyleSheet.create({
     },
 })
 export default class Location extends React.Component {
+  static navigationOptions = {
+    header: null,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios='ios-map-outline' android="ios-map-outline" style={{color: tintColor}} />
+      )
+  }
     constructor(props){
         super(props)
         this.state = {}
@@ -53,4 +61,3 @@ export default class Location extends React.Component {
         )
     }
 }
-

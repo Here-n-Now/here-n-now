@@ -5,6 +5,7 @@ const ActionButton = require('../FeatureTests/dummy/ActionButton');
 const styles = require('../FeatureTests/dummy/styles.js');
 const React = require('react');
 const ReactNative = require('react-native');
+import { Icon } from 'native-base';
 const {
     StyleSheet,
     Text,
@@ -21,6 +22,11 @@ exports.framework = 'React';
 
 // var user = firebaseApp.auth().currentUser;
 export default class User extends React.Component {
+  static navigationOptions = {
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios='ios-contact-outline' android="ios-contact-outline" style={{color: tintColor}} />
+      )
+  }
     constructor(props) {
         super(props);
         // console.log("props: ", this.props);
