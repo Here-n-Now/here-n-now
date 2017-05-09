@@ -6,6 +6,7 @@ import PostDetail from './FeatureTests/StyleTest';
 import VideoTest from './FeatureTests/VideoTest';
 import Location from './FeatureTests/Location';
 import App from './FeatureTests/src/App.js';
+import RenderVideoTest from './FeatureTests/RenderVideoTest';
 
 import {
     AppRegistry,
@@ -16,34 +17,40 @@ import {
 
 
 const Tabs = TabNavigator({
-    LocationTest: {
+    View: {
         screen: Location
     },
-    FirebaseTest: {
-        screen: FirebaseTest
-    },
-    PictureTest: {
-        screen: PictureTest
-    },
-    VideoTest: {
+    // FirebaseTest: {
+    //     screen: FirebaseTest
+    // },
+    // PictureTest: {
+    //     screen: PictureTest
+    // },
+    Share: {
         screen: VideoTest
     },
-    LiveTest: {
-        screen: App
-    },
-    StyleTest: {
-        screen: PostDetail
-    },
+    // RenderVideoTest: {
+    //     screen: RenderVideoTest
+    // },
+    // LiveTest: {
+    //     screen: App
+    // },
+    // StyleTest: {
+    //     screen: PostDetail
+    // },
 });
 
 export default Nav = StackNavigator({
     Tabs: {
         screen: Tabs
     },
-    Details: {
-      screen: PostDetail,
-      navigationOptions: {
-        title: 'Details',
-      }
+    RenderVideoTest: {
+        screen: RenderVideoTest
     },
+    // Details: {
+    //   screen: PostDetail,
+    //   navigationOptions: {
+    //     title: 'Details',
+    //   }
+    // },
 });
