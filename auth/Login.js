@@ -1,4 +1,4 @@
-import { firebaseApp } from '../index.ios';
+import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
 
 const StatusBar = require('../FeatureTests/dummy/StatusBar');
@@ -25,7 +25,6 @@ exports.framework = 'React';
 exports.title = 'AlertIOS';
 exports.description = 'iOS alerts and action sheets';
 
-console.log('FIREBASEEE', firebaseApp);
 export default class Login extends React.Component {
     state: any;
     customButtons: Array<Object>;
@@ -37,26 +36,6 @@ export default class Login extends React.Component {
             email: '',
             password: ''
         };
-
-        // this.state = {
-        //     promptValue: undefined,
-        // };
-
-        // this.customButtons = [{
-        //     text: 'Custom OK',
-        //     onPress: this.onClickLogin
-        // }, {
-        //     text: 'Custom Cancel',
-        //     style: 'cancel',
-        // }];
-        //
-        // this.customButtonss = [{
-        //     text: 'Custom OK',
-        //     onPress: this.onClickSignup
-        // }, {
-        //     text: 'Custom Cancel',
-        //     style: 'cancel',
-        // }];
     }
 
     // onClickSignup = (email, pass) => {
@@ -93,16 +72,17 @@ export default class Login extends React.Component {
     //     })
     // };
 
-    onClickLogin(promptValue) {
-        // this.setState({ promptValue: JSON.stringify(promptValue) });
+    onClickLogin() {
         console.log(this.state.email);
         let userEmail = this.state.email.toString();
         let userPassword = this.state.password.toString();
         firebaseApp.auth().signInWithEmailAndPassword(userEmail, userPassword)
+            .then(loggedin => console.log("got here"))
             .catch(err => console.error(err));
+        console.log(firebaseApp.auth().currentUser);
 
         firebaseApp.auth().onAuthStateChanged(user => {
-            console.log(user);
+            console.log("user logged in!!", user);
             if (user) {
                 this.props.navigation.navigate('Location');
             } else {
@@ -111,7 +91,7 @@ export default class Login extends React.Component {
         })
     }
 
-    onClickSignup(promptValue){
+    onClickSignup(){
         let userEmail = this.state.email.toString();
         let userPassword = this.state.password.toString();
         firebaseApp.auth().createUserWithEmailAndPassword(userEmail, userPassword)
