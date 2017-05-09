@@ -5,9 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
   AppRegistry,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import Video from 'react-native-video';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,19 +66,21 @@ export default class VideoTest extends React.Component {
     this.state = {
       camera: {
         aspect: Camera.constants.Aspect.fill,
-        captureTarget: Camera.constants.CaptureTarget.cameraRoll,
+        captureTarget: Camera.constants.CaptureTarget.disk,
         type: Camera.constants.Type.back,
         orientation: Camera.constants.Orientation.auto,
         flashMode: Camera.constants.FlashMode.auto,
       },
-      isRecording: false
+      isRecording: false,
+      image: null,
+      video: null
     };
   }
 
   takePicture = () => {
     if (this.camera) {
       this.camera.capture()
-        .then((data) => console.log(data))
+        .then(image => this.setState({image: image.path}))
         .catch(err => console.error(err));
     }
   }
@@ -84,7 +88,7 @@ export default class VideoTest extends React.Component {
   startRecording = () => {
     if (this.camera) {
       this.camera.capture({mode: Camera.constants.CaptureMode.video})
-          .then((data) => console.log(data))
+          .then(video => this.props.navigation.navigate('RenderVideoTest', {video: video.path}))
           .catch(err => console.error(err));
       this.setState({
         isRecording: true
@@ -168,6 +172,7 @@ export default class VideoTest extends React.Component {
   }
 
   render() {
+    console.log("in render - video uri", this.state.video)
     return (
       <View style={styles.container}>
         <StatusBar
@@ -245,6 +250,29 @@ export default class VideoTest extends React.Component {
               </TouchableOpacity>
           }
         </View>
+        {this.state.image &&
+          <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
+        {this.state.video &&
+          <Video source={{uri: this.state.video}}
+             ref={(ref) => {
+               this.player = ref
+             }}
+             rate={1.0}
+             volume={1.0}
+             muted={false}
+             paused={false}
+             resizeMode="cover"
+             repeat={true}
+             playInBackground={false}
+             playWhenInactive={false}
+             progressUpdateInterval={250.0}
+             onLoadStart={this.loadStart}
+             onLoad={this.setDuration}
+             onProgress={this.setTime}
+             onEnd={this.onEnd}
+             onError={this.videoError}
+             onBuffer={this.onBuffer}
+             style={styles.backgroundVideo} />}
       </View>
     );
   }
