@@ -55,7 +55,6 @@ export default class Location extends React.Component {
         this.state = {}
     }
     render(){
-        console.log('props', this.props)
         return (
             <MapComp navigation={this.props.navigation}/>
         )

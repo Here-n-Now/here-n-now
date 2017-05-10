@@ -60,7 +60,7 @@ export default class RenderVideoTest extends Component {
   renderSkin() {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
-    const navState = this.props.navigation.state.params
+    const navState = this.props.navigation && this.props.navigation.state.params
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>

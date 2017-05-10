@@ -38,7 +38,7 @@ class GoogleSearch extends React.Component {
           },
           textInputContainer: {
             backgroundColor: 'rgba(0,0,0,0)',
-            width: 350,
+            // width: 350,
             borderTopWidth: 0,
             borderBottomWidth:0
           },
