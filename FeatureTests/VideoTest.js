@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 import Video from 'react-native-video';
+import { Icon } from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +59,12 @@ const styles = StyleSheet.create({
 });
 
 export default class VideoTest extends React.Component {
+  static navigationOptions = {
+    header: null,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios='ios-camera-outline' android="ios-camera-outline" style={{color: tintColor}} />
+      )
+  }
   constructor(props) {
     super(props);
 
@@ -87,7 +94,10 @@ export default class VideoTest extends React.Component {
 
   startRecording = () => {
     if (this.camera) {
-      this.camera.capture({mode: Camera.constants.CaptureMode.video})
+      this.camera.capture({
+        audio: true,
+        mode: Camera.constants.CaptureMode.video
+      })
           .then(video => this.props.navigation.navigate('RenderVideoTest', {video: video.path}))
           .catch(err => console.error(err));
       this.setState({
@@ -172,7 +182,6 @@ export default class VideoTest extends React.Component {
   }
 
   render() {
-    console.log("in render - video uri", this.state.video)
     return (
       <View style={styles.container}>
         <StatusBar
