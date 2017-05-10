@@ -1,6 +1,5 @@
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
-
 const StatusBar = require('../FeatureTests/dummy/StatusBar');
 const ActionButton = require('../FeatureTests/dummy/ActionButton');
 const styles = require('../FeatureTests/dummy/styles.js');
@@ -73,6 +72,7 @@ export default class Login extends React.Component {
     // };
 
     onClickLogin() {
+        console.log('firebaseApp in Login: ', firebaseApp)
         console.log(this.state.email);
         let userEmail = this.state.email.toString();
         let userPassword = this.state.password.toString();

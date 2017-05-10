@@ -9,9 +9,14 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button
 } from 'react-native';
 
 import Video from 'react-native-video';
+import {firebaseApp} from '../Nav'
+console.log('Firebase: ',firebaseApp)
+
+// const database = firebaseApp.database();
 
 export default class RenderVideoTest extends Component {
   constructor(props) {
@@ -20,7 +25,7 @@ export default class RenderVideoTest extends Component {
     this.onProgress = this.onProgress.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
   }
-  state = {
+    state = {
     rate: 1,
     volume: 1,
     muted: false,
@@ -33,7 +38,20 @@ export default class RenderVideoTest extends Component {
     ignoreSilentSwitch: null,
     isBuffering: false,
   };
-
+  handleButton(postId,text) {
+    console.log('FirebaseApp in handle button: ',firebaseApp)
+    const database = firebaseApp.database();
+    console.log('DB in handle button: ',database)
+    firebaseApp.database().ref('posts/'+postId).set({
+      id: postId,
+      text: text,
+      location: {
+      latitude: 123,
+      longitude: 43
+      }
+    })
+    console.log('Handling click')
+  }
   onLoad(data) {
     this.setState({duration: data.duration});
   }
@@ -60,6 +78,7 @@ export default class RenderVideoTest extends Component {
     const video = this.props.navigation.navigate.state
     return (
       <View style={styles.container}>
+
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
             source={video ? {uri: video.video} : require('../broadchurch.mp4')}
@@ -82,6 +101,11 @@ export default class RenderVideoTest extends Component {
               <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
             </View>
           </View>
+          <Button
+          title="Post this video"
+          onPress={() => this.handleButton(2,'Hello Again!!')}
+          style={{justifyContent: 'center'}}
+        />
       </View>
     );
   }

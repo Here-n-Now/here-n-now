@@ -17,7 +17,7 @@ const {
 } = ReactNative;
 exports.framework = 'React';
 
-
+console.log('firebaseApp in singleuser: ', firebaseApp)
 
 // var user = firebaseApp.auth().currentUser;
 export default class User extends React.Component {
