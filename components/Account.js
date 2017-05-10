@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 // var user = firebaseApp.auth().currentUser;
-export default class User extends React.Component {
+export default class Account extends React.Component {
   static navigationOptions = {
     header: null,
     tabBarIcon: ({ tintColor }) => (
@@ -108,7 +108,6 @@ export default class User extends React.Component {
                       <Text>Logout</Text>
                     </Body>
                     <Right>
-                        <Text>••••••</Text>
                         <Icon name="arrow-forward" />
                     </Right>
                 </ListItem>
