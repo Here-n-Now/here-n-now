@@ -6,6 +6,8 @@ import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Conten
 import Video from 'react-native-video';
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
+import RNFetchBlob from 'react-native-fetch-blob'
+const fs = RNFetchBlob.fs
 
 export default class RenderVideoTest extends Component {
   static navigationOptions = {
@@ -32,14 +34,7 @@ export default class RenderVideoTest extends Component {
     const video = this.props.navigation.navigate.state
     console.log('Video in handleButton: ', video)
 
-    const database = firebaseApp.database();
-    // const storageRef = firebase.storage.ref();
-    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
-    // var metadata = {
-    //   contentType : 'image/jpeg'
-    // };
-    // imageRef.put(file,metadata)
-
+  const database = firebaseApp.database();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         firebaseApp.database().ref('posts/'+postId).set({
@@ -55,8 +50,48 @@ export default class RenderVideoTest extends Component {
     )
   }
 
-  addCaption = () => {
-    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
+uploadNewImageToStorage() {
+  console.log('Inside uploadNewImageToStorage')
+  const Blob = RNFetchBlob.polyfill.Blob
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+  window.Blob = Blob
+  let uri = '/Users/ugp/Desktop/Fullstack_Workshops/Senior_Projects/here-n-now/broadchurch.mp4'
+  let name = 'video';
+  this.uploadImage(uri,name)
+}
+
+uploadImage(uri, imageName, mime = 'video/mp4')  {
+  console.log('Inside uploadImage')
+  return new Promise((resolve, reject) => {
+
+   const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+     let uploadBlob = null
+     const imageRef = firebaseApp.storage().ref('posts').child(imageName)
+     fs.readFile(uploadUri, 'base64')
+     .then((data) => {
+
+       return Blob.build(data, { type: `${mime};BASE64` })
+     })
+     .then((blob) => {
+
+       uploadBlob = blob
+       return imageRef.put(blob, { contentType: mime })
+     })
+     .then(() => {
+       uploadBlob.close()
+       return imageRef.getDownloadURL()
+     })
+     .then((url) => {
+       console.log('Url Inside Promise',url)
+       resolve(url)
+     })
+     .catch((error) => {
+       reject(error)
+     })
+  })
+ }
+  addCaption() {
+
     AlertIOS.prompt(
         'Add Caption',
         null,
@@ -71,9 +106,6 @@ export default class RenderVideoTest extends Component {
         'plain-text'
       );
  }
-
-
-
 
   onLoad = data => {
     this.setState({duration: data.duration});
@@ -135,9 +167,18 @@ export default class RenderVideoTest extends Component {
           </Fab>
           <Fab
             position="topRight"
-            onPress={this.addCaption}>
+            onPress={() => {
+              console.log('clicked')
+              this.uploadNewImageToStorage()
+            }}>
           <Icon name="md-send" />
           </Fab>
+          <Button
+              onPress={() => {
+              console.log('clicked')
+              this.uploadNewImageToStorage()
+              }}>
+          </Button>
           <View style={styles.form}>
             <Item>
                 <Input placeholder='Add a caption' style={styles.form}/>
