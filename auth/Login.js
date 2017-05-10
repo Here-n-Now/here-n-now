@@ -1,7 +1,7 @@
 import { firebaseApp } from '../Nav';
-
 import styles from '../FeatureTests/dummy/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
+
 
 import React, { Component } from 'react';
 import {
@@ -36,6 +36,7 @@ export default class Login extends React.Component {
         const { email, password } = this.state
         let userEmail = email;
         let userPassword = password;
+
         firebaseApp.auth().signInWithEmailAndPassword(userEmail, userPassword)
             .then(loggedin => console.log("got here"))
             .catch(err => {

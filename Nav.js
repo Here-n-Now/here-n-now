@@ -8,9 +8,14 @@ import App from './FeatureTests/src/App.js';
 import Login from './auth/Login.js';
 import User from './auth/SingleUser.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-// import Post from './database/Post';
+import Post from './database/Post';
 // import SinglePost from './database/SinglePost';
-
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native';
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
@@ -22,12 +27,9 @@ const firebaseConfig = {
     messagingSenderId: "745916231980"
 };
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
-import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+export const storage = firebase.storage();
+
+
 
 
 export default class Nav extends React.Component {
@@ -62,9 +64,12 @@ export default class Nav extends React.Component {
                             title: 'Account',
                             screen: User
                         },
+                        NewPost: {
+                            screen: RenderVideoTest
+                        }
                         // Post: {
                         //     screen: Post
-                        // },
+                        //},
                         // SinglePost: {
                         //     screen: SinglePost
                         // }

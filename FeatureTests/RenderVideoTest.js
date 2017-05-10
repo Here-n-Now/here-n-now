@@ -9,9 +9,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
+  AlertIOS
 } from 'react-native';
 
 import Video from 'react-native-video';
+import {firebaseApp} from '../Nav';
+import * as firebase from 'firebase';
 
 export default class RenderVideoTest extends Component {
   static navigationOptions = {
@@ -23,7 +27,7 @@ export default class RenderVideoTest extends Component {
     this.onProgress = this.onProgress.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
   }
-  state = {
+    state = {
     rate: 1,
     volume: 1,
     muted: false,
@@ -36,6 +40,53 @@ export default class RenderVideoTest extends Component {
     ignoreSilentSwitch: null,
     isBuffering: false,
   };
+
+  handleButton(postId,text) {
+    const video = this.props.navigation.navigate.state
+    console.log('Video in handleButton: ', video)
+
+    const database = firebaseApp.database();
+    // const storageRef = firebase.storage.ref();
+    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
+    // var metadata = {
+    //   contentType : 'image/jpeg'
+    // };
+    // imageRef.put(file,metadata)
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        firebaseApp.database().ref('posts/'+postId).set({
+          id: postId,
+          text: text,
+          coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          },
+          movie: video ? {uri: video.video} : require('../broadchurch.mp4')
+        })
+      }
+    )
+  }
+
+  addCaption() {
+    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
+    AlertIOS.prompt(
+        'Add Caption',
+        null,
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {
+            text: 'Post',
+            onPress: (text) => {
+              this.handleButton(6,text)
+            }}
+        ],
+        'plain-text'
+      );
+ }
+
+
+
 
   onLoad(data) {
     this.setState({duration: data.duration});
@@ -63,6 +114,7 @@ export default class RenderVideoTest extends Component {
     const navState = this.props.navigation && this.props.navigation.state.params
     return (
       <View style={styles.container}>
+
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
             source={navState ? {uri: navState.video} : require('../broadchurch.mp4')}
@@ -85,6 +137,11 @@ export default class RenderVideoTest extends Component {
               <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
             </View>
           </View>
+          <Button
+          title="Post this video"
+          onPress={() => this.addCaption()}
+          style={{justifyContent: 'center'}}
+        />
       </View>
     );
   }
