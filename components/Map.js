@@ -99,21 +99,21 @@ export default class MapComp extends Component {
                   <Icon name="ios-search-outline" />
               </Fab>
           </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {alert("Modal has been closed.")}}
-            >
-            <GoogleSearch onSearch={this.onSearch} setModalVisible={this.setModalVisible} />
-            <Button
-              full
-              danger
-              onPress={this.setModalVisible}
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {alert("Modal has been closed.")}}
               >
-                <Text>Cancel Search</Text>
-            </Button>
-          </Modal>
+              <GoogleSearch onSearch={this.onSearch} setModalVisible={this.setModalVisible} />
+              <Button
+                full
+                danger
+                onPress={this.setModalVisible}
+                >
+                  <Text>Cancel Search</Text>
+              </Button>
+            </Modal>
       </Container>
     )
   }
