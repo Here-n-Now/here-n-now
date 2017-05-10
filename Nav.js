@@ -7,8 +7,6 @@ import Location from './FeatureTests/Location';
 import App from './FeatureTests/src/App.js';
 import Login from './auth/Login.js';
 import User from './auth/SingleUser.js';
-import Post from './database/Post';
-// import SinglePost from './database/SinglePost';
 
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 
@@ -51,27 +49,21 @@ export default class Nav extends React.Component {
                 this.setState({
                     user : user,
                     tab: TabNavigator({
-                        LocationTest: {
+                        View: {
                             screen: Location
                         },
-                        PictureTest: {
-                            screen: PictureTest
-                        },
-                        VideoTest: {
+                        // PictureTest: {
+                        //     screen: PictureTest
+                        // },
+                        Share: {
                             screen: VideoTest
                         },
-                        LiveTest: {
-                            screen: App
-                        },
-                        StyleTest: {
-                            screen: PostDetail
-                        },
-                        User: {
+                        Account: {
                             screen: User
                         },
-                        Post: {
-                            screen: Post
-                        },
+                        // Post: {
+                        //     screen: Post
+                        // },
                         // SinglePost: {
                         //     screen: SinglePost
                         // }
@@ -81,8 +73,6 @@ export default class Nav extends React.Component {
         });
     }
 
-
-
     render () {
         return (
 
@@ -91,12 +81,10 @@ export default class Nav extends React.Component {
                     Tabs: {
                         screen: this.state.tab
                     },
-                    Details: {
-                        screen: PostDetail,
-                        navigationOptions: {
-                            title: 'Details',
-                        },
-                    }
+                    RenderVideoTest: {
+                        screen: RenderVideoTest
+                    },
+
                 }))
             )
 
