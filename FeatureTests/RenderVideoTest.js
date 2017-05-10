@@ -38,20 +38,23 @@ export default class RenderVideoTest extends Component {
     ignoreSilentSwitch: null,
     isBuffering: false,
   };
+
   handleButton(postId,text) {
-    console.log('FirebaseApp in handle button: ',firebaseApp)
     const database = firebaseApp.database();
-    console.log('DB in handle button: ',database)
-    firebaseApp.database().ref('posts/'+postId).set({
-      id: postId,
-      text: text,
-      location: {
-      latitude: 123,
-      longitude: 43
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        firebaseApp.database().ref('posts/'+postId).set({
+          id: postId,
+          text: text,
+          coords: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+          }
+        })
       }
-    })
-    console.log('Handling click')
+    )
   }
+
   onLoad(data) {
     this.setState({duration: data.duration});
   }
@@ -103,7 +106,7 @@ export default class RenderVideoTest extends Component {
           </View>
           <Button
           title="Post this video"
-          onPress={() => this.handleButton(2,'Hello Again!!')}
+          onPress={() => this.handleButton(5,'Hello with current location!!')}
           style={{justifyContent: 'center'}}
         />
       </View>
