@@ -20,7 +20,7 @@ const firebaseConfig = {
     messagingSenderId: '745916231980'
 };
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
-export const storage = firebase.storage();
+export const fireStorage = firebaseApp.storage();
 
 export default class Nav extends React.Component {
     constructor(props) {
