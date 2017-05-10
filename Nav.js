@@ -10,7 +10,12 @@ import User from './auth/SingleUser.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import Post from './database/Post';
 // import SinglePost from './database/SinglePost';
-
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native';
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
@@ -22,14 +27,9 @@ const firebaseConfig = {
     messagingSenderId: "745916231980"
 };
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
-console.log('Firebase in Nav: ', firebaseApp)
-export const testString = 'Test'
-import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+export const storage = firebase.storage();
+
+
 
 
 export default class Nav extends React.Component {

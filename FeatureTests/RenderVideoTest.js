@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 
 import Video from 'react-native-video';
-import {firebaseApp} from '../Nav'
+import {firebaseApp} from '../Nav';
+import * as firebase from 'firebase';
 
 export default class RenderVideoTest extends Component {
   constructor(props) {
@@ -38,22 +39,34 @@ export default class RenderVideoTest extends Component {
   };
 
   handleButton(postId,text) {
+    const video = this.props.navigation.navigate.state
+    console.log('Video in handleButton: ', video)
+
     const database = firebaseApp.database();
+    // const storageRef = firebase.storage.ref();
+    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
+    // var metadata = {
+    //   contentType : 'image/jpeg'
+    // };
+    // imageRef.put(file,metadata)
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         firebaseApp.database().ref('posts/'+postId).set({
           id: postId,
           text: text,
           coords: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-          }
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          },
+          movie: video ? {uri: video.video} : require('../broadchurch.mp4')
         })
       }
     )
   }
 
   addCaption() {
+    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
     AlertIOS.prompt(
         'Add Caption',
         null,
