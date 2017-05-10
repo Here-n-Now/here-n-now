@@ -9,14 +9,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button
+  Button,
+  AlertIOS
 } from 'react-native';
 
 import Video from 'react-native-video';
 import {firebaseApp} from '../Nav'
-console.log('Firebase: ',firebaseApp)
-
-// const database = firebaseApp.database();
 
 export default class RenderVideoTest extends Component {
   constructor(props) {
@@ -54,6 +52,25 @@ export default class RenderVideoTest extends Component {
       }
     )
   }
+
+  addCaption() {
+    AlertIOS.prompt(
+        'Add Caption',
+        null,
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {
+            text: 'Post',
+            onPress: (text) => {
+              this.handleButton(6,text)
+            }}
+        ],
+        'plain-text'
+      );
+ }
+
+
+
 
   onLoad(data) {
     this.setState({duration: data.duration});
@@ -106,7 +123,7 @@ export default class RenderVideoTest extends Component {
           </View>
           <Button
           title="Post this video"
-          onPress={() => this.handleButton(5,'Hello with current location!!')}
+          onPress={() => this.addCaption()}
           style={{justifyContent: 'center'}}
         />
       </View>
