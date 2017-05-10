@@ -16,7 +16,9 @@ import {
 import Video from 'react-native-video';
 import {firebaseApp} from '../Nav';
 import * as firebase from 'firebase';
-
+import RNFetchBlob from 'react-native-fetch-blob'
+//export const fireStorage = firebase.storage();
+const fs = RNFetchBlob.fs
 export default class RenderVideoTest extends Component {
   static navigationOptions = {
     header: null
@@ -46,12 +48,8 @@ export default class RenderVideoTest extends Component {
     console.log('Video in handleButton: ', video)
 
     const database = firebaseApp.database();
-    // const storageRef = firebase.storage.ref();
-    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
-    // var metadata = {
-    //   contentType : 'image/jpeg'
-    // };
-    // imageRef.put(file,metadata)
+
+
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -68,8 +66,50 @@ export default class RenderVideoTest extends Component {
     )
   }
 
+uploadNewImageToStorage() {
+  console.log('Inside uploadNewImageToStorage')
+const Blob = RNFetchBlob.polyfill.Blob
+
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
+let uri = '/Users/lada/Desktop/here-n-now/public/images/thdancingman.gif'
+let name = 'dancing man';
+this.uploadImage(uri,name)
+
+}
+
+uploadImage(uri, imageName, mime = 'image/gif ')  {
+  console.log('Inside uploadImage')
+ return new Promise((resolve, reject) => {
+
+   const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+     let uploadBlob = null
+     const imageRef = firebaseApp.storage().ref('posts').child(imageName)
+     fs.readFile(uploadUri, 'base64')
+     .then((data) => {
+
+       return Blob.build(data, { type: `${mime};BASE64` })
+     })
+     .then((blob) => {
+
+       uploadBlob = blob
+       return imageRef.put(blob, { contentType: mime })
+     })
+     .then(() => {
+       uploadBlob.close()
+       return imageRef.getDownloadURL()
+     })
+     .then((url) => {
+       console.log('Url Inside Promise',url)
+       resolve(url)
+     })
+     .catch((error) => {
+       reject(error)
+     })
+  })
+ }
   addCaption() {
-    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
+
     AlertIOS.prompt(
         'Add Caption',
         null,
@@ -139,7 +179,7 @@ export default class RenderVideoTest extends Component {
           </View>
           <Button
           title="Post this video"
-          onPress={() => this.addCaption()}
+          onPress={() => this.uploadNewImageToStorage()}
           style={{justifyContent: 'center'}}
         />
       </View>

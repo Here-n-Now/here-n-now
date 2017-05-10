@@ -12,6 +12,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
     "react-native-camera": "^0.8.0",
+    "react-native-fetch-blob": "^0.10.5",
     "react-native-google-maps": "^1.0.0",
     "react-native-maps": "^0.14.0",
     "react-native-vector-icons": "^4.1.1",
