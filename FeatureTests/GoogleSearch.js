@@ -33,11 +33,24 @@ class GoogleSearch extends React.Component {
           types: '(cities)', // default: 'geocode'
         }}
         styles={{
-          description: {
-            fontWeight: 'bold',
+          container: {
+            flex: 1
+          },
+          textInputContainer: {
+            backgroundColor: 'rgba(0,0,0,0)',
+            // width: 350,
+            borderTopWidth: 0,
+            borderBottomWidth:0
+          },
+          textInput: {
+            marginLeft: 0,
+            marginRight: 0,
+            height: 38,
+            color: '#5d5d5d',
+            fontSize: 16
           },
           predefinedPlacesDescription: {
-            color: '#1faadb',
+            color: '#1faadb'
           },
         }}
 

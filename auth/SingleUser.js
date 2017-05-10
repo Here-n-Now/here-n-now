@@ -1,82 +1,119 @@
 import { firebaseApp } from '../Nav';
-import * as firebase from 'firebase';
-const StatusBar = require('../FeatureTests/dummy/StatusBar');
-const ActionButton = require('../FeatureTests/dummy/ActionButton');
-const styles = require('../FeatureTests/dummy/styles.js');
-const React = require('react');
-const ReactNative = require('react-native');
-const {
+
+import styles from '../FeatureTests/dummy/styles.js';
+import RenderVideoTest from '../FeatureTests/RenderVideoTest'
+
+import React, { Component } from 'react';
+import { NavigationActions } from 'react-navigation';
+import { Icon, Container, Content, Text, Button, Header, Body, Title, List, ListItem, Badge, Left, Right, Switch } from 'native-base';
+
+import {
     StyleSheet,
-    Text,
     View,
-    Button,
-    AppRegistry,
-    ListView,
+    Linking,
     TouchableHighlight,
     AlertIOS
-} = ReactNative;
-exports.framework = 'React';
-
-
+} from 'react-native';
 
 // var user = firebaseApp.auth().currentUser;
 export default class User extends React.Component {
+  static navigationOptions = {
+    header: null,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios='ios-contact-outline' android="ios-contact-outline" style={{color: tintColor}} />
+      )
+  }
     constructor(props) {
         super(props);
-        // console.log("props: ", this.props);
         this.state = {
-            dataSource: new ListView.DataSource({
-                rowHasChanged: (row1, row2) => row1 !== row2,
-            }),
             user: undefined
         };
-        this.onClickEdit = this.onClickEdit.bind(this);
-        this.onClickLogout = this.onClickLogout.bind(this);
     }
 
     componentDidMount() {
         firebaseApp.auth().onAuthStateChanged(user => {
             let email, uid;
-            if (user) {
-                // email = user.email;
-                // uid = user.uid;
-                console.log("singleuser page gets user", user);
-                this.setState({user});
-                return user;
-            }
-
-            else {
-                return (
-                    <Text title="User not exist!"/>
-                )
-            }
+            if (user) this.setState({user});
+            else this.props.navigation.navigate('Login');
         })
     }
 
-    onClickEdit(event) {
-
-        this.state.user.updatePassword(event.target.value());
-
+    onClickEdit = event => {
+        // //editing info section, curently throws an error
+        // this.state.user.updatePassword(event.target.value());
+        AlertIOS.alert('Uh Oh', `Why are you clicking things that aren't fully integrated yet?`);
     }
 
-    onClickLogout() {
-        firebaseApp.auth().signOut();
-        console.log("loging out");
+    onClickLogout = () => {
+        //actually logs out user but they can still can pull on the screen and seem logged in. need to disable back or figure out how to re-render nav
+        firebaseApp.auth().signOut()
+        .then(() => this.props.navigation.navigate('Login'))
     }
 
 
     render() {
+        const { user } = this.state;
         return (
-            <View style={styles.container}>
-                <StatusBar title="User's page"/>
-                <View
-                    title = "Hello"
-                    style={styles.listview} />
-                <ActionButton onPress={ this.onClickEdit } title="Edit Profile!!" />
-
-                <ActionButton onPress = {this.onClickLogout } title = "Log out!!" />
-            </View>
+          <Container style={styles.container}>
+            <Header>
+                <Body>
+                    <Title>Hi, {this.state.user && this.state.user.email}</Title>
+                </Body>
+            </Header>
+            <Content>
+              <ListItem itemDivider>
+                <Text>SETTINGS</Text>
+              </ListItem>
+              <ListItem icon onPress={ this.onClickEdit }>
+                  <Left>
+                      <Icon name="ios-mail-outline" />
+                  </Left>
+                  <Body>
+                    <Text>Email</Text>
+                  </Body>
+                  <Right>
+                      <Text>{user && user.email.slice(0, 20) }</Text>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
+              <ListItem icon onPress={ this.onClickEdit }>
+                  <Left>
+                      <Icon name="ios-key-outline" />
+                  </Left>
+                  <Body>
+                    <Text>Password</Text>
+                  </Body>
+                  <Right>
+                      <Text>••••••</Text>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
+              <ListItem icon onPress={ () => Linking.openURL('app-settings:') }>
+                  <Left>
+                      <Icon name="ios-settings-outline" />
+                  </Left>
+                  <Body>
+                    <Text>App Permissions</Text>
+                  </Body>
+                  <Right>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
+              <ListItem itemDivider />
+                <ListItem icon onPress={ this.onClickLogout }>
+                    <Left>
+                        <Icon name="ios-close-outline" />
+                    </Left>
+                    <Body>
+                      <Text>Logout</Text>
+                    </Body>
+                    <Right>
+                        <Text>••••••</Text>
+                        <Icon name="arrow-forward" />
+                    </Right>
+                </ListItem>
+            </Content>
+          </Container>
         )
     }
 }
-// dataSource={user}

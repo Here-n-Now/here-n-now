@@ -35,8 +35,8 @@ export default class Nav extends React.Component {
         super(props);
         this.state = {
             user: undefined,
-            tab: TabNavigator({
-                LoginTest: {
+            tab: StackNavigator({
+                Login: {
                     screen: Login
                 }
             })
@@ -59,6 +59,7 @@ export default class Nav extends React.Component {
                             screen: VideoTest
                         },
                         Account: {
+                            title: 'Account',
                             screen: User
                         },
                         // Post: {
@@ -77,7 +78,6 @@ export default class Nav extends React.Component {
 
     render () {
         return (
-
             this.state.tab !== undefined && (
                 React.createElement(StackNavigator({
                     Tabs: {
@@ -86,6 +86,9 @@ export default class Nav extends React.Component {
                     RenderVideoTest: {
                         screen: RenderVideoTest
                     },
+                    Login: {
+                        screen: Login
+                    }
                 }))
             )
 
