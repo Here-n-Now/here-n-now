@@ -17,8 +17,8 @@ import Video from 'react-native-video';
 import {firebaseApp} from '../Nav';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob'
-//export const fireStorage = firebase.storage();
 const fs = RNFetchBlob.fs
+
 export default class RenderVideoTest extends Component {
   static navigationOptions = {
     header: null
@@ -68,14 +68,12 @@ export default class RenderVideoTest extends Component {
 
 uploadNewImageToStorage() {
   console.log('Inside uploadNewImageToStorage')
-const Blob = RNFetchBlob.polyfill.Blob
-
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
-let uri = '/Users/lada/Desktop/here-n-now/public/images/thdancingman.gif'
-let name = 'dancing man';
-this.uploadImage(uri,name)
-
+  const Blob = RNFetchBlob.polyfill.Blob
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+  window.Blob = Blob
+  let uri = '/Users/lada/Desktop/here-n-now/public/images/thdancingman.gif'
+  let name = 'dancing man';
+  this.uploadImage(uri,name)
 }
 
 uploadImage(uri, imageName, mime = 'image/gif ')  {
