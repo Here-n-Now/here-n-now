@@ -20,7 +20,7 @@ class GoogleSearch extends Component {
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
           this.props.onSearch(details.geometry.location);
-          this.props.setModalVisible()
+          this.props.setModalVisible();
         }}
         getDefaultValue={() => {
           // text input default value
@@ -36,7 +36,7 @@ class GoogleSearch extends Component {
           textInputContainer: {
             backgroundColor: 'rgba(0,0,0,0)',
             borderTopWidth: 0,
-            borderBottomWidth:0
+            borderBottomWidth: 0
           },
           textInput: {
             marginLeft: 0,

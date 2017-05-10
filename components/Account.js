@@ -15,6 +15,7 @@ import {
     AlertIOS
 } from 'react-native';
 
+
 // var user = firebaseApp.auth().currentUser;
 export default class Account extends React.Component {
   static navigationOptions = {
