@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {View, StyleSheet, Linking, Modal} from 'react-native'
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab } from 'native-base';
 import MapView from 'react-native-maps';
-
+import * as firebase from 'firebase';
 import GoogleSearch from './GoogleSearch'
 
 export default class MapComp extends Component {
@@ -16,12 +16,12 @@ export default class MapComp extends Component {
     super(props)
     this.state = {
       markers: [
-        {id: 1, photo: require('../public/images/thdancingman.gif'), latlng: {latitude: 40.7128, longitude: -74.0041}, title: "Marker 1", description: 'Marker 1 script'},
-        {id: 2, photo: require('../public/images/thdancingman.gif'), latlng: {latitude: 40.7138, longitude: -74.0077}, title: "Marker 2", description: 'Marker 2 script'},
-        {id: 3, photo: require('../public/images/giphy.gif'), latlng: {latitude: 40.7218, longitude: -73.9791}, title: "Marker 3", description: 'Marker 3 script'},
-        {id: 4, photo: require('../public/images/giphy.gif'), latlng: {latitude: 40.7048, longitude: -74.0131}, title: "Marker 4", description: 'Marker 4 script'},
-        {id: 5, photo: require('../public/images/thdancingman.gif'), latlng: {latitude: 37.3130, longitude: -122.0423}, title: "Marker 5", description: 'Marker 5 script'},
-        {id: 6, photo: require('../public/images/giphy.gif'), latlng: {latitude: 37.3530, longitude: -122.0323}, title: "Marker 6", description: 'Marker 6 script'},
+        {id: 1, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 40.7128, longitude: -74.0041}, title: "Marker 1", description: 'Marker 1 script'},
+        {id: 2, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 40.7138, longitude: -74.0077}, title: "Marker 2", description: 'Marker 2 script'},
+        {id: 3, photo: require('../public/images/giphy.gif'), coords: {latitude: 40.7218, longitude: -73.9791}, title: "Marker 3", description: 'Marker 3 script'},
+        {id: 4, photo: require('../public/images/giphy.gif'), coords: {latitude: 40.7048, longitude: -74.0131}, title: "Marker 4", description: 'Marker 4 script'},
+        {id: 5, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 37.3130, longitude: -122.0423}, title: "Marker 5", description: 'Marker 5 script'},
+        {id: 6, photo: require('../public/images/giphy.gif'), coords: {latitude: 37.3530, longitude: -122.0323}, title: "Marker 6", description: 'Marker 6 script'},
       ],
       modalVisible: false,
     }
@@ -43,11 +43,17 @@ export default class MapComp extends Component {
         longitudeDelta: 0.0421,
       }})
     }
+  componentWillMount(){
+    var markerRef = firebase.database().ref('posts');
+      markerRef.on('value', (snapshot) => {
+      console.log('snapshot', snapshot.val())
+      this.setState({markers: snapshot.val()})
+    });
+  }
 
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
-
     navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({region: {
@@ -62,7 +68,9 @@ export default class MapComp extends Component {
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
   }
+
   render(){
+    // console.log('after mount state', this.state)
     return (
       <Container style={styles.container}>
             <MapView
@@ -71,13 +79,15 @@ export default class MapComp extends Component {
               onRegionChange={this.onRegionChange}
               showsUserLocation={true}
               >
-              {this.state.markers.map(marker => (
+              {Object.keys(this.state.markers).map(markerId => {
+                let marker = this.state.markers[markerId]
+                return (
                 <MapView.Marker
                   key={marker.id}
-                  coordinate={marker.latlng}
+                  coordinate={marker.coords}
                   identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
-                    this.props.navigation.navigate('RenderVideoTest')
+                    this.props.navigation.navigate('viewPost', {imageURL: marker.image, videoURL: marker.video})
                   }}
                   // onSelect={evt => console.log('Select', evt.nativeEvent)}
                   // onSelect={() => console.log('Nav', this.props)}
@@ -89,7 +99,8 @@ export default class MapComp extends Component {
                     <Text>{marker.description}</Text>
                   </MapView.Callout>*/}
                 </MapView.Marker>
-              ))}
+              )
+              })}
             </MapView>
             <View style={{pointerEvents: 'none'}}>
                 <Fab
