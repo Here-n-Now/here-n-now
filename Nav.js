@@ -83,8 +83,8 @@ export default class Nav extends React.Component {
                     PostVideo: {
                       screen: PostVideo
                     },
-                    viewPost: {
-                      screen: ViewDB
+                    ViewPost: {
+                      screen: ViewVideo
                     }
                 }))
             )

@@ -15,14 +15,7 @@ export default class MapComp extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      markers: [
-        {id: 1, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 40.7128, longitude: -74.0041}, title: "Marker 1", description: 'Marker 1 script'},
-        {id: 2, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 40.7138, longitude: -74.0077}, title: "Marker 2", description: 'Marker 2 script'},
-        {id: 3, photo: require('../public/images/giphy.gif'), coords: {latitude: 40.7218, longitude: -73.9791}, title: "Marker 3", description: 'Marker 3 script'},
-        {id: 4, photo: require('../public/images/giphy.gif'), coords: {latitude: 40.7048, longitude: -74.0131}, title: "Marker 4", description: 'Marker 4 script'},
-        {id: 5, photo: require('../public/images/thdancingman.gif'), coords: {latitude: 37.3130, longitude: -122.0423}, title: "Marker 5", description: 'Marker 5 script'},
-        {id: 6, photo: require('../public/images/giphy.gif'), coords: {latitude: 37.3530, longitude: -122.0323}, title: "Marker 6", description: 'Marker 6 script'},
-      ],
+      markers: {},
       modalVisible: false,
     }
   }
@@ -39,14 +32,13 @@ export default class MapComp extends Component {
       this.setState({region: {
         latitude: coords.lat,
         longitude: coords.lng,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001
       }})
     }
   componentWillMount(){
     var markerRef = firebase.database().ref('posts');
       markerRef.on('value', (snapshot) => {
-      console.log('snapshot', snapshot.val())
       this.setState({markers: snapshot.val()})
     });
   }
@@ -59,8 +51,8 @@ export default class MapComp extends Component {
           this.setState({region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001
             }
           })
         },
@@ -87,11 +79,8 @@ export default class MapComp extends Component {
                   coordinate={marker.coords}
                   identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
-                    this.props.navigation.navigate('viewPost', {imageURL: marker.image, videoURL: marker.video})
+                    this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
                   }}
-                  // onSelect={evt => console.log('Select', evt.nativeEvent)}
-                  // onSelect={() => console.log('Nav', this.props)}
-                  // onCalloutPress={evt => Linking.openURL(evt.nativeEvent.id)}
                   >
                   {/*<MapView.Callout>
                     <Image source={marker.photo} />
