@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardImage = props => {
@@ -14,6 +14,9 @@ const PostCardImage = props => {
                 </Body>
             </Left>
         </CardItem>
+        <TouchableOpacity
+            onPress={() => {props.navigation.navigate('ViewPost', {imageURL: props.post.image})}}
+        >
         <CardItem>
             <Body>
                 <Image
@@ -22,7 +25,7 @@ const PostCardImage = props => {
                 />
                 <Button transparent textStyle={{color: '#87838B'}}
                   onPress={() => {
-                    props.navigation.navigate('viewPost', {imageURL: props.post.image})}
+                    props.navigation.navigate('ViewPost', {imageURL: props.post.image})}
                   }
                 >
                     <Icon name="logo-github" />
@@ -30,6 +33,7 @@ const PostCardImage = props => {
                 </Button>
             </Body>
         </CardItem>
+        </TouchableOpacity>
     </Card>
   );
 }
