@@ -7,6 +7,7 @@ import Map from './components/Map';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import ViewVideo from './components/ViewVideo.js';
+import ViewDB from './components/ViewDB.js';
 import SubmitVideo from './components/SubmitVideo.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import App from './FeatureTests/src/App';
