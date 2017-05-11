@@ -2,12 +2,13 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 import React from 'react';
 import * as firebase from 'firebase';
 
-import VideoTest from './FeatureTests/VideoTest';
+import PostPic from './components/PostPic';
+import PostVideo from './components/PostVideo.js';
 import Map from './components/Map';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import ViewVideo from './components/ViewVideo.js';
-import SubmitVideo from './components/SubmitVideo.js';
+import CameraApp from './components/CameraApp';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import App from './FeatureTests/src/App';
 
@@ -41,12 +42,9 @@ export default class Nav extends React.Component {
                 this.setState({
                     user,
                     tab: TabNavigator({
-                        ViewVideo: {
-                            screen: ViewVideo
-                        },
-                        SubVideo: {
-                            screen: SubmitVideo
-                        },
+                        // PostVideo: {
+                        //     screen: PostVideo
+                        // },
                         View: {
                             screen: Map
                         },
@@ -54,7 +52,7 @@ export default class Nav extends React.Component {
                         //     screen: App
                         // },
                         Share: {
-                            screen: VideoTest
+                            screen: CameraApp
                         },
                         Account: {
                             screen: Account
@@ -77,6 +75,12 @@ export default class Nav extends React.Component {
                     },
                     Login: {
                         screen: Login
+                    },
+                    PostPic: {
+                      screen: PostPic
+                    },
+                    PostVideo: {
+                      screen: PostVideo
                     }
                 }))
             )

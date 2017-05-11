@@ -6,8 +6,10 @@ import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Conten
 import Video from 'react-native-video';
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
+import RNFetchBlob from 'react-native-fetch-blob'
+const fs = RNFetchBlob.fs
 
-export default class RenderVideoTest extends Component {
+export default class PostVideo extends Component {
   static navigationOptions = {
     header: null
   }
@@ -28,52 +30,57 @@ export default class RenderVideoTest extends Component {
     };
   }
 
-  handleButton = (postId,text) => {
-    const video = this.props.navigation.navigate.state
-    console.log('Video in handleButton: ', video)
-
+  postToFirebaseDB = (videoURL, text = '') => {
+    const postId = Math.random().toString().split('.')[1];
     const database = firebaseApp.database();
-    // const storageRef = firebase.storage.ref();
-    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
-    // var metadata = {
-    //   contentType : 'image/jpeg'
-    // };
-    // imageRef.put(file,metadata)
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('posts/'+postId).set({
+        firebaseApp.database().ref('posts/' + postId).set({
           id: postId,
           text: text,
           coords: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           },
-          movie: video ? {uri: video.video} : require('../broadchurch.mp4')
+          video: videoURL
         })
       }
     )
   }
 
-  addCaption = () => {
-    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
-    AlertIOS.prompt(
-        'Add Caption',
-        null,
-        [
-          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {
-            text: 'Post',
-            onPress: (text) => {
-              this.handleButton(6,text)
-            }}
-        ],
-        'plain-text'
-      );
- }
+  uploadNewVideoToStorage = () => {
+    const Blob = RNFetchBlob.polyfill.Blob
+    window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+    window.Blob = Blob
+    const { video } = this.props.navigation.state.params
+    const videoName = Math.random().toString();
+    this.uploadVideo(video, videoName)
+  }
 
-
-
+  uploadVideo(video, videoName, mime = 'video/mp4') {
+    return new Promise((resolve, reject) => {
+      const uploadUri = Platform.OS === 'ios'
+        ? video.replace('file://', '')
+        : video
+      let uploadBlob = null
+      const videoRef = firebaseApp.storage().ref('posts').child(videoName)
+      fs.readFile(uploadUri, 'base64').then((data) => {
+        return Blob.build(data, {type: `${mime};BASE64`})
+      }).then(blob => {
+        uploadBlob = blob
+        return videoRef.put(blob, {contentType: mime})
+      }).then(() => {
+        uploadBlob.close()
+        return videoRef.getDownloadURL()
+      }).then(videoURL => {
+        resolve(videoURL)
+        this.postToFirebaseDB(videoURL)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
 
   onLoad = data => {
     this.setState({duration: data.duration});
@@ -135,19 +142,19 @@ export default class RenderVideoTest extends Component {
           </Fab>
           <Fab
             position="topRight"
-            onPress={this.addCaption}>
+            onPress={this.uploadNewVideoToStorage}>
           <Icon name="md-send" />
           </Fab>
-          <View style={styles.form}>
-            <Item>
-                <Input placeholder='Add a caption' style={styles.form}/>
-            </Item>
-          </View>
+
     </Container>
     )
   }
 }
-
+// <View style={styles.form}>
+//   <Item>
+//       <Input placeholder='Add a caption' style={styles.form}/>
+//   </Item>
+// </View>
 const styles = StyleSheet.create({
   container: {
     flex: 1,

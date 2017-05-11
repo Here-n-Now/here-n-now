@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   StatusBar,
@@ -58,15 +58,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class VideoTest extends React.Component {
+export default class CameraApp extends Component {
   static navigationOptions = {
     header: null,
     tabBarIcon: ({ tintColor }) => (
       <Icon ios='ios-camera-outline' android="ios-camera-outline" style={{color: tintColor}} />
       )
   }
-  constructor(props) {
-    super(props);
+
+  constructor() {
+    super()
 
     this.camera = null;
 
@@ -87,7 +88,7 @@ export default class VideoTest extends React.Component {
   takePicture = () => {
     if (this.camera) {
       this.camera.capture()
-        .then(image => this.setState({image: image.path}))
+        .then(image => this.props.navigation.navigate('PostPic', {image: image.path}))
         .catch(err => console.error(err));
     }
   }
@@ -98,7 +99,7 @@ export default class VideoTest extends React.Component {
         audio: true,
         mode: Camera.constants.CaptureMode.video
       })
-          .then(video => this.props.navigation.navigate('RenderVideoTest', {video: video.path}))
+          .then(video => this.props.navigation.navigate('PostVideo', {video: video.path}))
           .catch(err => console.error(err));
       this.setState({
         isRecording: true
