@@ -1,16 +1,25 @@
 'use strict';
 import React, { Component } from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS, Image } from 'react-native';
-import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
+import { Icon, Header, Left, Toast, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
 
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
-import RNFetchBlob from 'react-native-fetch-blob'
+import RNFetchBlob from 'react-native-fetch-blob';
+import { NavigationActions } from 'react-navigation';
+
 const fs = RNFetchBlob.fs
 
 export default class PostPic extends Component {
   static navigationOptions = {
     header: null
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showToast: false
+    }
   }
 
   postToFirebaseDB = (imageURL, text = '') => {
@@ -30,6 +39,15 @@ export default class PostPic extends Component {
         })
       }
     )
+
+    this.props.navigation.navigate('View');
+
+    Toast.show({
+      text: 'Yay! Your picture is up!',
+      position: 'bottom',
+      type: 'success',
+      duration: 5000
+    })
   }
 
   uploadNewImageToStorage = () => {
@@ -77,7 +95,9 @@ export default class PostPic extends Component {
             shadowOpacity: 1.0,
           }}
           position="topLeft"
-          onPress={this.setModalVisible}>
+          onPress={
+            () => this.props.navigation.dispatch(NavigationActions.back({}))
+          }>
           <Icon name="ios-close-circle-outline" />
         </Fab>
         <Fab

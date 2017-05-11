@@ -6,8 +6,10 @@ import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Conten
 import Video from 'react-native-video';
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
-import RNFetchBlob from 'react-native-fetch-blob'
-const fs = RNFetchBlob.fs
+import RNFetchBlob from 'react-native-fetch-blob';
+import { NavigationActions } from 'react-navigation'
+
+const fs = RNFetchBlob.fs;
 
 export default class PostVideo extends Component {
   static navigationOptions = {
@@ -47,6 +49,15 @@ export default class PostVideo extends Component {
         })
       }
     )
+
+    this.props.navigation.navigate('View');
+
+    Toast.show({
+      text: 'Yay! Your picture is up!',
+      position: 'bottom',
+      type: 'success',
+      duration: 5000
+    })
   }
 
   uploadNewVideoToStorage = () => {
@@ -137,7 +148,9 @@ export default class PostVideo extends Component {
               shadowOpacity: 1.0,
             }}
             position="topLeft"
-            onPress={this.setModalVisible}>
+            onPress={
+              () => this.props.navigation.dispatch(NavigationActions.back({}))
+            }>
             <Icon name="ios-close-circle-outline" />
           </Fab>
           <Fab
