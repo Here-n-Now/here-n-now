@@ -60,7 +60,7 @@ export default class RenderVideoTest extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           },
-          movie: video ? {uri: video.video} : require('../broadchurch.mp4')
+          movie: video ? {uri: video.video} : require('../introVid.mp4')
         })
       }
     )
@@ -152,10 +152,8 @@ uploadImage(uri, imageName, mime = 'image/gif ')  {
     const navState = this.props.navigation && this.props.navigation.state.params
     return (
       <View style={styles.container}>
-
-        <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
-            source={navState ? {uri: navState.video} : require('../broadchurch.mp4')}
+            source={navState ? {uri: navState.video} : require('../introVid.mp4')}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
@@ -168,18 +166,6 @@ uploadImage(uri, imageName, mime = 'image/gif ')  {
             onProgress={this.onProgress}
             repeat={true}
           />
-        </TouchableOpacity>
-          <View style={styles.trackingControls}>
-            <View style={styles.progress}>
-              <View style={[styles.innerProgressCompleted, {flex: flexCompleted}]} />
-              <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
-            </View>
-          </View>
-          <Button
-          title="Post this video"
-          onPress={() => this.uploadNewImageToStorage()}
-          style={{justifyContent: 'center'}}
-        />
       </View>
     );
   }

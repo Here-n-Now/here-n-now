@@ -49,7 +49,7 @@ export default class RenderVideoTest extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           },
-          movie: video ? {uri: video.video} : require('../broadchurch.mp4')
+          movie: video ? {uri: video.video} : require('../introVid.mp4')
         })
       }
     )
@@ -103,7 +103,7 @@ export default class RenderVideoTest extends Component {
       <Container style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
-            source={navState ? {uri: navState.video} : require('../broadchurch.mp4')}
+            source={navState ? {uri: navState.video} : require('../introVid.mp4')}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}

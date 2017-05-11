@@ -121,7 +121,7 @@ export default class PostVideo extends Component {
       <Container style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
-            source={navState ? {uri: navState.video} : require('../broadchurch.mp4')}
+            source={navState ? {uri: navState.video} : require('../introVid.mp4')}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
