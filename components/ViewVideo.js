@@ -1,13 +1,14 @@
 'use strict';
 import React, { Component } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS, Image } from 'react-native';
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
 
 import Video from 'react-native-video';
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
+import { NavigationActions } from 'react-navigation'
 
-export default class RenderVideoTest extends Component {
+export default class ViewVideo extends Component {
   static navigationOptions = {
     header: null
   }
@@ -16,64 +17,15 @@ export default class RenderVideoTest extends Component {
     this.state = {
       rate: 1,
       volume: 1,
-      muted: true,
       resizeMode: 'cover',
       duration: 0.0,
       currentTime: 0.0,
       controls: false,
       paused: false,
-      skin: 'custom',
       ignoreSilentSwitch: null,
       isBuffering: false,
     };
   }
-
-  handleButton = (postId,text) => {
-    const video = this.props.navigation.navigate.state
-    console.log('Video in handleButton: ', video)
-
-    const database = firebaseApp.database();
-    // const storageRef = firebase.storage.ref();
-    // const imageRef = storageRef.child('../public/images/thdancingman.gif')
-    // var metadata = {
-    //   contentType : 'image/jpeg'
-    // };
-    // imageRef.put(file,metadata)
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        firebaseApp.database().ref('posts/'+postId).set({
-          id: postId,
-          text: text,
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          },
-          movie: video ? {uri: video.video} : require('../introVid.mp4')
-        })
-      }
-    )
-  }
-
-  addCaption = () => {
-    console.log('props.navigation.navigate.video in addCaption: ',this.props.navigation.navigate.video)
-    AlertIOS.prompt(
-        'Add Caption',
-        null,
-        [
-          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {
-            text: 'Post',
-            onPress: (text) => {
-              this.handleButton(6,text)
-            }}
-        ],
-        'plain-text'
-      );
- }
-
-
-
 
   onLoad = data => {
     this.setState({duration: data.duration});
@@ -98,17 +50,34 @@ export default class RenderVideoTest extends Component {
   render() {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
-    const navState = this.props.navigation && this.props.navigation.state.params
-    return (
-      <Container style={styles.container}>
-        <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
+    const { videoURL, imageURL } = this.props.navigation.state.params
+    return imageURL ? (
+          <Container>
+            <Image source={{uri: imageURL}} style={styles.backgroundImage} />
+            <Fab
+              style={{
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                shadowColor: 'black',
+                shadowOpacity: 1.0,
+              }}
+              position="topLeft"
+              onPress={
+                () => this.props.navigation.dispatch(NavigationActions.back({}))
+              }>
+              <Icon name="md-close-circle" />
+            </Fab>
+          </Container>
+        )
+        :
+        (<Container style={styles.container}>
+          <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
-            source={navState ? {uri: navState.video} : require('../introVid.mp4')}
+            source={{uri: videoURL}}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
             volume={this.state.volume}
-            muted={this.state.muted}
+            muted={false}
             ignoreSilentSwitch={this.state.ignoreSilentSwitch}
             resizeMode={this.state.resizeMode}
             onLoad={this.onLoad}
@@ -130,26 +99,30 @@ export default class RenderVideoTest extends Component {
               shadowOpacity: 1.0,
             }}
             position="topLeft"
-            onPress={this.setModalVisible}>
-            <Icon name="ios-close-circle-outline" />
+            onPress={
+              () => this.props.navigation.dispatch(NavigationActions.back({}))
+            }>
+            <Icon name="md-close-circle" />
           </Fab>
-          <Fab
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              shadowColor: 'black',
-              shadowOpacity: 1.0,
-            }}
-            position="topRight"
-            onPress={this.setModalVisible}>
-          <Icon name="ios-happy-outline" />
-          </Fab>
-        <View style={styles.form}>
-          <Text>What up?</Text>
-        </View>
     </Container>
     )
   }
 }
+
+// <View style={[styles.form, {pointerEvents: 'none'}]}>
+//   <Text>What up?</Text>
+// </View>
+
+// <Fab
+//   style={{
+//     backgroundColor: 'rgba(0, 0, 0, 0)',
+//     shadowColor: 'black',
+//     shadowOpacity: 1.0,
+//   }}
+//   position="topRight"
+//   onPress={this.setModalVisible}>
+// <Icon name="ios-happy-outline" />
+// </Fab>
 
 const styles = StyleSheet.create({
   container: {
@@ -164,6 +137,10 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch'
   },
   fab: {
     backgroundColor: 'rgba(0, 0, 0, 0)',

@@ -20,7 +20,6 @@ export default class PostVideo extends Component {
     this.state = {
       rate: 1,
       volume: 1,
-      muted: true,
       resizeMode: 'cover',
       duration: 0.0,
       currentTime: 0.0,
@@ -126,7 +125,7 @@ export default class PostVideo extends Component {
             rate={this.state.rate}
             paused={this.state.paused}
             volume={this.state.volume}
-            muted={this.state.muted}
+            muted={false}
             ignoreSilentSwitch={this.state.ignoreSilentSwitch}
             resizeMode={this.state.resizeMode}
             onLoad={this.onLoad}
@@ -158,7 +157,6 @@ export default class PostVideo extends Component {
             onPress={this.uploadNewVideoToStorage}>
           <Icon name="md-send" />
           </Fab>
-
     </Container>
     )
   }
