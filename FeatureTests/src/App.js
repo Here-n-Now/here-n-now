@@ -6,21 +6,23 @@ import FullScreenVideo from './components/FullScreenVideo.js';
 import Commons from './lib/commons.js';
 import styles from '../style/app.js';
 import config from './config/app.js';
+import firebaseApp from './Nav';
 
-const sampleStreamURLs = [
-  require('../../public/image/sample-image-1.jpg'),
-  require('../../public/image/sample-image-2.jpg'),
-  require('../../public/image/sample-image-3.jpg')
-]
+// const sampleStreamURLs = [
+//   require('../../public/image/sample-image-1.jpg'),
+//   require('../../public/image/sample-image-2.jpg'),
+//   require('../../public/image/sample-image-3.jpg')
+// ]
 
-const sampleFullScreenURL = require('../../public/image/sample-image-2.jpg');
-const backgroundImage= require('../../public/image/IMG_0187.jpg');
-const logo= require('../../public/image/Garena_Logo.png');
+// const sampleFullScreenURL = require('../../public/image/sample-image-2.jpg');
+// const backgroundImage= require('../../public/image/IMG_0187.jpg');
+// const logo= require('../../public/image/Garena_Logo.png');
 
 const FRONT_CAMERA = true;
 const webRTCServices = require('./lib/services.js');
 const VIDEO_CONFERENCE_ROOM = 'video_conference';
 
+const database = firebaseApp.database().ref();
 const SELF_STREAM_ID = 'self_stream_id';
 
 export default class App extends Component {
@@ -79,14 +81,14 @@ export default class App extends Component {
   renderJoinContainer() {
     if(this.state.joinState != 'joined') {
       return <View style={styles.joinContainer}>
-        <Text style={styles.joinLabel}>Be the first to join this conversation</Text>
-        <TextInput style={styles.joinName}
-          placeholder={'Enter your name'} placeholderTextColor={'#888'}
-          onChangeText={(name) => this.setState({name})}
-          value={this.state.name} />
+        {/*<Text style={styles.joinLabel}>Be the first to join this conversation</Text>*/}
+        {/*<TextInput style={styles.joinName}*/}
+          {/*placeholder={'Enter your name'} placeholderTextColor={'#888'}*/}
+          {/*onChangeText={(name) => this.setState({name})}*/}
+          {/*value={this.state.name} />*/}
         <TouchableHighlight style={styles.joinButton}
             onPress={this.handleJoinClick.bind(this)}>
-          <Text style={styles.joinButtonText}>{this.state.joinState == 'ready' ? 'Join' : 'Joining...'}</Text>
+          <Text style={styles.joinButtonText}>{this.state.joinState == 'ready' ? 'Watch' : 'Watching...'}</Text>
         </TouchableHighlight>
       </View>
     }
@@ -119,7 +121,7 @@ export default class App extends Component {
   //----------------------------------------------------------------------------
   //  WebRTC service callbacks
   handleJoined() {
-    console.log('Joined');
+    console.log('Watch');
     this.setState({
       joinState: 'joined'
     });
@@ -128,24 +130,24 @@ export default class App extends Component {
   handleFriendLeft(socketId) {
     let newState = {
       streams: this.state.streams.filter(stream => stream.id != socketId)
-    }
+    };
     if(this.state.activeStreamId == socketId) {
       newState.activeStreamId = newState.streams[0].id;
     }
     this.setState(newState);
   }
 
-  handleFriendConnected(socketId, stream) {
-    this.setState({
-      streams: [
-        ...this.state.streams,
-        {
-          id: socketId,
-          url: stream.toURL()
-        }
-      ]
-    })
-  }
+  // handleFriendConnected(socketId, stream) {
+  //   this.setState({
+  //     streams: [
+  //       ...this.state.streams,
+  //       {
+  //         id: socketId,
+  //         url: stream.toURL()
+  //       }
+  //     ]
+  //   })
+  // }
 
   handleDataChannelMessage(message) {
 
