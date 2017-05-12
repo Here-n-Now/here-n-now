@@ -3,7 +3,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardImage = props => {
-  console.log('PC props', props.post.image)
+
   return (
     <Card style={{ flex: 0 }}>
         <CardItem>
