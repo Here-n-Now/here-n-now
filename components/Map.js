@@ -5,6 +5,8 @@ import MapView from 'react-native-maps';
 import * as firebase from 'firebase';
 import GoogleSearch from './GoogleSearch'
 import GeoFire from 'geofire'
+//import geofire from '../geofireTest'
+
 export default class MapComp extends Component {
   static navigationOptions = {
     header: null,
@@ -16,7 +18,14 @@ export default class MapComp extends Component {
     super(props)
     this.state = {
       markers: {},
+      markersArr: [],
       modalVisible: false,
+      region: {
+        latitude: 40,
+        longitude: -74,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001
+      }
     }
   }
 
@@ -37,10 +46,7 @@ export default class MapComp extends Component {
       }})
     }
   componentWillMount(){
-    var markerRef = firebase.database().ref('posts')
-      markerRef.on('value', (snapshot) => {
-      this.setState({markers: snapshot.val()})
-    });
+
   }
 
   componentDidMount() {
@@ -55,10 +61,31 @@ export default class MapComp extends Component {
             longitudeDelta: 0.001
             }
           })
+          //geofire([position.coords.latitude,position.coords.longitude])
         },
         (error) => alert(JSON.stringify(error)),
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
+    const geofireRef = firebase.database().ref('geolocation');
+    const geoFire = new GeoFire(geofireRef);
+    var geoQuery = geoFire.query({
+      center: [this.state.region.latitude, this.state.region.longitude],
+      radius: 1
+    });
+    console.log('region', this.state.region)
+    console.log('something here', geoQuery.center())
+    let markersArr = []
+
+    // geoQuery.on('key_entered', (key, place, distance) => {
+    //   markersArr.push({key: key, coords: place})
+    //   console.log('Key: ', key, 'location ', place, 'distance ', distance)
+    // });
+    // console.log('after')
+    // this.setState({markersArr: markersArr})
+  var markerRef = firebase.database().ref('posts')
+    markerRef.on('value', (snapshot) => {
+    this.setState({markers: snapshot.val()})
+  });
   }
 
   render(){
@@ -72,17 +99,18 @@ export default class MapComp extends Component {
               showsUserLocation={true}
               >
               {Object.keys(this.state.markers).map(markerId => {
+                //console.log('markersArr', markersArr)
                 let marker = this.state.markers[markerId]
                 return (
                 <MapView.Marker
                   key={marker.id}
                   coordinate={marker.coords}
-                  identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
                     if (marker.image || marker.video){
                       this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
                     } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
                   }}
+
                   >
                   {/*<MapView.Callout>
                     <Image source={marker.photo} />

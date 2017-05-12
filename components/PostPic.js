@@ -7,6 +7,7 @@ import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { NavigationActions } from 'react-navigation';
+import GeoFire from 'geofire';
 
 const fs = RNFetchBlob.fs
 
@@ -23,18 +24,24 @@ export default class PostPic extends Component {
   }
 
   postToFirebaseDB = (imageURL, text = '') => {
-    const postId = Math.random().toString().split('.')[1];
+    //Points to geolocation folder
+    const geofireRef = firebase.database().ref('geolocation');
+    // //Points to firebase root
+    const firebaseRef = firebase.database().ref(); //was a '.push()'?
+    // //Points to posts folder
+    const postsRef = firebase.database().ref('posts')
+    // //Creates new geofire instance
+    const geoFire = new GeoFire(geofireRef);
+    const myId = `Image:${firebaseRef.push().key}`
     const database = firebaseApp.database();
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('posts/' + postId).set({
-          id: postId,
+        //post to geofire folder
+        geoFire.set(myId, [position.coords.latitude, position.coords.longitude])
+        //post to posts folder
+        firebaseApp.database().ref('posts/' + myId).set({
+          id: myId,
           text: text,
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          },
           image: imageURL
         })
       }

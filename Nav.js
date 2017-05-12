@@ -2,6 +2,18 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 import React from 'react';
 import * as firebase from 'firebase';
 
+
+const firebaseConfig = {
+    apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
+    authDomain: 'we-ward-872a3.firebaseapp.com',
+    databaseURL: 'https://we-ward-872a3.firebaseio.com',
+    projectId: 'we-ward-872a3',
+    storageBucket: 'we-ward-872a3.appspot.com',
+    messagingSenderId: '745916231980'
+};
+export const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const fireStorage = firebaseApp.storage();
+
 import PostPic from './components/PostPic';
 import PostVideo from './components/PostVideo.js';
 import Map from './components/Map';
@@ -15,17 +27,6 @@ import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import geofiretest from './geofireTest.js'
-
-const firebaseConfig = {
-    apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
-    authDomain: 'we-ward-872a3.firebaseapp.com',
-    databaseURL: 'https://we-ward-872a3.firebaseio.com',
-    projectId: 'we-ward-872a3',
-    storageBucket: 'we-ward-872a3.appspot.com',
-    messagingSenderId: '745916231980'
-};
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
-export const fireStorage = firebaseApp.storage();
 
 export default class Nav extends React.Component {
     constructor(props) {
@@ -41,8 +42,6 @@ export default class Nav extends React.Component {
     }
 
     componentDidMount() {
-
-        geofiretest();
         firebaseApp.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({
