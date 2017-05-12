@@ -4,7 +4,7 @@ import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Conten
 import MapView from 'react-native-maps';
 import * as firebase from 'firebase';
 import GoogleSearch from './GoogleSearch'
-
+import GeoFire from 'geofire'
 export default class MapComp extends Component {
   static navigationOptions = {
     header: null,

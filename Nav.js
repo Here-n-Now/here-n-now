@@ -14,6 +14,7 @@ import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
+import geofiretest from './geofireTest.js'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
@@ -40,6 +41,8 @@ export default class Nav extends React.Component {
     }
 
     componentDidMount() {
+
+        geofiretest();
         firebaseApp.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({
@@ -58,7 +61,7 @@ export default class Nav extends React.Component {
                             screen: Account
                         },
                         // LiveViewer: {
-                        //     screen: LiveViewer
+                        //    screen: LiveViewer
                         // },
                         // LiveStreamer: {
                         //     screen: LiveStreamer
