@@ -48,18 +48,18 @@ export default class Nav extends React.Component {
                         // PostVideo: {
                         //     screen: PostVideo
                         // },
-                        // View: {
-                        //     screen: Map
-                        // },
-                        // Share: {
-                        //     screen: CameraApp
-                        // },
-                        // Account: {
-                        //     screen: Account
-                        // },
-                        LiveViewer: {
-                            screen: LiveViewer
+                        View: {
+                            screen: Map
                         },
+                        Share: {
+                            screen: CameraApp
+                        },
+                        Account: {
+                            screen: Account
+                        },
+                        // LiveViewer: {
+                        //     screen: LiveViewer
+                        // },
                         // LiveStreamer: {
                         //     screen: LiveStreamer
                         // },

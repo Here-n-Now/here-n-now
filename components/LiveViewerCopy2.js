@@ -27,13 +27,10 @@ export default class App extends Component {
   }
 
   render() {
-
-  const {liveVideoURL} = this.props.navigation.state.params
-  console.log('state', this.state.stream.url, 'params', liveVideoURL, 'equal?', this.state.stream.url === liveVideoURL)
     return <View style={styles.container}>
       {
         this.state.joinState == 'joined' ?
-        <FullScreenVideo streamURL={liveVideoURL} />
+        <FullScreenVideo streamURL={this.state.stream.url} />
         :
         null
       }
@@ -63,7 +60,7 @@ export default class App extends Component {
     });
     let callbacks = {
       joined: this.handleJoined,
-      friendConnected: this.handleFriendConnected,
+      friendConnected: this.dummyStream,
     }
     webRTCServices.join(VIDEO_CONFERENCE_ROOM, this.state.name, callbacks);
   }
@@ -71,12 +68,13 @@ export default class App extends Component {
   //----------------------------------------------------------------------------
   //  WebRTC service callbacks
   handleJoined = () => {
+    console.log('Joined');
     this.setState({
       joinState: 'joined'
     });
   }
 
-  handleFriendConnected = (socketId, stream) => {
+  dummyStream = (socketId, stream) => {
     this.setState({
       stream:
         {
@@ -85,12 +83,9 @@ export default class App extends Component {
         }
     })
   }
+
 }
 
-// var markerRef = firebase.database().ref('live')
-//   markerRef.on('value', (snapshot) => {
-//   this.setState({markers: snapshot.val()})
-// });
 // I am a broadcaster
 // I create a room
 // I only see myself
