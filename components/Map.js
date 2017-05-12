@@ -38,23 +38,6 @@ export default class MapComp extends Component {
     }
   componentWillMount(){
     var markerRef = firebase.database().ref('posts')
-      var firebaseRef = firebase.database().ref().push();
-
-    var geoFireRef = firebase.database().ref('geolocation');
-    var geoFire = new GeoFire(geoFireRef);
-    var selected = [];
-
-    var myID = "fish-" + firebaseRef.push().key;
-    console.log('myID: ',myID)
-
-    // var geoQuery = geoFire.query({
-    //   center: [this.state.latitude, this.state.longitude],
-    //   radius: 2
-    // });
-    // geoQuery.on('value',(snapshot) => {
-    //   this.setState({markers: snapshot.val()})
-    // });
-
       markerRef.on('value', (snapshot) => {
       this.setState({markers: snapshot.val()})
     });
