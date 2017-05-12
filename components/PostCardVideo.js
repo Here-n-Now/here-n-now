@@ -4,7 +4,7 @@ import Video from 'react-native-video';
 import {Card, CardItem, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardVideo = props => {
-  console.log('PC props', props)
+
   return (
     <Card style={{ flex: 0 }}>
         <CardItem>

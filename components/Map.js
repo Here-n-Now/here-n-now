@@ -4,7 +4,7 @@ import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Conten
 import MapView from 'react-native-maps';
 import * as firebase from 'firebase';
 import GoogleSearch from './GoogleSearch'
-
+import GeoFire from 'geofire'
 export default class MapComp extends Component {
   static navigationOptions = {
     header: null,
@@ -38,6 +38,23 @@ export default class MapComp extends Component {
     }
   componentWillMount(){
     var markerRef = firebase.database().ref('posts')
+      var firebaseRef = firebase.database().ref().push();
+
+    var geoFireRef = firebase.database().ref('geolocation');
+    var geoFire = new GeoFire(geoFireRef);
+    var selected = [];
+
+    var myID = "fish-" + firebaseRef.push().key;
+    console.log('myID: ',myID)
+
+    // var geoQuery = geoFire.query({
+    //   center: [this.state.latitude, this.state.longitude],
+    //   radius: 2
+    // });
+    // geoQuery.on('value',(snapshot) => {
+    //   this.setState({markers: snapshot.val()})
+    // });
+
       markerRef.on('value', (snapshot) => {
       this.setState({markers: snapshot.val()})
     });
@@ -46,6 +63,9 @@ export default class MapComp extends Component {
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
+    var firebaseRef = firebase.database().ref().push();
+var myID = "fish-" + firebaseRef.push().key;
+    console.log('myID: ',myID)
     navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({region: {
