@@ -46,9 +46,6 @@ export default class MapComp extends Component {
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
-    var firebaseRef = firebase.database().ref().push();
-var myID = "fish-" + firebaseRef.push().key;
-    console.log('myID: ',myID)
     navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({region: {
