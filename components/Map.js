@@ -37,7 +37,7 @@ export default class MapComp extends Component {
       }})
     }
   componentWillMount(){
-    var markerRef = firebase.database().ref('posts');
+    var markerRef = firebase.database().ref('posts')
       markerRef.on('value', (snapshot) => {
       this.setState({markers: snapshot.val()})
     });

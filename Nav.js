@@ -13,6 +13,7 @@ import ViewDB from './components/ViewDB.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import App from './FeatureTests/src/App';
 import PostFeed from './components/PostFeed.js';
+import Pagination from './components/Pagination.js';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
