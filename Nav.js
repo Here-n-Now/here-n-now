@@ -11,7 +11,8 @@ import ViewVideo from './components/ViewVideo.js';
 import CameraApp from './components/CameraApp';
 import ViewDB from './components/ViewDB.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-import App from './FeatureTests/src/App';
+import LiveStreamer from './components/LiveStreamer';
+import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import geofiretest from './geofireTest.js'
 
@@ -53,18 +54,21 @@ export default class Nav extends React.Component {
                         View: {
                             screen: Map
                         },
-                        // App: {
-                        //     screen: App
-                        // },
                         Share: {
                             screen: CameraApp
                         },
                         Account: {
                             screen: Account
                         },
-                        Feed: {
-                            screen: PostFeed
-                        },
+                        // LiveViewer: {
+                        //    screen: LiveViewer
+                        // },
+                        // LiveStreamer: {
+                        //     screen: LiveStreamer
+                        // },
+                        // Feed: {
+                        //     screen: PostFeed
+                        // },
                     })
                 });
             }
@@ -92,7 +96,13 @@ export default class Nav extends React.Component {
                     },
                     ViewPost: {
                       screen: ViewVideo
-                    }
+                    },
+                    LiveViewer: {
+                        screen: LiveViewer
+                    },
+                    LiveStreamer: {
+                        screen: LiveStreamer
+                    },
                 }))
             )
         );
