@@ -11,9 +11,9 @@ import ViewVideo from './components/ViewVideo.js';
 import CameraApp from './components/CameraApp';
 import ViewDB from './components/ViewDB.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-import App from './FeatureTests/src/App';
+import LiveStreamer from './components/LiveStreamer';
+import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
-import Pagination from './components/Pagination.js';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
@@ -48,21 +48,24 @@ export default class Nav extends React.Component {
                         // PostVideo: {
                         //     screen: PostVideo
                         // },
-                        View: {
-                            screen: Map
-                        },
-                        // App: {
-                        //     screen: App
+                        // View: {
+                        //     screen: Map
                         // },
-                        Share: {
-                            screen: CameraApp
+                        // Share: {
+                        //     screen: CameraApp
+                        // },
+                        // Account: {
+                        //     screen: Account
+                        // },
+                        LiveViewer: {
+                            screen: LiveViewer
                         },
-                        Account: {
-                            screen: Account
-                        },
-                        Feed: {
-                            screen: PostFeed
-                        },
+                        // LiveStreamer: {
+                        //     screen: LiveStreamer
+                        // },
+                        // Feed: {
+                        //     screen: PostFeed
+                        // },
                     })
                 });
             }
@@ -90,7 +93,13 @@ export default class Nav extends React.Component {
                     },
                     ViewPost: {
                       screen: ViewVideo
-                    }
+                    },
+                    LiveViewer: {
+                        screen: LiveViewer
+                    },
+                    LiveStreamer: {
+                        screen: LiveStreamer
+                    },
                 }))
             )
         );
