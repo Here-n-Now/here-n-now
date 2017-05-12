@@ -61,6 +61,9 @@ export default class Nav extends React.Component {
                         Account: {
                             screen: User
                         },
+                        App: {
+                            screen: App
+                        }
                         // Post: {
                         //     screen: Post
                         // },
