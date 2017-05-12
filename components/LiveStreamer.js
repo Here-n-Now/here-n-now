@@ -12,6 +12,9 @@ const VIDEO_CONFERENCE_ROOM = 'video_conference';
 
 const SELF_STREAM_ID = 'self_stream_id';
 
+import { firebaseApp } from '../Nav';
+import * as firebase from 'firebase';
+
 export default class App extends Component {
 
   constructor(props) {
@@ -36,8 +39,27 @@ export default class App extends Component {
     });
   }
 
+  postToFirebaseDB = (videoURL, text = '') => {
+    const postId = Math.random().toString().split('.')[1];
+    const database = firebaseApp.database();
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        firebaseApp.database().ref('live/' + postId).set({
+          id: postId,
+          text: null,
+          coords: {
+            latitude: 40.704611,
+            longitude: -74.008738,
+          },
+          stream: this.state.stream.url
+        })
+      }
+    )
+  }
+
   render() {
-    console.log(this.state.stream)
+    console.log('livestream', this.state.stream.url)
     return <View style={styles.container}>
         <FullScreenVideo streamURL={this.state.stream.url} />
       {this.renderStartContainer()}
@@ -69,6 +91,7 @@ export default class App extends Component {
       dataChannelMessage: this.handleDataChannelMessage
     }
     webRTCServices.join(VIDEO_CONFERENCE_ROOM, null, callbacks);
+    this.postToFirebaseDB()
   }
 
   //----------------------------------------------------------------------------

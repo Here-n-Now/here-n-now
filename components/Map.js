@@ -79,7 +79,9 @@ export default class MapComp extends Component {
                   coordinate={marker.coords}
                   identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
-                    this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
+                    if (marker.image || marker.video){
+                      this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
+                    } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
                   }}
                   >
                   {/*<MapView.Callout>
