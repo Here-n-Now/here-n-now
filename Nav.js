@@ -1,15 +1,13 @@
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import React from 'react';
+import React, { Component } from 'react';
 import * as firebase from 'firebase';
 
-import PostPic from './components/PostPic';
-import PostVideo from './components/PostVideo.js';
+import SubmitContainer from './components/SubmitContainer.js';
+import ViewContainer from './components/ViewContainer.js';
 import Map from './components/Map';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
-import ViewVideo from './components/ViewVideo.js';
 import CameraApp from './components/CameraApp';
-import ViewDB from './components/ViewDB.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
@@ -27,7 +25,7 @@ const firebaseConfig = {
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
 export const fireStorage = firebaseApp.storage();
 
-export default class Nav extends React.Component {
+export default class Nav extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,9 +46,6 @@ export default class Nav extends React.Component {
                 this.setState({
                     user,
                     tab: TabNavigator({
-                        // PostVideo: {
-                        //     screen: PostVideo
-                        // },
                         View: {
                             screen: Map
                         },
@@ -88,14 +83,11 @@ export default class Nav extends React.Component {
                     Login: {
                         screen: Login
                     },
-                    PostPic: {
-                      screen: PostPic
+                    SubmitContainer: {
+                      screen: SubmitContainer
                     },
-                    PostVideo: {
-                      screen: PostVideo
-                    },
-                    ViewPost: {
-                      screen: ViewVideo
+                    ViewContainer: {
+                      screen: ViewContainer
                     },
                     LiveViewer: {
                         screen: LiveViewer

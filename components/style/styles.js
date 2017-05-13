@@ -63,6 +63,52 @@ var styles = StyleSheet.create({
     paddingTop: 14,
     paddingBottom: 16,
   },
+  containerVid: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  fullScreenVid: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  fabVid: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+  },
+  formVid: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: 'white',
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+  },
+  progressVid: {
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  innerProgressCompletedVid: {
+    height: 20,
+    backgroundColor: '#cccccc',
+  },
+  innerProgressRemainingVid: {
+    height: 20,
+    backgroundColor: '#2C2C2C',
+  },
 })
 
 module.exports = styles

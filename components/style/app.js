@@ -33,7 +33,6 @@ export default StyleSheet.create({
     height: config.screenHeight,
     backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
-
   joinContainer: {
     position: "absolute",
     top: 0,
@@ -46,7 +45,6 @@ export default StyleSheet.create({
     alignItems: "center",
     //borderWidth: 1, borderColor: "white"
   },
-
   joinLabel: {
     color: "white",
     fontSize: 16,
@@ -72,5 +70,94 @@ export default StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold"
-  }
+  },
+  containerCam: {
+    flex: 1,
+  },
+  previewCam: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  overlayCam: {
+    position: 'absolute',
+    padding: 16,
+    right: 0,
+    left: 0,
+    alignItems: 'center',
+  },
+  topOverlayCam: {
+    top: 0,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  bottomOverlayCam: {
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  captureButton: {
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 40,
+  },
+  typeButtonCam: {
+    padding: 5,
+  },
+  flashButtonCam: {
+    padding: 5,
+  },
+  buttonsSpaceCam: {
+    width: 10,
+  },
+  containerVid: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  fullScreenVid: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  fabVid: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+  },
+  formVid: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: 'white',
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+  },
+  progressVid: {
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  innerProgressCompletedVid: {
+    height: 20,
+    backgroundColor: '#cccccc',
+  },
+  innerProgressRemainingVid: {
+    height: 20,
+    backgroundColor: '#2C2C2C',
+  },
 });

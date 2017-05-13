@@ -1,6 +1,6 @@
 import { firebaseApp } from '../Nav';
 
-import styles from '../FeatureTests/dummy/styles.js';
+import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
 
 import React, { Component } from 'react';

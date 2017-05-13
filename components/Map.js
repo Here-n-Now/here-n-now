@@ -80,7 +80,7 @@ export default class MapComp extends Component {
                   identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
                     if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
+                      this.props.navigation.navigate('ViewContainer', {image: marker.image, video: marker.video})
                     } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
                   }}
                   >
