@@ -39,8 +39,6 @@ export default class Nav extends Component {
     }
 
     componentDidMount() {
-
-        geofiretest();
         firebaseApp.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({

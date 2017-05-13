@@ -5,6 +5,9 @@ import MapView from 'react-native-maps';
 import * as firebase from 'firebase';
 import GoogleSearch from './GoogleSearch'
 import GeoFire from 'geofire'
+import geofire from '../geofireTest'
+//import geofire from '../geofireTest'
+
 export default class MapComp extends Component {
   static navigationOptions = {
     header: null,
@@ -16,53 +19,71 @@ export default class MapComp extends Component {
     super(props)
     this.state = {
       markers: {},
+      markersArr: [],
       modalVisible: false,
+      region: {
+        latitude: 40,
+        longitude: -74,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001
+      }
     }
   }
 
-    onRegionChange = (region) => {
-      this.setState({region})
-    }
+  onRegionChange = (region) => {
+    this.setState({region})
+  }
 
-    setModalVisible = () => {
-      this.setState({modalVisible: !this.state.modalVisible})
-    }
+  setModalVisible = () => {
+    this.setState({modalVisible: !this.state.modalVisible})
+  }
 
-    onSearch = (coords) => {
-      this.setState({region: {
-        latitude: coords.lat,
-        longitude: coords.lng,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001
-      }})
-    }
+  onSearch = (coords) => {
+    this.setState({region: {
+      latitude: coords.lat,
+      longitude: coords.lng,
+      latitudeDelta: 0.001,
+      longitudeDelta: 0.001
+    }})
+  }
+
   componentWillMount(){
-    var markerRef = firebase.database().ref('posts')
-      markerRef.on('value', (snapshot) => {
-      this.setState({markers: snapshot.val()})
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({region: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+          }
+        }, () => console.log('1. premiddlemount',this.state.region))
+      },
+      (error) => alert(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
   }
 
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001
-            }
-          })
-        },
-        (error) => alert(JSON.stringify(error)),
-        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
+  var markerRef = firebase.database().ref('posts')
+    markerRef.on('value', (snapshot) => {
+    this.setState({markers: snapshot.val()})
+  });
   }
 
   render(){
-    // console.log('after mount state', this.state)
+    const markersArr = []
+    const geofireRef = firebase.database().ref('geolocation');
+    const geoFire = new GeoFire(geofireRef);
+    const geoQuery = geoFire.query({
+      center: [this.state.region.latitude, this.state.region.longitude],
+      radius: .25
+    });
+    if (this.state.markers){
+      geoQuery.on("key_entered", (key, location, distance)=>{
+          if (this.state.markers[key]){ markersArr.push(this.state.markers[key]) }
+    })}
     return (
       <Container style={styles.container}>
             <MapView
@@ -71,36 +92,32 @@ export default class MapComp extends Component {
               onRegionChange={this.onRegionChange}
               showsUserLocation={true}
               >
-              {Object.keys(this.state.markers).map(markerId => {
-                let marker = this.state.markers[markerId]
+              {/*Object.keys(this.state.markers).map(markerId => {
+                let marker = this.state.markers[markerId]*/
+                markersArr.map(marker => {
+                  console.log(marker)
                 return (
                 <MapView.Marker
                   key={marker.id}
                   coordinate={marker.coords}
-                  identifier={'https://www.youtube.com/watch?v=kaWkfpk3rbg'}
                   onSelect={() => {
                     if (marker.image || marker.video){
                       this.props.navigation.navigate('ViewContainer', {image: marker.image, video: marker.video})
                     } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
                   }}
                   >
-                  {/*<MapView.Callout>
-                    <Image source={marker.photo} />
-                    <Text>{marker.title}</Text>
-                    <Text>{marker.description}</Text>
-                  </MapView.Callout>*/}
                 </MapView.Marker>
               )
-              })}
+            })}
             </MapView>
-            <View style={{pointerEvents: 'none'}}>
-                <Fab
-                  style={{ backgroundColor: '#5067FF' }}
-                  position="topRight"
-                  onPress={this.setModalVisible}>
-                  <Icon name="ios-search-outline" />
+            <View>
+              <Fab
+                style={{ backgroundColor: '#5067FF' }}
+                position="topRight"
+                onPress={this.setModalVisible}>
+                <Icon name="ios-search-outline" />
               </Fab>
-          </View>
+            </View>
             <Modal
               animationType={"fade"}
               transparent={false}
@@ -141,3 +158,9 @@ const styles = StyleSheet.create({
     position: 'absolute'
   }
 })
+
+                  {/*<MapView.Callout>
+                    <Image source={marker.photo} />
+                    <Text>{marker.title}</Text>
+                    <Text>{marker.description}</Text>
+                  </MapView.Callout>*/}
