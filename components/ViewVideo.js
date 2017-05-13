@@ -4,7 +4,7 @@ import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS, Image } from 'r
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
 
 import Video from 'react-native-video';
-import { firebaseApp } from '../Nav';
+import { firebaseApp } from '../Home';
 import * as firebase from 'firebase';
 import { NavigationActions } from 'react-navigation'
 
@@ -40,34 +40,30 @@ export default class ViewVideo extends Component {
   }
 
   getCurrentTimePercentage = () => {
-      if (this.state.currentTime > 0) {
-        return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
-      } else {
-        return 0;
-      }
+    if (this.state.currentTime > 0) {
+      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
+    } else {
+      return 0;
+    }
   }
 
   render() {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
     const { videoURL, imageURL } = this.props.navigation.state.params
-    return imageURL ? (
-          <Container>
-            <Image source={{uri: imageURL}} style={styles.backgroundImage} />
-            <Fab
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                shadowColor: 'black',
-                shadowOpacity: 1.0,
-              }}
-              position="topLeft"
-              onPress={
-                () => this.props.navigation.dispatch(NavigationActions.back({}))
-              }>
-              <Icon name="md-close-circle" />
-            </Fab>
-          </Container>
-        )
+    return imageURL ?
+      (
+        <Container>
+          <Image source={{uri: imageURL}} style={styles.backgroundImage} />
+          <Fab
+            style={styles.fab}
+            position="topLeft"
+            onPress={() => this.props.navigation.dispatch(NavigationActions.back({}))}
+          >
+            <Icon name="md-close-circle" />
+          </Fab>
+        </Container>
+      )
         :
         (<Container style={styles.container}>
           <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
@@ -93,11 +89,7 @@ export default class ViewVideo extends Component {
             </View>
           </View>
           <Fab
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              shadowColor: 'black',
-              shadowOpacity: 1.0,
-            }}
+            style={styles.fab}
             position="topLeft"
             onPress={
               () => this.props.navigation.dispatch(NavigationActions.back({}))
@@ -144,10 +136,10 @@ const styles = StyleSheet.create({
   },
   fab: {
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    shadowOffset: {
-      width: 10,
-      height: 10,
-    },
+    //shadowOffset: {
+    //  width: 10,
+    //  height: 10,
+    //},
     shadowColor: 'black',
     shadowOpacity: 1.0,
   },

@@ -21,14 +21,13 @@ import Login from './components/Login.js';
 import Account from './components/Account.js';
 import ViewVideo from './components/ViewVideo.js';
 import CameraApp from './components/CameraApp';
-import ViewDB from './components/ViewDB.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import geofiretest from './geofireTest.js'
 
-export default class Nav extends React.Component {
+export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

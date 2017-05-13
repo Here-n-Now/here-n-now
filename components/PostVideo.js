@@ -4,7 +4,6 @@ import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS } from 'react-na
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
 
 import Video from 'react-native-video';
-// import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { NavigationActions } from 'react-navigation'

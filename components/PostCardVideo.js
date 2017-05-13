@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
 import {Card, CardItem, Text, Button, Icon, Left, Body } from 'native-base';
 
@@ -20,11 +20,11 @@ const PostCardVideo = props => {
         >
             <CardItem>
                 <Body>
-                <Video
-                source={{uri: props.post.video}}
-                style={{width: 300, height: 200}}
-                paused={true}
-                />
+                    <Video
+                    source={{uri: props.post.video}}
+                    style={{width: 300, height: 200}}
+                    paused={true}
+                    />
                     <Button transparent textStyle={{color: '#87838B'}}>
                         <Icon name="logo-github" />
                         <Text>1,926 stars</Text>

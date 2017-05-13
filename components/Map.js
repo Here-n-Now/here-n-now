@@ -56,7 +56,7 @@ export default class MapComp extends Component {
           latitudeDelta: 0.001,
           longitudeDelta: 0.001
           }
-        }, () => console.log('1. premiddlemount',this.state.region))
+        })
       },
       (error) => alert(JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
@@ -92,23 +92,22 @@ export default class MapComp extends Component {
               onRegionChange={this.onRegionChange}
               showsUserLocation={true}
               >
-              {/*Object.keys(this.state.markers).map(markerId => {
-                let marker = this.state.markers[markerId]*/
+              {
                 markersArr.map(marker => {
-                  console.log(marker)
-                return (
-                <MapView.Marker
-                  key={marker.id}
-                  coordinate={marker.coords}
-                  onSelect={() => {
-                    if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
-                    } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
-                  }}
-                  >
-                </MapView.Marker>
-              )
-            })}
+                  return (
+                    <MapView.Marker
+                      key={marker.id}
+                      coordinate={marker.coords}
+                      onSelect={() => {
+                        if (marker.image || marker.video){
+                          this.props.navigation.navigate('ViewPost', {imageURL: marker.image, videoURL: marker.video})
+                        } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
+                      }}
+                      >
+                    </MapView.Marker>
+                  )
+                })
+              }
             </MapView>
             <View>
               <Fab
@@ -123,14 +122,14 @@ export default class MapComp extends Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {alert("Modal has been closed.")}}
-              >
+            >
               <GoogleSearch onSearch={this.onSearch} setModalVisible={this.setModalVisible} />
               <Button
                 full
                 danger
                 onPress={this.setModalVisible}
-                >
-                  <Text>Cancel Search</Text>
+              >
+                <Text>Cancel Search</Text>
               </Button>
             </Modal>
       </Container>

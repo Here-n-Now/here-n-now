@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS, Image } from 'react-native';
 import { Icon, Header, Left, Toast, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
 
-import { firebaseApp } from '../Nav';
+import { firebaseApp } from '../Home';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { NavigationActions } from 'react-navigation';

@@ -9,5 +9,5 @@
 
 // // geoFire.set('newPost', location)
 
-// import { firebaseApp } from '../Nav';
+// import { firebaseApp } from '../Home';
 // import * as firebase from 'firebase';
