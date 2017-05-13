@@ -52,7 +52,11 @@ export default class PostVideo extends Component {
         firebaseApp.database().ref('posts/' + myId).set({
           id: myId,
           text: text,
-          video: videoURL
+          video: videoURL,
+          coords: {
+            latitude: position.coords.latitude,
+            longitude:position.coords.longitude
+          }
         })
       }
     )
