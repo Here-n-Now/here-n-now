@@ -42,13 +42,16 @@ export default class PostPic extends Component {
         firebaseApp.database().ref('posts/' + myId).set({
           id: myId,
           text: text,
-          image: imageURL
+          image: imageURL,
+          coords: {
+            latitude: position.coords.latitude,
+            longitude:position.coords.longitude
+          }
         })
       }
     )
-
+    this.forceUpdate()
     this.props.navigation.navigate('View');
-
     Toast.show({
       text: 'Yay! Your picture is up!',
       position: 'bottom',
