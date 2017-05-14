@@ -98,12 +98,11 @@ export default class PostVideo extends Component {
     )
     this.forceUpdate()
     this.props.navigation.navigate('View');
-    this.setState({uploading: false});
     Toast.show({
       text: `Yay! Your ${mediaType} is up!`,
       position: 'bottom',
       type: 'success',
-      duration: 5000
+      duration: 4000
     })
   }
 
@@ -111,7 +110,11 @@ export default class PostVideo extends Component {
     const { video, image } = this.props.navigation.state.params
     return(
       <Container>
-        {video ? <ViewVideo video={video} /> : <ViewImage image={image} />}
+        {
+          //this fixes the video playing in the background issue
+          !this.state.uploading &&
+          (video ? <ViewVideo video={video} /> : <ViewImage image={image} />)
+        }
         <Fab
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0)',
