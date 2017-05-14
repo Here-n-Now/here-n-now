@@ -1,6 +1,8 @@
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
+import { Container, Content, H2 } from 'native-base';
+import { Image, Dimensions } from 'react-native';
 
 import SubmitContainer from './components/SubmitContainer.js';
 import ViewContainer from './components/ViewContainer.js';
@@ -30,71 +32,83 @@ export default class Nav extends Component {
         super(props);
         this.state = {
             user: undefined,
-            tab: StackNavigator({
-                Login: {
-                    screen: Login
-                }
-            })
+            nav: undefined,
         };
     }
 
     componentDidMount() {
-        firebaseApp.auth().onAuthStateChanged(user => {
-            if (user) {
-                this.setState({
-                    user,
-                    tab: TabNavigator({
-                        View: {
-                            screen: Map
-                        },
-                        Share: {
-                            screen: CameraApp
-                        },
-                        Account: {
-                            screen: Account
-                        },
-                        // LiveViewer: {
-                        //    screen: LiveViewer
-                        // },
-                        // LiveStreamer: {
-                        //     screen: LiveStreamer
-                        // },
-                        // Feed: {
-                        //     screen: PostFeed
-                        // },
-                    })
-                });
-            }
-        });
+      const loggedOut = StackNavigator({
+          Login: {
+              screen: Login
+          }
+      });
+      const tabNav = TabNavigator({
+          View: {
+              screen: Map
+          },
+          Share: {
+              screen: CameraApp
+          },
+          Account: {
+              screen: Account
+          },
+          // LiveViewer: {
+          //    screen: LiveViewer
+          // },
+          // LiveStreamer: {
+          //     screen: LiveStreamer
+          // },
+          // Feed: {
+          //     screen: PostFeed
+          // },
+      })
+      const loggedIn = StackNavigator({
+          Tabs: {
+              screen: tabNav
+          },
+          RenderVideoTest: {
+              screen: RenderVideoTest
+          },
+          Login: {
+              screen: Login
+          },
+          SubmitContainer: {
+            screen: SubmitContainer
+          },
+          ViewContainer: {
+            screen: ViewContainer
+          },
+          LiveViewer: {
+              screen: LiveViewer
+          },
+          LiveStreamer: {
+              screen: LiveStreamer
+          },
+      });
+      firebaseApp.auth().onAuthStateChanged(user => {
+          if (user) {this.setState({
+            user,
+            nav: loggedIn
+          });
+        }
+          else {
+            this.setState({nav: loggedOut});
+          }
+      });
     }
 
     render () {
+        const { width } = Dimensions.get('window');
         return (
-            this.state.tab !== undefined && (
-                React.createElement(StackNavigator({
-                    Tabs: {
-                        screen: this.state.tab
-                    },
-                    RenderVideoTest: {
-                        screen: RenderVideoTest
-                    },
-                    Login: {
-                        screen: Login
-                    },
-                    SubmitContainer: {
-                      screen: SubmitContainer
-                    },
-                    ViewContainer: {
-                      screen: ViewContainer
-                    },
-                    LiveViewer: {
-                        screen: LiveViewer
-                    },
-                    LiveStreamer: {
-                        screen: LiveStreamer
-                    },
-                }))
-            )
+          (this.state.nav && React.createElement(this.state.nav))
+          ||
+          <Container style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <Content>
+                  <Image source={require('./public/images/world.gif')} style={{width: width, height: width}} />
+                  <H2></H2>
+                  <H2 style={{textAlign: 'center'}}>Loading the world</H2>
+              </Content>
+          </Container>
         );
     }
 }

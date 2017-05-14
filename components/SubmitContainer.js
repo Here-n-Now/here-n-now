@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
-import { Icon, Button, Container, Content, Input, Item, Fab } from 'native-base';
+import { Platform, TouchableOpacity, View, Modal, TextInput } from 'react-native';
+import { Icon, Button, Container, Content, Input, Item, Title, Text, Fab, Header, Left, Right, Body, Spinner, Toast, H2 } from 'native-base';
 
 import Video from 'react-native-video';
 import { NavigationActions } from 'react-navigation';
@@ -17,16 +17,23 @@ import styles from './style/app';
 const fs = RNFetchBlob.fs;
 
 export default class PostVideo extends Component {
+  
   static navigationOptions = {
     header: null
   }
+
   constructor(props) {
     super(props);
     this.state = {
+      uploading: false,
+      modalVisible: false,
+      text: '',
+      finalText: ''
     };
   }
 
   uploadToStorage = () => {
+    this.setState({uploading: true});
     const { video, image } = this.props.navigation.state.params;
     let mediaLocalUrl = video || image;
     const Blob = RNFetchBlob.polyfill.Blob;
@@ -71,7 +78,7 @@ export default class PostVideo extends Component {
       (position) => {
         firebaseApp.database().ref('posts/' + postId).set({
           id: postId,
-          text: text,
+          text: this.state.finalText,
           coords: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
@@ -80,41 +87,94 @@ export default class PostVideo extends Component {
         })
       }
     )
-
     this.props.navigation.navigate('View');
-
+    this.setState({uploading: false});
     Toast.show({
-      text: 'Yay! Your picture is up!',
+      text: `Yay! Your ${mediaType} is up!`,
       position: 'bottom',
       type: 'success',
       duration: 5000
     })
   }
 
-  render() {
+  content = () => {
     const { video, image } = this.props.navigation.state.params
-    return (
-      <Container style={styles.containerVid}>
+    return(
+      <Container>
         {video ? <ViewVideo video={video} /> : <ViewImage image={image} />}
-          <Fab
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              shadowColor: 'black',
-              shadowOpacity: 1.0,
-            }}
-            position="topLeft"
-            onPress={
-              () => this.props.navigation.dispatch(NavigationActions.back({}))
-            }>
-            <Icon name="ios-close-circle-outline" />
-          </Fab>
-          <Fab
-            position="topRight"
-            onPress={this.uploadToStorage}>
+        <Fab
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            shadowColor: 'black',
+            shadowOpacity: 1.0,
+          }}
+          position="topLeft"
+          onPress={
+            () => this.props.navigation.dispatch(NavigationActions.back({}))
+          }>
+          <Icon name="ios-close-circle-outline" />
+        </Fab>
+        <Fab
+          position="topRight"
+          onPress={this.uploadToStorage}>
           <Icon name="md-send" />
-          </Fab>
-    </Container>
+        </Fab>
+        <Fab
+          position="bottomLeft"
+          style={this.state.finalText ? {backgroundColor:'green'} : {backgroundColor:'black'}}
+          onPress={
+            () => {this.setState({modalVisible: true})}
+          }>
+          <Icon name="md-chatboxes" />
+        </Fab>
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {alert("Modal has been closed.")}}
+          >
+          <Header>
+              <Left>
+                  <Button transparent onPress={() => this.setState({modalVisible: false})}>
+                      <Icon name='close' />
+                  </Button>
+              </Left>
+              <Body>
+                  <Title>Caption</Title>
+              </Body>
+              <Right>
+                <Button transparent onPress={() => this.setState({
+                    modalVisible: false,
+                    finalText: this.state.text
+                  })}>
+                    {!!this.state.text && <Icon name='ios-checkbox' />}
+                </Button>
+              </Right>
+          </Header>
+            <Content>
+                <TextInput
+                  placeholder='Say something about this post'
+                  style={{height:400}}
+                  multiline={true}
+                  onChangeText={(text) => this.setState({text})}
+                  value={this.state.text}
+                />
+            </Content>
+        </Modal>
+      </Container>
     )
+  }
+
+  render() {
+    const content =
+      this.state.uploading ?
+        <View>
+          <Spinner style={{marginTop:100}}/>
+          <H2 style={{textAlign: 'center'}}>Uploading</H2>
+        </View>
+      :
+        this.content()
+    return content;
   }
 }
 // <View style={styles.formVid}>

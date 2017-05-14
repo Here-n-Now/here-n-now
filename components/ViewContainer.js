@@ -21,7 +21,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    const { video, image } = this.props.navigation.state.params;
+    const { video, image, text } = this.props.navigation.state.params;
     return  (
       <View style={{flex: 1}}>
         {video ? <ViewVideo video={video} /> : <ViewImage image={image} />}
@@ -62,7 +62,7 @@ export default class ViewContainer extends Component {
               <Right />
           </Header>
             <Content>
-              <Text>Hey Guys, what do you think of my awesome caption?</Text>
+              {!!text && <Text style={{margin:15}}>{text}</Text>}
             <ListItem itemDivider>
               <Text>42 comments</Text>
             </ListItem>

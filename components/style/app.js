@@ -114,12 +114,6 @@ export default StyleSheet.create({
   buttonsSpaceCam: {
     width: 10,
   },
-  containerVid: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
   fullScreenVid: {
     position: 'absolute',
     top: 0,

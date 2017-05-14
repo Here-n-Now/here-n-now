@@ -102,7 +102,7 @@ export default class MapComp extends Component {
                   coordinate={marker.coords}
                   onSelect={() => {
                     if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewContainer', {image: marker.image, video: marker.video})
+                      this.props.navigation.navigate('ViewContainer', {text: marker.text, image: marker.image, video: marker.video})
                     } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
                   }}
                   >
