@@ -9,6 +9,7 @@ import { NavigationActions } from 'react-navigation';
 import { firebaseApp } from '../Nav';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
+import GeoFire from 'geofire';
 
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
@@ -17,7 +18,7 @@ import styles from './style/app';
 const fs = RNFetchBlob.fs;
 
 export default class PostVideo extends Component {
-  
+
   static navigationOptions = {
     header: null
   }
@@ -72,12 +73,20 @@ export default class PostVideo extends Component {
   postToFirebaseDB = (mediaUrl, text = '') => {
     const { video, image } = this.props.navigation.state.params;
     let mediaType = video ? 'video' : 'image';
-    const postId = Math.random().toString().split('.')[1];
+    const geofireRef = firebase.database().ref('geolocation');
+    // //Points to firebase root
+    const firebaseRef = firebase.database().ref(); //was a '.push()'?
+    // //Points to posts folder
+    const postsRef = firebase.database().ref('posts')
+    // //Creates new geofire instance
+    const geoFire = new GeoFire(geofireRef);
+    const myId = `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}:${firebaseRef.push().key}`
     const database = firebaseApp.database();
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('posts/' + postId).set({
-          id: postId,
+        geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
+        firebaseApp.database().ref('posts/' + myId).set({
+          id: myId,
           text: this.state.finalText,
           coords: {
             latitude: position.coords.latitude,
@@ -87,6 +96,7 @@ export default class PostVideo extends Component {
         })
       }
     )
+    this.forceUpdate()
     this.props.navigation.navigate('View');
     this.setState({uploading: false});
     Toast.show({
@@ -154,7 +164,7 @@ export default class PostVideo extends Component {
             <Content>
                 <TextInput
                   placeholder='Say something about this post'
-                  style={{height:400}}
+                  style={{height:350}}
                   multiline={true}
                   onChangeText={(text) => this.setState({text})}
                   value={this.state.text}
