@@ -1,6 +1,6 @@
 import { firebaseApp } from '../Nav';
 
-import styles from '../FeatureTests/dummy/styles.js';
+import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
 
 import React, { Component } from 'react';
@@ -48,7 +48,6 @@ export default class Account extends React.Component {
     onClickLogout = () => {
         //actually logs out user but they can still can pull on the screen and seem logged in. need to disable back or figure out how to re-render nav
         firebaseApp.auth().signOut()
-        .then(() => this.props.navigation.navigate('Login'))
     }
 
 

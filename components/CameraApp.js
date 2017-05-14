@@ -1,68 +1,19 @@
 import React, { Component } from 'react';
 import {
   Image,
-  StatusBar,
-  StyleSheet,
   TouchableOpacity,
   View,
-  Text,
-  AppRegistry,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import Video from 'react-native-video';
 import { Icon } from 'native-base';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  overlay: {
-    position: 'absolute',
-    padding: 16,
-    right: 0,
-    left: 0,
-    alignItems: 'center',
-  },
-  topOverlay: {
-    top: 0,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  bottomOverlay: {
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  captureButton: {
-    padding: 15,
-    backgroundColor: 'white',
-    borderRadius: 40,
-  },
-  typeButton: {
-    padding: 5,
-  },
-  flashButton: {
-    padding: 5,
-  },
-  buttonsSpace: {
-    width: 10,
-  },
-});
+import styles from './style/app'
 
 export default class CameraApp extends Component {
   static navigationOptions = {
     header: null,
     tabBarIcon: ({ tintColor }) => (
-      <Icon ios='ios-camera-outline' android="ios-camera-outline" style={{color: tintColor}} />
+      <Icon name='ios-camera-outline' style={{color: tintColor}} />
       )
   }
 
@@ -88,7 +39,7 @@ export default class CameraApp extends Component {
   takePicture = () => {
     if (this.camera) {
       this.camera.capture()
-        .then(image => this.props.navigation.navigate('PostPic', {image: image.path}))
+        .then(image => this.props.navigation.navigate('SubmitContainer', {image: image.path}))
         .catch(err => console.error(err));
     }
   }
@@ -99,7 +50,7 @@ export default class CameraApp extends Component {
         audio: true,
         mode: Camera.constants.CaptureMode.video
       })
-          .then(video => this.props.navigation.navigate('PostVideo', {video: video.path}))
+          .then(video => this.props.navigation.navigate('SubmitContainer', {video: video.path}))
           .catch(err => console.error(err));
       this.setState({
         isRecording: true
@@ -184,16 +135,10 @@ export default class CameraApp extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar
-          animated
-          hidden
-        />
+      <View style={styles.containerCam}>
         <Camera
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-          style={styles.preview}
+          ref={cam => this.camera = cam }
+          style={styles.previewCam}
           aspect={this.state.camera.aspect}
           captureTarget={this.state.camera.captureTarget}
           type={this.state.camera.type}
@@ -203,9 +148,9 @@ export default class CameraApp extends Component {
           defaultTouchToFocus
           mirrorImage={false}
         />
-        <View style={[styles.overlay, styles.topOverlay]}>
+      <View style={[styles.overlayCam, styles.topOverlayCam]}>
           <TouchableOpacity
-            style={styles.typeButton}
+            style={styles.typeButtonCam}
             onPress={this.switchType}
           >
             <Image
@@ -213,7 +158,7 @@ export default class CameraApp extends Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.flashButton}
+            style={styles.flashButtonCam}
             onPress={this.switchFlash}
           >
             <Image
@@ -221,7 +166,7 @@ export default class CameraApp extends Component {
             />
           </TouchableOpacity>
         </View>
-        <View style={[styles.overlay, styles.bottomOverlay]}>
+        <View style={[styles.overlayCam, styles.bottomOverlayCam]}>
           {
             !this.state.isRecording
             &&
@@ -237,7 +182,7 @@ export default class CameraApp extends Component {
             //can we get here? Change to AND statment?
             null
           }
-          <View style={styles.buttonsSpace} />
+          <View style={styles.buttonsSpaceCam} />
           {
               !this.state.isRecording
               &&
@@ -260,29 +205,6 @@ export default class CameraApp extends Component {
               </TouchableOpacity>
           }
         </View>
-        {this.state.image &&
-          <Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
-        {this.state.video &&
-          <Video source={{uri: this.state.video}}
-             ref={(ref) => {
-               this.player = ref
-             }}
-             rate={1.0}
-             volume={1.0}
-             muted={false}
-             paused={false}
-             resizeMode="cover"
-             repeat={true}
-             playInBackground={false}
-             playWhenInactive={false}
-             progressUpdateInterval={250.0}
-             onLoadStart={this.loadStart}
-             onLoad={this.setDuration}
-             onProgress={this.setTime}
-             onEnd={this.onEnd}
-             onError={this.videoError}
-             onBuffer={this.onBuffer}
-             style={styles.backgroundVideo} />}
       </View>
     );
   }
