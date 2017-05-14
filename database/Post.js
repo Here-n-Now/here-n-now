@@ -1,4 +1,4 @@
-// import { firebaseApp } from '../Nav';
+// import { firebaseApp } from '../Home';
 // import * as firebase from 'firebase';
 //
 // const StatusBar = require('../FeatureTests/dummy/StatusBar');

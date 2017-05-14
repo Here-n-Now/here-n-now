@@ -27,7 +27,7 @@ const firebaseConfig = {
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
 export const fireStorage = firebaseApp.storage();
 
-export default class Nav extends Component {
+export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {

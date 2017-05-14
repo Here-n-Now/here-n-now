@@ -12,7 +12,7 @@ const VIDEO_CONFERENCE_ROOM = 'video_conference';
 
 const SELF_STREAM_ID = 'self_stream_id';
 
-import { firebaseApp } from '../Nav';
+import { firebaseApp } from '../Home';
 import * as firebase from 'firebase';
 
 export default class App extends Component {

@@ -38,11 +38,11 @@ export default class SubmitVideo extends Component {
   }
 
   getCurrentTimePercentage = () => {
-      if (this.state.currentTime > 0) {
-        return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
-      } else {
-        return 0;
-      }
+    if (this.state.currentTime > 0) {
+      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
+    } else {
+      return 0;
+    }
   }
 
   render() {

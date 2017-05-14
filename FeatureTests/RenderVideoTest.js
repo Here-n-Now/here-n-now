@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import Video from 'react-native-video';
-import {firebaseApp} from '../Nav';
+import {firebaseApp} from '../Home';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob'
 const fs = RNFetchBlob.fs

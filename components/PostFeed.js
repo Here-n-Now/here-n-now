@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content } from 'native-base';
 import * as firebase from 'firebase';
 import PostCardImage from './PostCardImage'
 import PostCardVideo from './PostCardVideo'
@@ -22,9 +22,7 @@ export default class PostFeed extends Component {
     // Log the current scroll position in the list in pixels
     let itemHeight = 328;
     let currentOffset = Math.floor(event.nativeEvent.contentOffset.y);
-    let currentItemIndex = Math.ceil((currentOffset / itemHeight)+1);
-    console.log(currentItemIndex)
-    console.log(event.nativeEvent.contentOffset.y);
+    let currentItemIndex = Math.ceil((currentOffset / itemHeight) + 1);
     if (currentItemIndex % 5 === 0) {this.loadNextPage()}
   }
   loadNextPage(){

@@ -6,7 +6,7 @@ import { Icon, Button, Container, Content, Input, Item, Title, Text, Fab, Header
 import Video from 'react-native-video';
 import { NavigationActions } from 'react-navigation';
 
-import { firebaseApp } from '../Nav';
+import { firebaseApp } from '../Home';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import GeoFire from 'geofire';

@@ -1,4 +1,4 @@
-import { firebaseApp } from '../Nav';
+import { firebaseApp } from '../Home';
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
 
