@@ -102,7 +102,7 @@ export default class PostVideo extends Component {
       text: `Yay! Your ${mediaType} is up!`,
       position: 'bottom',
       type: 'success',
-      duration: 4000
+      duration: 3000
     })
   }
 
