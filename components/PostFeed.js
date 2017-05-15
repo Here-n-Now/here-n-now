@@ -13,6 +13,10 @@ export default class PostFeed extends Component {
     }
   }
   componentWillMount(){
+    console.log('Selected Posts in PostFeed WillMount: ',this.props.navigation.state.params)
+    if(this.props.navigation.state.params) {
+      console.log('Posts by Current User: ', this.props.navigation.state.params)
+    }
     var postRef = firebase.database().ref('posts').limitToLast(5);
       postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val()})
@@ -32,6 +36,7 @@ export default class PostFeed extends Component {
     });
   }
   render(){
+    console.log('Selected Posts in PostFeed in Render: ',this.props.navigation.state.params)
     return (
         <Container>
             <Content onScroll={(e) => this.setCurrentReadOffset(e)}>

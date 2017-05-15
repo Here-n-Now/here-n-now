@@ -84,6 +84,9 @@ export default class Home extends Component {
           LiveStreamer: {
               screen: LiveStreamer
           },
+          PostFeed: {
+            screen: PostFeed
+          }
       });
       firebaseApp.auth().onAuthStateChanged(user => {
           if (user) {this.setState({

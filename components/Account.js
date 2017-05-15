@@ -3,10 +3,11 @@ import * as firebase from 'firebase';
 
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
+import PostFeed from './PostFeed'
 
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
-import { Icon, Container, Content, Text, Button, Header, Body, Title, List, ListItem, Badge, Left, Right, Switch } from 'native-base';
+import { Icon, Container, Content, Text, Button, Header, Body, Title, List, ListItem, Badge, Left, Right, Switch,TouchableOpacity } from 'native-base';
 
 import {
     StyleSheet,
@@ -28,7 +29,8 @@ export default class Account extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined
+            user: undefined,
+            selected: []
         };
     }
 
@@ -38,6 +40,7 @@ export default class Account extends React.Component {
             if (user) this.setState({user});
             else this.props.navigation.navigate('Login');
         })
+       // this.fetchMyPosts();
 
     }
 
@@ -53,31 +56,29 @@ export default class Account extends React.Component {
     }
 
     fetchMyPosts = () => {
-      console.log('New Query');
       const firebaseRef = firebase.database().ref();
       const userPostsRef = firebase.database().ref('user-posts');
       const database = firebaseApp.database();
-      // firebaseApp.database().ref('user-posts/' + 4).set({
-      //     id: 4,
-      //     userId: this.state.user.uid,
-      //     text: 'test post',
-      //     coords: {
-      //       latitude: 10,
-      //       longitude: 20
-      //     }
-      //   })
 
+
+      //Query to fetch posts by current User
       userPostsRef.orderByChild('userId').equalTo('pFbnScDJd7gx7F1PfuHxgvUkLe23').on('value',
-      function(snapshot) {
-        console.log('Inside query callback')
-        console.log(snapshot.val());
+        (snapshot) => {
+
+        var selected = snapshot.val().slice(1);
+         console.log('Snapshot.slice: ', selected);
+
+        this.setState({selected:  selected});
       });
-    }
+      console.log('SELECTED POSTS before navigate: ',this.state.selected);
+     this.props.navigation.navigate('PostFeed', {selectedPosts: this.state.selected})
+     }
 
 
     render() {
+      console.log('POSTS by USER on State: ',this.state.selected);
+
         const { user } = this.state;
-       // console.log('USER: ',this.state.user.uid)
         return (
           <Container style={styles.container}>
             <Header>
@@ -148,6 +149,7 @@ export default class Account extends React.Component {
                       <Icon name="arrow-forward" />
                   </Right>
               </ListItem>
+
             </Content>
           </Container>
         )
