@@ -25,10 +25,10 @@ export default class MapComp extends Component {
       markersArr: [],
       modalVisible: false,
       region: {
-        latitude: 40,
-        longitude: -74,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 1,
+        longitudeDelta: 1
       }
     }
   }
@@ -172,5 +172,3 @@ const styles = StyleSheet.create({
                     <Text>{marker.title}</Text>
                     <Text>{marker.description}</Text>
                   </MapView.Callout>*/}
-
-
