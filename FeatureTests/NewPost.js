@@ -42,7 +42,7 @@ export default class NewPost extends React.Component {
         <Text>longitude: {this.state.longitude}</Text>
 
         <TouchableOpacity
-                  style={styles.captureButton}
+                  style={styles.captureButton}1q
                   onPress={console.log('On press in NewPost')}
               >
 

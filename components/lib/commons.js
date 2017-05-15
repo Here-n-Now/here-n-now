@@ -33,4 +33,4 @@ function getLocalStream(isFront, callback) {
 
 export default {
   getLocalStream
-}
+};

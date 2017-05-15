@@ -1,10 +1,3 @@
-/**
- * rewebrtc-server project
- *
- * Tho Q Luong <thoqbk@gmail.com>
- * Feb 12, 2017
- */
-
 let WebRTC = require('react-native-webrtc');
 
 let socket = null;
@@ -15,15 +8,15 @@ let onDataChannelMessageCallback = null;
 const socketIOClient = require('socket.io-client');
 socket = socketIOClient('https://rewebrtc.herokuapp.com', {transports: ['websocket'], jsonp: false});
 
-var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
-var peerConnections = {}; //map of {socketId: socket.io id, RTCPeerConnection}
+const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+let peerConnections = {}; //map of {socketId: socket.io id, RTCPeerConnection}
 let localStream = null;
 let friends = null; //list of {socketId, name}
 let me = null; //{socketId, name}
 
 function createPeerConnection(friend, isOffer, onDataChannelMessage) {
   let socketId = friend.socketId;
-  var retVal = new WebRTC.RTCPeerConnection(configuration);
+  const retVal = new WebRTC.RTCPeerConnection(configuration);
 
   peerConnections[socketId] = retVal;
 
@@ -49,7 +42,7 @@ function createPeerConnection(friend, isOffer, onDataChannelMessage) {
     if (isOffer) {
       createOffer();
     }
-  }
+  };
 
   retVal.oniceconnectionstatechange = function(event) {
     console.log('oniceconnectionstatechange');
@@ -80,7 +73,7 @@ function createPeerConnection(friend, isOffer, onDataChannelMessage) {
     if (retVal.textDataChannel) {
       return;
     }
-    var dataChannel = retVal.createDataChannel("text");
+    let dataChannel = retVal.createDataChannel("text");
 
     dataChannel.onerror = function (error) {
       console.log("dataChannel.onerror", error);
@@ -108,8 +101,8 @@ function createPeerConnection(friend, isOffer, onDataChannelMessage) {
 }
 
 function exchange(data) {
-  var fromId = data.from;
-  var pc;
+  let fromId = data.from;
+  let pc;
   if (fromId in peerConnections) {
     pc = peerConnections[fromId];
   } else {
@@ -128,22 +121,19 @@ function exchange(data) {
     pc.setRemoteDescription(new WebRTC.RTCSessionDescription(data.sdp), function () {
       if (pc.remoteDescription.type == "offer")
       pc.createAnswer(function(desc) {
-        //console.log('createAnswer', desc);
         pc.setLocalDescription(desc, function () {
-          //console.log('setLocalDescription', pc.localDescription);
           socket.emit('exchange', {'to': fromId, 'sdp': pc.localDescription });
         }, logError);
       }, logError);
     }, logError);
   } else {
-    //console.log('exchange candidate', data);
     pc.addIceCandidate(new WebRTC.RTCIceCandidate(data.candidate));
   }
 }
 
 function leave(socketId) {
   console.log('leave', socketId);
-  var pc = peerConnections[socketId];
+  const pc = peerConnections[socketId];
   pc.close();
   delete peerConnections[socketId];
   if(onFriendLeftCallback != null) {
@@ -174,9 +164,6 @@ function logError(error) {
 }
 
 //------------------------------------------------------------------------------
-//  Utils
-
-//------------------------------------------------------------------------------
 // Services
 function countFriends(roomId, callback) {
   socket.emit("count", roomId, (count) => {
@@ -188,7 +175,7 @@ function countFriends(roomId, callback) {
 function loadLocalStream2(muted) {
   navigator.getUserMedia({ "audio": true, "video": true }, function (stream) {
     localStream = stream;
-    var selfView = document.getElementById("selfView");
+    const selfView = document.getElementById("selfView");
     selfView.src = URL.createObjectURL(stream);
     selfView.muted = muted;
   }, logError);
@@ -198,7 +185,7 @@ function getLocalStream(isFront, callback) {
   WebRTC.MediaStreamTrack.getSources(sourceInfos => {
     console.log(sourceInfos);
     let videoSourceId;
-    for (const i = 0; i < sourceInfos.length; i++) {
+    for (let i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
       if(sourceInfo.kind == "video" && sourceInfo.facing == (isFront ? "front" : "back")) {
         videoSourceId = sourceInfo.id;
@@ -226,8 +213,8 @@ function getLocalStream(isFront, callback) {
 }
 
 function broadcastMessage(message) {
-  for (var key in peerConnections) {
-    var pc = peerConnections[key];
+  for (let key in peerConnections) {
+    const pc = peerConnections[key];
     pc.textDataChannel.send(JSON.stringify(message));
   }
 }
@@ -256,11 +243,14 @@ function join(roomId, name, callbacks) {
       me = {
         socketId: socket.id,
         name: name
-      }
+      };
       callbacks.joined();
     }
   });
 }
+
+
+
 //------------------------------------------------------------------------------
 // Exports
 module.exports = {
@@ -268,4 +258,4 @@ module.exports = {
   countFriends,
   getLocalStream,
   broadcastMessage
-}
+};

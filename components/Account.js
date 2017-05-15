@@ -23,7 +23,7 @@ export default class Account extends React.Component {
     tabBarIcon: ({ tintColor }) => (
       <Icon ios='ios-contact-outline' android="ios-contact-outline" style={{color: tintColor}} />
       )
-  }
+  };
     constructor(props) {
         super(props);
         this.state = {
@@ -40,15 +40,14 @@ export default class Account extends React.Component {
     }
 
     onClickEdit = event => {
-        // //editing info section, curently throws an error
-        // this.state.user.updatePassword(event.target.value());
+        //editing info section, currently throws an error
         AlertIOS.alert('Uh Oh', `Why are you clicking things that aren't fully integrated yet?`);
-    }
+    };
 
     onClickLogout = () => {
         //actually logs out user but they can still can pull on the screen and seem logged in. need to disable back or figure out how to re-render nav
         firebaseApp.auth().signOut()
-    }
+    };
 
 
     render() {

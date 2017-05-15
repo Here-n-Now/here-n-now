@@ -71,8 +71,3 @@ export default class SubmitVideo extends Component {
     )
   }
 }
-// <View style={styles.form}>
-//   <Item>
-//       <Input placeholder='Add a caption' style={styles.form}/>
-//   </Item>
-// </View>
