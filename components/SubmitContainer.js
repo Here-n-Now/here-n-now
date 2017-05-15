@@ -86,6 +86,19 @@ export default class PostVideo extends Component {
       (position) => {
         geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
         firebaseApp.database().ref('posts/' + myId).set({
+            // "type": "Feature",
+            // "properties": {
+            //   "_id": myId,
+            //   "index": 0,
+            //   "featureclass": "A"
+            // },
+            // "geometry": {
+            //   "type": "Point",
+            //   "coordinates": [
+            //     5.406567,
+            //     43.274155
+            //   ]
+            // }
           id: myId,
           text: this.state.finalText,
           coords: {
