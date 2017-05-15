@@ -161,8 +161,6 @@ export default class MapCluster extends React.Component {
         finalClusterArr.push(snapshot.val())
       })
     }
-    console.log('postIds', postIds, 'distance keys', distanceKeys)
-    console.log('final Array', finalClusterArr)
     //this.props.navigation.navigate('ViewContainer', {finalClusterArr})
   }
 
