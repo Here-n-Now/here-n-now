@@ -181,7 +181,7 @@ function loadLocalStream2(muted) {
   }, logError);
 }
 
-function getLocalStream(isFront, callback) {
+function getLocalStream(isFront, hasSound, callback) {
   WebRTC.MediaStreamTrack.getSources(sourceInfos => {
     console.log(sourceInfos);
     let videoSourceId;
@@ -192,7 +192,7 @@ function getLocalStream(isFront, callback) {
       }
     }
     WebRTC.getUserMedia({
-      audio: true,
+      audio: hasSound,
       video: {
         mandatory: {
           minWidth: 500, // Provide your own width, height and frame rate here

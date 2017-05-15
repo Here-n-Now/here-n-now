@@ -25,10 +25,10 @@ export default class MapComp extends Component {
       markersArr: [],
       modalVisible: false,
       region: {
-        latitude: 40,
-        longitude: -74,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 1,
+        longitudeDelta: 1
       }
     }
   }
@@ -67,8 +67,6 @@ export default class MapComp extends Component {
   }
 
   componentDidMount() {
-    ////we may not need this??
-    ////we probably only need the delta info from here
     var markerRef = firebase.database().ref('posts')
       markerRef.on('value', (snapshot) => {
       this.setState({markers: snapshot.val()})
@@ -81,31 +79,20 @@ export default class MapComp extends Component {
     const geoFire = new GeoFire(geofireRef);
     const geoQuery = geoFire.query({
       center: [this.state.region.latitude, this.state.region.longitude],
-      radius: .25
+      radius: 5
     });
     if (this.state.markers){
       geoQuery.on("key_entered", (key, location, distance)=>{
           if (this.state.markers[key]){ markersArr.push(this.state.markers[key]) }
     })}
 
+  // var index = supercluster({radius: 40, maxZoom: 16}).load(geoJSON);
 
+  // // get GeoJSON clusters given a bounding box and zoom
+  // var clusters = index.getClusters([-180, -85, 180, 85], 2);
 
-  // const cl = supercluster([
-  //   { lat: 10, lng: 10 },
-  //   { lat: 10.1, lng: 10.1 },
-  //   { lat: 12, lng: 12 },
-  //   { lat: 84, lng: 179 },
-  // ]);
-
-  // const r = cl({ bounds: { nw: { lat: 85, lng: -180 }, se: { lat: -85, lng: 180 } }, zoom: 2 });
-
-  var index = supercluster({radius: 40, maxZoom: 16}).load(geoJSON);
-
-  // get GeoJSON clusters given a bounding box and zoom
-  var clusters = index.getClusters([-180, -85, 180, 85], 2);
-
-  // get a JSON vector tile in the same format as GeoJSON-VT
-  var tile = index.getTile(7, 523, 125);
+  // // get a JSON vector tile in the same format as GeoJSON-VT
+  // var tile = index.getTile(7, 523, 125);
 
     return (
       <Container style={styles.container}>
@@ -185,5 +172,3 @@ const styles = StyleSheet.create({
                     <Text>{marker.title}</Text>
                     <Text>{marker.description}</Text>
                   </MapView.Callout>*/}
-
-

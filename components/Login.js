@@ -191,7 +191,7 @@ export default class Login extends React.Component {
                                     </Button>
                                 </Left>
                                 <Body>
-                                <Title>Reset Pw!</Title>
+                                <Title>Reset Password!</Title>
                                 </Body>
                                 <Right></Right>
 

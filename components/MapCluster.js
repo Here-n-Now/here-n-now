@@ -4,10 +4,10 @@ import {
   View
 } from 'react-native';
 
-// import Expo from './expo'
 import Promise from 'bluebird';
 import MapView from 'react-native-maps';
 import supercluster from 'supercluster';
+import * as firebase from 'firebase';
 import {geoJSON} from '../database/GeoJSONPoints'
 import Marker from './Marker';
 
@@ -26,9 +26,7 @@ export default class MapCluster extends React.Component {
     this.state = {
       mapLock: false,
       region: Marseille,
-      points: Points
     }
-
   }
   setRegion(region) {
     if(Array.isArray(region)) {
@@ -47,13 +45,16 @@ export default class MapCluster extends React.Component {
       console.log("We can't set the region as an array");
     }
   }
+
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
+    console.log('after mount')
   }
 
   createMarkersForLocations(props) {
+    console.log('props',props)
     return {
-      places: this.state.points//props.mapPoints
+      places: props.mapPoints
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -78,7 +79,7 @@ export default class MapCluster extends React.Component {
       this.setState({
         clusters,
         mapLock: false
-      }, ()=> console.log('current state', this.state));
+      });
     }
   }
     onChangeRegionComplete(region) {
@@ -112,7 +113,6 @@ export default class MapCluster extends React.Component {
       const { clusters, region } = this.state;
       const onPressMaker = this.onPressMaker.bind(this);
       markers.map(function(element ) {
-        console.log('element', element)
         returnArray.push(
             <Marker
               key={element.properties._id || element.properties.cluster_id}
@@ -129,8 +129,10 @@ export default class MapCluster extends React.Component {
   }
 
     onPressMaker(data) {
+      console.log('data', data)
     if (data.options.isCluster) {
       if (data.options.region.length > 0) {
+        console.log('region', data.options.region)
         this.goToRegion(data.options.region, 100)
       } else {
         console.log("We can't move to an empty region");
@@ -173,19 +175,3 @@ export default class MapCluster extends React.Component {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

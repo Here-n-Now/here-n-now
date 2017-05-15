@@ -147,6 +147,7 @@ export default class CameraApp extends Component {
                   defaultTouchToFocus
                   mirrorImage={false}
               />
+<<<<<<< HEAD
               <View style={[styles.overlayCam, styles.topOverlayCam]}>
                 <TouchableOpacity
                     style={styles.typeButtonCam}
@@ -207,4 +208,57 @@ export default class CameraApp extends Component {
             </View>
         );
     }
+=======
+            </TouchableOpacity>
+            ||
+            //can we get here? Change to AND statment?
+            null
+          }
+          <View style={styles.buttonsSpaceCam} />
+          {
+              !this.state.isRecording
+              &&
+              <TouchableOpacity
+                  style={styles.captureButton}
+                  onPress={this.startRecording}
+              >
+                <Image
+                    source={require('../public/assets/ic_videocam_36pt.png')}
+                />
+              </TouchableOpacity>
+              ||
+              <TouchableOpacity
+                  style={styles.captureButton}
+                  onPress={this.stopRecording}
+              >
+                <Image
+                    source={require('../public/assets/ic_stop_36pt.png')}
+                />
+              </TouchableOpacity>
+          }
+          <View style={styles.buttonsSpaceCam} />
+          {
+              !this.state.isRecording
+              &&
+              <TouchableOpacity
+                  style={styles.liveCaptureButton}
+                  onPress={this.startLive}
+              >
+                <Icon name='ios-radio-outline' />
+              </TouchableOpacity>
+              ||
+              <TouchableOpacity
+                  style={styles.captureButton}
+                  onPress={this.stopLive}
+              >
+                <Image
+                    source={require('../public/assets/ic_stop_36pt.png')}
+                />
+              </TouchableOpacity>
+          }
+        </View>
+      </View>
+    );
+  }
+>>>>>>> master
 }

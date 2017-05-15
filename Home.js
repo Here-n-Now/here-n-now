@@ -7,7 +7,7 @@ import { Image, Dimensions } from 'react-native';
 import SubmitContainer from './components/SubmitContainer.js';
 import ViewContainer from './components/ViewContainer.js';
 import Map from './components/Map';
-import MapCluster from './components/MapCluster';
+import MapContainer from './components/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import CameraApp from './components/CameraApp';
@@ -16,7 +16,6 @@ import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import geofiretest from './geofireTest.js'
-import Points from './database/GeoJSONPoints'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
