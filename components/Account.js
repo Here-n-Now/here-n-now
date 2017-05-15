@@ -57,7 +57,7 @@ export default class Account extends React.Component {
           <Container style={styles.container}>
             <Header>
                 <Body>
-                    <Title>Hi, {this.state.user && this.state.user.email}</Title>
+                    <Title>Hi, {this.state.user && this.state.user.displayName}</Title>
                 </Body>
             </Header>
             <Content>

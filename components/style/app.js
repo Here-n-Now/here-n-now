@@ -105,6 +105,14 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 40,
   },
+  liveCaptureButton: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'white',
+    borderRadius: 40,
+  },
   typeButtonCam: {
     padding: 5,
   },

@@ -20,6 +20,7 @@ export default class ViewContainer extends Component {
     this.state = {
       modalVisible: false,
       comment: '',
+      userName: '',
       comments: []
     };
   }
@@ -50,7 +51,6 @@ export default class ViewContainer extends Component {
   getFromFirebaseDB = () => {
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
-    console.log('bycomments', user)
     const query = firebase.database().ref('posts/' + id + '/comments');
     query.on('value', (snapshot) => {
       let comments = snapshot.val();
