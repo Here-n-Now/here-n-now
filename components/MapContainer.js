@@ -12,7 +12,7 @@ export default class MapContainer extends Component {
     componentWillMount(){
     var markerRef = firebase.database().ref('geoJSON')
       markerRef.on('value', (snapshot) => {
-      this.setState({markers: snapshot.val()})
+      this.setState({markers: snapshot.val()}, () => console.log('db', snapshot.val()))
     });
     }
     render(){

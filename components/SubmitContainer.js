@@ -85,27 +85,29 @@ export default class PostVideo extends Component {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
-        firebaseApp.database().ref('posts/' + myId).set({
-            // "type": "Feature",
-            // "properties": {
-            //   "_id": myId,
-            //   "index": 0,
-            //   "featureclass": "A"
-            // },
-            // "geometry": {
-            //   "type": "Point",
-            //   "coordinates": [
-            //     5.406567,
-            //     43.274155
-            //   ]
-            // }
-          id: myId,
-          text: this.state.finalText,
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          },
-          [mediaType]: mediaUrl
+        firebaseApp.database().ref('geoJSON/' + myId).set({
+            "type": "Feature",
+            "properties": {
+              "_id": myId,
+              "featureclass": "A",
+              "text": this.state.finalText,
+              [mediaType]: mediaUrl,
+              "user_id": firebaseApp.auth().currentUser.uid,
+              "postedAt": firebase.database.ServerValue.TIMESTAMP
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                position.coords.longitude,
+                position.coords.latitude
+              ]
+            }
+          // id: myId,
+          // coords: {
+          //   latitude: position.coords.latitude,
+          //   longitude: position.coords.longitude
+          // },
+          // [mediaType]: mediaUrl
         })
       }
     )
@@ -192,6 +194,7 @@ export default class PostVideo extends Component {
   }
 
   render() {
+    console.log('id',firebase.database.ServerValue.TIMESTAMP)
     const content =
       this.state.uploading ?
         <View>
