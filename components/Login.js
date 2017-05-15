@@ -110,18 +110,21 @@ export default class Login extends React.Component {
                 </Header>
                      <Content>
                          <Form>
-                             <Item floatingLabel>
+                             {target === 'Signup' &&
+                               <Item floatingLabel>
                                 <Icon name='ios-contact-outline' />
                                  <Label>Username</Label>
                                  <Input
+                                   autoCorrect={false}
                                    onChangeText={e => this.setState({username: e})}
                                    />
                                  {/*<Icon name='checkmark-circle' />*/}
-                             </Item>
+                             </Item>}
                              <Item floatingLabel>
                                 <Icon name='ios-mail-outline' />
                                  <Label>Email</Label>
                                  <Input
+                                   autoCorrect={false}
                                    onChangeText={e => this.setState({email: e})}
                                    />
                                  {/*<Icon name='checkmark-circle' />*/}
@@ -130,6 +133,7 @@ export default class Login extends React.Component {
                                 <Icon name='ios-key-outline' />
                                  <Label>Password</Label>
                                  <Input
+                                   autoCorrect={false}
                                    onChangeText={e => this.setState({password: e})}
                                    secureTextEntry={true}
                                    />
