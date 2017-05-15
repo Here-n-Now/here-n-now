@@ -5,7 +5,6 @@ import Faker from 'Faker';
 
 import React, { Component } from 'react';
 import {
-    StyleSheet,
     TextInput,
     View,
     AppRegistry,
