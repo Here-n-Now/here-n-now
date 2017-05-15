@@ -10,11 +10,12 @@ import supercluster from 'supercluster';
 import * as firebase from 'firebase';
 import {geoJSON} from '../database/GeoJSONPoints'
 import Marker from './Marker';
+import GeoFire from 'geofire'
 
 const Points = geoJSON
 const Marseille = {
-  latitude: 43.2931047,
-  longitude: 5.38509780000004,
+  latitude: 40.704980,
+  longitude: -74.009,
   latitudeDelta: 0.0922 / 1.2,
   longitudeDelta: 0.0421 / 1.2,
 }
@@ -128,19 +129,41 @@ export default class MapCluster extends React.Component {
     return [];
   }
 
-    onPressMaker(data) {
-      console.log('data', data)
-    if (data.options.isCluster) {
-      if (data.options.region.length > 0) {
-        console.log('region', data.options.region)
-        this.goToRegion(data.options.region, 100)
-      } else {
-        console.log("We can't move to an empty region");
-      }
-    } else {
+  onPressMaker(data) {
+    const geofirePoints = {}
+    const postIds = []
+    const finalClusterArr = []
+    const limit = data.feature.properties.point_count
 
+    const clusterRef = firebase.database().ref('geolocation');
+    const geoJSONRef = firebase.database().ref('CurrentPosts');
+    const geoFire = new GeoFire(clusterRef)
+    const geoQuery = geoFire.query({
+      center: [40.704980, -74.009],
+      radius: 100
+    })
+    geoQuery.on('key_entered', (key, location, distance) => {
+      if (!geofirePoints[distance]){
+        geofirePoints[distance] = [key]
+      } else {
+        geofirePoints[distance] = [...geofirePoints[distance], key]
+      }
+    })
+    const distanceKeys = Object.keys(geofirePoints)
+    for (let i = 0; i < distanceKeys.length; i++) {
+      postIds.push(...geofirePoints[distanceKeys[i]])
+      if (postIds.length >= limit) {
+        break
+      }
     }
-    return;
+    for (let j = 0; j < postIds.length; j++){
+      geoJSONRef.orderByChild('properties/_id').equalTo(`${postIds[j]}`).on('value', (snapshot) => {
+        finalClusterArr.push(snapshot.val())
+      })
+    }
+    console.log('postIds', postIds, 'distance keys', distanceKeys)
+    console.log('final Array', finalClusterArr)
+    //this.props.navigation.navigate('ViewContainer', {finalClusterArr})
   }
 
 
