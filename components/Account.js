@@ -1,4 +1,5 @@
 import { firebaseApp } from '../Home';
+import * as firebase from 'firebase';
 
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
@@ -37,6 +38,7 @@ export default class Account extends React.Component {
             if (user) this.setState({user});
             else this.props.navigation.navigate('Login');
         })
+
     }
 
     onClickEdit = event => {
@@ -50,9 +52,32 @@ export default class Account extends React.Component {
         firebaseApp.auth().signOut()
     }
 
+    fetchMyPosts = () => {
+      console.log('New Query');
+      const firebaseRef = firebase.database().ref();
+      const userPostsRef = firebase.database().ref('user-posts');
+      const database = firebaseApp.database();
+      // firebaseApp.database().ref('user-posts/' + 4).set({
+      //     id: 4,
+      //     userId: this.state.user.uid,
+      //     text: 'test post',
+      //     coords: {
+      //       latitude: 10,
+      //       longitude: 20
+      //     }
+      //   })
+
+      userPostsRef.orderByChild('userId').equalTo('pFbnScDJd7gx7F1PfuHxgvUkLe23').on('value',
+      function(snapshot) {
+        console.log('Inside query callback')
+        console.log(snapshot.val());
+      });
+    }
+
 
     render() {
         const { user } = this.state;
+       // console.log('USER: ',this.state.user.uid)
         return (
           <Container style={styles.container}>
             <Header>
@@ -111,6 +136,18 @@ export default class Account extends React.Component {
                         <Icon name="arrow-forward" />
                     </Right>
                 </ListItem>
+                <ListItem icon onPress={ this.fetchMyPosts }>
+                  <Left>
+                      <Icon name="ios-key-outline" />
+                  </Left>
+                  <Body>
+                    <Text>My Posts</Text>
+                  </Body>
+                  <Right>
+                      <Text>••••••</Text>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
             </Content>
           </Container>
         )
