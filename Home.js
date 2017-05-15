@@ -37,13 +37,6 @@ export default class Home extends Component {
         };
     }
 
-    componentWillMount(){
-        var points;
-        var markerRef = firebase.database().ref('geoJSON')
-        markerRef.on('value', (snapshot) => {
-            points = snapshot.val()
-        })
-    }
     componentDidMount() {
       const loggedOut = StackNavigator({
           Login: {
