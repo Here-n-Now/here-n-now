@@ -70,10 +70,12 @@ export default class CameraApp extends Component {
   switchType = () => {
     let newType;
     const { back, front } = Camera.constants.Type;
-
+    console.log('cam type', 'front', front, 'back', back)
     if (this.state.camera.type === back) {
+      console.log('in back')
       newType = front;
     } else if (this.state.camera.type === front) {
+      console.log('in front')
       newType = back;
     }
 
@@ -134,6 +136,7 @@ export default class CameraApp extends Component {
   }
 
   render() {
+    console.log('did state change?', this.state.camera.type)
     return (
       <View style={styles.containerCam}>
         <Camera
