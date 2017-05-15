@@ -14,6 +14,7 @@ const SELF_STREAM_ID = 'self_stream_id';
 
 import { firebaseApp } from '../Home';
 import * as firebase from 'firebase';
+import GeoFire from 'geofire';
 
 export default class App extends Component {
 
@@ -28,7 +29,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    webRTCServices.getLocalStream(true, (stream) => {
+    webRTCServices.getLocalStream(true, true, (stream) => {
       this.setState({
         //sets your own id  and your url that you are streaming
         stream: {
@@ -39,15 +40,18 @@ export default class App extends Component {
     });
   }
 
-  postToFirebaseDB = (videoURL, text = '') => {
-    const postId = Math.random().toString().split('.')[1];
+  postToFirebaseDB = (mediaUrl, text = '') => {
+    const geofireRef = firebase.database().ref('geolocation');
+    const firebaseRef = firebase.database().ref(); //was a '.push()'?
+    const postsRef = firebase.database().ref('posts')
+    const geoFire = new GeoFire(geofireRef);
+    const myId = `Live:${firebaseRef.push().key}`
     const database = firebaseApp.database();
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('live/' + postId).set({
-          id: postId,
-          text: null,
+        geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
+        firebaseApp.database().ref('posts/' + myId).set({
+          id: myId,
           coords: {
             latitude: 40.704611,
             longitude: -74.008738,
@@ -59,7 +63,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log('livestream', this.state.stream.url)
     return <View style={styles.container}>
         <FullScreenVideo streamURL={this.state.stream.url} />
       {this.renderStartContainer()}
@@ -104,19 +107,16 @@ export default class App extends Component {
 
 }
 
+//Create our own server?
+//Have muliple rooms?
+
 // I am a broadcaster
-// I create a room
-// I only see myself
-// I can chose camera front or back
-// (I can see count of people connected)
-// I can close the connection
-// Auto generates id
-// That gets pushed to the db
-// That gets rendred on map
+//// I can close the connection
+///// this should remove the pin
+//// I can chose camera front or back
+//// (I can see count of people connected)
 
 // I am a viewer
-// I can click on an id to enter a room
-// I can only view
-// I can leave
-// I get a message when broadcast ends
-// (I can commment or like)
+//// I can leave and it closes my connection
+//// If I am in a room and the broadcast ends, it get a message
+//// (I can commment or like)

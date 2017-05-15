@@ -9,22 +9,22 @@ export default class FullScreenVideo extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      streamURL: undefined
+      stream: undefined
     };
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({streamURL: this.props.streamURL}), 1000)
+    setTimeout(() => this.setState({stream: this.props.stream}), 1000)
   }
 
   render() {
-    console.log('fullscreen', this.state.streamURL)
+    console.log('fullscreen', this.state.stream)
     return <View style={styles.container}>
       {
         config.useRCTView ?
-        <RTCView streamURL={this.state.streamURL} style={styles.video} />
+        <RTCView streamURL={this.state.stream} style={styles.video} />
         :
-        <Image source={this.props.streamURL} style={styles.video} resizeMode={"contain"} />
+        <Image source={this.state.stream} style={styles.video} resizeMode={"contain"} />
       }
     </View>
   }

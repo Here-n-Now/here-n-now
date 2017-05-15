@@ -23,17 +23,16 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    webRTCServices.getLocalStream(true, (stream) => {});
+    webRTCServices.getLocalStream(true, false, (stream) => {});
   }
 
   render() {
 
-  const {liveVideoURL} = this.props.navigation.state.params
-  console.log('state', this.state.stream.url, 'params', liveVideoURL, 'equal?', this.state.stream.url === liveVideoURL)
+  const { stream } = this.props.navigation.state.params
     return <View style={styles.container}>
       {
         this.state.joinState == 'joined' ?
-        <FullScreenVideo streamURL={liveVideoURL} />
+        <FullScreenVideo stream={stream} />
         :
         null
       }
