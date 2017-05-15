@@ -25,6 +25,7 @@ export default class ViewContainer extends Component {
   }
 
   postToFirebaseDB = () => {
+    if (!this.state.comment.length) return;
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
     const database = firebaseApp.database();
@@ -35,11 +36,13 @@ export default class ViewContainer extends Component {
         firebaseApp.database().ref('posts/' + id + '/comments').update({
             [commentId]: {
               uid: user.uid,
-              photoURL: user.photoURL || null,
-              userName: user.displayName || null,
-              comment: this.state.comment
+              photoURL: user.photoURL,
+              displayName: user.displayName,
+              comment: this.state.comment,
+              postedAt: firebase.database.ServerValue.TIMESTAMP
           }
         })
+        .then(() => this.setState({comment: ''}))
       }
     )
   }
@@ -47,11 +50,14 @@ export default class ViewContainer extends Component {
   getFromFirebaseDB = () => {
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
+    console.log('bycomments', user)
     const query = firebase.database().ref('posts/' + id + '/comments');
-    query.on('value', function(snapshot) {
-      const comments = Object.entries(snapshot.val())
+    query.on('value', (snapshot) => {
+      let comments = snapshot.val();
+      //if not null, comments will get reversed array of comments
+      comments = comments && Object.entries(comments).reverse();
       this.setState({ comments });
-    }.bind(this));
+    });
   }
 
   render() {
@@ -102,7 +108,7 @@ export default class ViewContainer extends Component {
             <Content>
               {!!text && <Text style={{margin:15}}>{text}</Text>}
             <ListItem itemDivider>
-              <Text>{comments.length} comments</Text>
+              <Text>{comments ? comments.length : 'No'} comments</Text>
             </ListItem>
               {comments && comments.map((comment) => <ViewComments comment={comment}/>)}
             </Content>
@@ -119,9 +125,7 @@ export default class ViewContainer extends Component {
                 </Item>
               </Col>
               <Col size={25}>
-                <Button block onPress={
-                  this.postToFirebaseDB
-                }>
+                <Button block onPress={ this.postToFirebaseDB } >
                   <Text>Share</Text>
                 </Button>
               </Col>

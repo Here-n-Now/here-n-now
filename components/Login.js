@@ -1,6 +1,7 @@
 import { firebaseApp } from '../Home';
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
+import Faker from 'Faker';
 
 import React, { Component } from 'react';
 import {
@@ -46,16 +47,28 @@ export default class Login extends React.Component {
 
     onClickSignup = () => {
         //to add username http://stackoverflow.com/questions/37798560/how-do-i-add-username-to-user-when-using-firebase-android
-        const { email, password } = this.state
+        const { email, password, username } = this.state;
         let userEmail = email;
         let userPassword = password;
-        firebaseApp.auth().createUserWithEmailAndPassword(userEmail, userPassword)
-            .catch(err => {
-                let errorCode = err.code;
-                let errorMessage = err.message;
-                AlertIOS.alert('Uh Oh', errorMessage);
+        firebaseApp.auth().createUserWithEmailAndPassword(email, password)
+          .then(() => {
+            user = firebaseApp.auth().currentUser;
+            user.sendEmailVerification();
+          })
+          .then(() => {
+            user.updateProfile({
+              displayName: username,
+              photoURL: Faker.Image.avatar()
             });
+          })
+          .catch(err => {
+              let errorCode = err.code;
+              let errorMessage = err.message;
+              AlertIOS.alert('Uh Oh', errorMessage);
+          });
     }
+    // photoURL: user.photoURL || Faker.Image.abstractImage(),
+    // displayName: user.displayName || Faker.Name.firstName(),
 
     setModalVisible(visible, target) {
       this.setState({
@@ -97,6 +110,14 @@ export default class Login extends React.Component {
                 </Header>
                      <Content>
                          <Form>
+                             <Item floatingLabel>
+                                <Icon name='ios-contact-outline' />
+                                 <Label>Username</Label>
+                                 <Input
+                                   onChangeText={e => this.setState({username: e})}
+                                   />
+                                 {/*<Icon name='checkmark-circle' />*/}
+                             </Item>
                              <Item floatingLabel>
                                 <Icon name='ios-mail-outline' />
                                  <Label>Email</Label>

@@ -1,27 +1,22 @@
 'use strict';
 import React, { Component } from 'react';
-import { Container, Content, List, ListItem, Thumbnail, Text, Body, Left, Right } from 'native-base';
+import { ListItem, Thumbnail, Text, Body, Left, Right } from 'native-base';
+import TimeAgo from 'react-native-timeago';
 
 const ViewComments = (props) => {
-  console.log('comment list', props)
+  const {photoURL, displayName, comment, postedAt } = props.comment[1];
   return (
       <ListItem avatar>
           <Left>
-              <Thumbnail source={{uri: props.comment[1].photoURL || 'https://unsplash.it/200'}} />
+              <Thumbnail source={{uri: photoURL}} />
           </Left>
           <Body>
-              <Text>{props.comment[1].displayName || 'Anonomous'}</Text>
-              <Text note>{props.comment[1].comment}</Text>
+              <Text>{displayName}</Text>
+              <Text note>{comment}</Text>
+              <Text note style={{fontSize: 10}}><TimeAgo time={postedAt} interval={20000}/></Text>
           </Body>
-          <Right>
-              <Text note>3:43 pm</Text>
-          </Right>
       </ListItem>
   );
 };
 
-// uid: user.uid,
-// photoURL: user.photoURL,
-// userName: user.displayName,
-// comment: this.state.comment
 export default ViewComments;
