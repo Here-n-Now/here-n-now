@@ -108,7 +108,7 @@ export default class ViewContainer extends Component {
             <Content>
               {!!text && <Text style={{margin:15}}>{text}</Text>}
             <ListItem itemDivider>
-              <Text>{comments ? comments.length : 'No'} comments</Text>
+              <Text>{comments ? comments.length > 1 ? `${comments.length} comments` : `${comments.length} comment` : 'No comments'}</Text>
             </ListItem>
               {comments && comments.map((comment) => <ViewComments comment={comment}/>)}
             </Content>

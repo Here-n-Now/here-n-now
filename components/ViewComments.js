@@ -11,8 +11,8 @@ const ViewComments = (props) => {
               <Thumbnail source={{uri: photoURL}} />
           </Left>
           <Body>
-              <Text>{displayName}</Text>
-              <Text note>{comment}</Text>
+              <Text note>{displayName}</Text>
+              <Text>{comment}</Text>
               <Text note style={{fontSize: 10}}><TimeAgo time={postedAt} interval={20000}/></Text>
           </Body>
       </ListItem>
