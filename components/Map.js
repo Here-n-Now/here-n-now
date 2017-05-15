@@ -7,6 +7,9 @@ import GoogleSearch from './GoogleSearch'
 import GeoFire from 'geofire'
 import geofire from '../geofireTest'
 //import geofire from '../geofireTest'
+import supercluster from 'supercluster'
+import {geoJSON} from '../database/GeoJSONPoints'
+
 
 export default class MapComp extends Component {
   static navigationOptions = {
@@ -84,6 +87,26 @@ export default class MapComp extends Component {
       geoQuery.on("key_entered", (key, location, distance)=>{
           if (this.state.markers[key]){ markersArr.push(this.state.markers[key]) }
     })}
+
+
+
+  // const cl = supercluster([
+  //   { lat: 10, lng: 10 },
+  //   { lat: 10.1, lng: 10.1 },
+  //   { lat: 12, lng: 12 },
+  //   { lat: 84, lng: 179 },
+  // ]);
+
+  // const r = cl({ bounds: { nw: { lat: 85, lng: -180 }, se: { lat: -85, lng: 180 } }, zoom: 2 });
+
+  var index = supercluster({radius: 40, maxZoom: 16}).load(geoJSON);
+
+  // get GeoJSON clusters given a bounding box and zoom
+  var clusters = index.getClusters([-180, -85, 180, 85], 2);
+
+  // get a JSON vector tile in the same format as GeoJSON-VT
+  var tile = index.getTile(7, 523, 125);
+
     return (
       <Container style={styles.container}>
             <MapView
@@ -162,3 +185,5 @@ const styles = StyleSheet.create({
                     <Text>{marker.title}</Text>
                     <Text>{marker.description}</Text>
                   </MapView.Callout>*/}
+
+
