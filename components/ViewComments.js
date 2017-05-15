@@ -1,20 +1,20 @@
 'use strict';
 import React, { Component } from 'react';
-import { Container, Content, List, ListItem, Thumbnail, Text, Body, Left, Right } from 'native-base';
+import { ListItem, Thumbnail, Text, Body, Left, Right } from 'native-base';
+import TimeAgo from 'react-native-timeago';
 
-const ViewComments = () => {
+const ViewComments = (props) => {
+  const {photoURL, displayName, comment, postedAt } = props.comment[1];
   return (
       <ListItem avatar>
           <Left>
-              <Thumbnail source={{uri: 'https://unsplash.it/200'}} />
+              <Thumbnail source={{uri: photoURL}} />
           </Left>
           <Body>
-              <Text>Kumar Pratik</Text>
-              <Text note>Doing what you like will always keep you happy . .</Text>
+              <Text note>{displayName}</Text>
+              <Text>{comment}</Text>
+              <Text note style={{fontSize: 10}}><TimeAgo time={postedAt} interval={20000}/></Text>
           </Body>
-          <Right>
-              <Text note>3:43 pm</Text>
-          </Right>
       </ListItem>
   );
 };
