@@ -7,6 +7,7 @@ import { Image, Dimensions } from 'react-native';
 import SubmitContainer from './components/SubmitContainer.js';
 import ViewContainer from './components/ViewContainer.js';
 import Map from './components/Map';
+import MapContainer from './components/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import CameraApp from './components/CameraApp';
@@ -44,7 +45,7 @@ export default class Home extends Component {
       });
       const tabNav = TabNavigator({
           View: {
-              screen: Map
+              screen: MapContainer
           },
           Share: {
               screen: CameraApp

@@ -11,8 +11,8 @@ export const geoJSON = [
     "geometry": {
       "type": "Point",
       "coordinates": [
-        5.393084,
-        43.296485
+        20,
+        30
       ]
     }
   },
@@ -26,8 +26,8 @@ export const geoJSON = [
     "geometry": {
       "type": "Point",
       "coordinates": [
-        5.406567,
-        43.274155
+        21,
+        30
       ]
     }
   },
