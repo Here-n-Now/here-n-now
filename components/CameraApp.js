@@ -203,6 +203,26 @@ export default class CameraApp extends Component {
                 />
               </TouchableOpacity>
           }
+          <View style={styles.buttonsSpaceCam} />
+          {
+              !this.state.isRecording
+              &&
+              <TouchableOpacity
+                  style={styles.liveCaptureButton}
+                  onPress={this.startLive}
+              >
+                <Icon name='ios-radio-outline' />
+              </TouchableOpacity>
+              ||
+              <TouchableOpacity
+                  style={styles.captureButton}
+                  onPress={this.stopLive}
+              >
+                <Image
+                    source={require('../public/assets/ic_stop_36pt.png')}
+                />
+              </TouchableOpacity>
+          }
         </View>
       </View>
     );
