@@ -69,10 +69,10 @@ export default class MapComp extends Component {
   componentDidMount() {
     ////we may not need this??
     ////we probably only need the delta info from here
-  var markerRef = firebase.database().ref('posts')
-    markerRef.on('value', (snapshot) => {
-    this.setState({markers: snapshot.val()})
-  });
+    var markerRef = firebase.database().ref('posts')
+      markerRef.on('value', (snapshot) => {
+      this.setState({markers: snapshot.val()})
+    });
   }
 
   render(){
@@ -123,8 +123,8 @@ export default class MapComp extends Component {
                   coordinate={marker.coords}
                   onSelect={() => {
                     if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewContainer', {text: marker.text, image: marker.image, video: marker.video})
-                    } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
+                      this.props.navigation.navigate('ViewContainer', {...marker})
+                    } else this.props.navigation.navigate('LiveViewer', {...marker})
                   }}
                   >
                 </MapView.Marker>

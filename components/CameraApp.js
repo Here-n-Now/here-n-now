@@ -70,7 +70,6 @@ export default class CameraApp extends Component {
   switchType = () => {
     let newType;
     const { back, front } = Camera.constants.Type;
-
     if (this.state.camera.type === back) {
       newType = front;
     } else if (this.state.camera.type === front) {
