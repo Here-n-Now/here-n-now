@@ -14,7 +14,6 @@ import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import MyFeed from './components/MyFeed.js';
-import geofiretest from './geofireTest.js'
 import CameraContainer from './components/camera/CameraContainer.js';
 
 
@@ -57,9 +56,9 @@ export default class Home extends Component {
           // LiveViewer: {
           //    screen: LiveViewer
           // },
-          // Feed: {
-          //     screen: PostFeed
-          // },
+          //Feed: {
+          //    screen: PostFeed
+          //},
       })
       const loggedIn = StackNavigator({
           Tabs: {
