@@ -18,7 +18,7 @@ import { Button, Container, Content, Text, Form, Item, Label, Input, Header, Lef
 export default class Login extends React.Component {
     static navigationOptions = {
         header: null
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -32,7 +32,7 @@ export default class Login extends React.Component {
     }
 
     onClickLogin = () => {
-        const { email, password } = this.state
+        const { email, password } = this.state;
         let userEmail = email;
         let userPassword = password;
         firebaseApp.auth().signInWithEmailAndPassword(userEmail, userPassword)
@@ -42,7 +42,7 @@ export default class Login extends React.Component {
                 let errorMessage = err.message;
                 AlertIOS.alert('Uh Oh', errorMessage);
             });
-    }
+    };
 
     onClickSignup = () => {
         //to add username http://stackoverflow.com/questions/37798560/how-do-i-add-username-to-user-when-using-firebase-android
@@ -83,7 +83,7 @@ export default class Login extends React.Component {
     }
 
     render() {
-        const { email, password, modalVisible, target, username } = this.state
+        const { email, password, modalVisible, target, username } = this.state;
         return (
             <View style={styles.container}>
                 <Modal
@@ -104,8 +104,7 @@ export default class Login extends React.Component {
                             </Body>
                             <Right>
                                 {
-                                    //if both filled out, show submit button
-                                    //need to !! so it resolves to truthy or false not a number. number will throw react error
+
                                     (!!email.length && !!password.length) &&
                                     <Button transparent onPress={target === 'Login' ? this.onClickLogin : this.onClickSignup}>
                                         <Icon name='md-send' />
