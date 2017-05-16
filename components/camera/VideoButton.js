@@ -2,14 +2,14 @@ import React from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import styles from '../style/app';
 
-export default PictureButton = (props) => {
+export default VideoButton = (props) => {
   return (
     <TouchableOpacity
         style={styles.captureButton}
-        onPress={props.takePicture}
+        onPress={props.startRecording}
     >
       <Image
-          source={require('../../public/assets/ic_photo_camera_36pt.png')}
+          source={require('../../public/assets/ic_videocam_36pt.png')}
       />
     </TouchableOpacity>
   );
