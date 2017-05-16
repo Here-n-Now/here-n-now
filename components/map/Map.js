@@ -192,7 +192,9 @@ export default class Map extends Component {
     // 5. Navigate to feed view with final array of posts as props
     !!finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: finalClusterArr})
   }
-
+  componentWillUnmount(){
+    geoQuery.cancel();
+  }
   render() {
     return (
       <Container style={styles.container}>
@@ -206,11 +208,6 @@ export default class Map extends Component {
             this.createMarkersForRegionPlaces()
           }
          </MapView>
-        <SearchModal
-          modalVisible={this.state.modalVisible}
-          onChangeRegionComplete={this.onChangeRegionComplete}
-          setModalVisible={this.setModalVisible}
-        />
       </Container>
     );
   }
