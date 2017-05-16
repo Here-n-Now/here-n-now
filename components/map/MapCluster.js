@@ -195,6 +195,7 @@ export default class MapCluster extends Component {
     })
     // 5. Navigate to feed view with final array of posts as props
     !!finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: finalClusterArr})
+
   }
 
   render() {
