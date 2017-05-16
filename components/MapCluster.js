@@ -27,6 +27,7 @@ export default class MapCluster extends React.Component {
     this.state = {
       mapLock: false,
       region: Marseille,
+      finalClusterArr: []
     }
   }
   setRegion(region) {
@@ -47,6 +48,22 @@ export default class MapCluster extends React.Component {
     }
   }
 
+  componentWillMount(){
+   navigator.geolocation.getCurrentPosition(
+     (position) => {
+       this.setState({region: {
+         latitude: position.coords.latitude,
+         longitude: position.coords.longitude,
+         latitudeDelta: 0.001,
+         longitudeDelta: 0.001
+         }
+       })
+     },
+     (error) => alert(JSON.stringify(error)),
+     {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+   );
+ }
+
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
     console.log('after mount')
@@ -58,6 +75,7 @@ export default class MapCluster extends React.Component {
       places: props.mapPoints
     };
   }
+
   componentWillReceiveProps(nextProps) {
     const markers = this.createMarkersForLocations(nextProps);
     if (markers && Object.keys(markers)) {
@@ -134,14 +152,14 @@ export default class MapCluster extends React.Component {
     const postIds = []
     const finalClusterArr = []
     const limit = data.feature.properties.point_count
-
+    const clusterCoords = data.feature.geometry.coordinates
     const clusterRef = firebase.database().ref('geolocation');
     const geoJSONRef = firebase.database().ref('CurrentPosts');
     const geoFire = new GeoFire(clusterRef)
     const geoQuery = geoFire.query({
-      center: [40.704980, -74.009],
-      radius: 100
-    })
+     center: [clusterCoords[1], clusterCoords[0]],
+     radius: 100
+   })
     geoQuery.on('key_entered', (key, location, distance) => {
       if (!geofirePoints[distance]){
         geofirePoints[distance] = [key]
@@ -161,7 +179,9 @@ export default class MapCluster extends React.Component {
         finalClusterArr.push(snapshot.val())
       })
     }
-    //this.props.navigation.navigate('ViewContainer', {finalClusterArr})
+    this.setState({
+      finalClusterArr
+    })
   }
 
 
@@ -173,6 +193,7 @@ export default class MapCluster extends React.Component {
   }
 
   render() {
+    !!this.state.finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: this.state.finalClusterArr})
     return (
       <View
         style={{

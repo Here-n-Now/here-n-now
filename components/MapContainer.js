@@ -17,7 +17,7 @@ export default class MapContainer extends Component {
     }
     render(){
       return(
-        <MapCluster mapOther={this.state.markers} mapPoints={Object.values(this.state.markers)} />
+        <MapCluster mapOther={this.state.markers} mapPoints={Object.values(this.state.markers)} navigation={this.props.navigation.navigate} />
       )
     }
 }

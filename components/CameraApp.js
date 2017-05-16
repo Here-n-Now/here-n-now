@@ -31,6 +31,7 @@ export default class CameraApp extends Component {
         flashMode: Camera.constants.FlashMode.auto,
       },
       isRecording: false,
+      isLive: false,
       image: null,
       video: null
     };
@@ -65,6 +66,20 @@ export default class CameraApp extends Component {
         isRecording: false
       });
     }
+  }
+
+  startLive = () => {
+    this.setState({
+      isLive: true,
+      isRecording: true
+    });
+  }
+
+  stopLive = () => {
+    this.setState({
+      isLive: false,
+      isRecording: false
+    });
   }
 
   switchType = () => {
@@ -183,6 +198,18 @@ export default class CameraApp extends Component {
           }
           <View style={styles.buttonsSpaceCam} />
           {
+            this.state.isRecording
+            &&
+            <TouchableOpacity
+                style={styles.captureButton}
+                onPress={this.state.isLive ? this.stopLive : this.stopRecording}
+            >
+              <Image
+                  source={require('../public/assets/ic_stop_36pt.png')}
+              />
+            </TouchableOpacity>
+          }
+          {
               !this.state.isRecording
               &&
               <TouchableOpacity
@@ -191,15 +218,6 @@ export default class CameraApp extends Component {
               >
                 <Image
                     source={require('../public/assets/ic_videocam_36pt.png')}
-                />
-              </TouchableOpacity>
-              ||
-              <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={this.stopRecording}
-              >
-                <Image
-                    source={require('../public/assets/ic_stop_36pt.png')}
                 />
               </TouchableOpacity>
           }
@@ -212,15 +230,6 @@ export default class CameraApp extends Component {
                   onPress={this.startLive}
               >
                 <Icon name='ios-radio-outline' />
-              </TouchableOpacity>
-              ||
-              <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={this.stopLive}
-              >
-                <Image
-                    source={require('../public/assets/ic_stop_36pt.png')}
-                />
               </TouchableOpacity>
           }
         </View>
