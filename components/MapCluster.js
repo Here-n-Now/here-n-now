@@ -36,8 +36,8 @@ export default class MapCluster extends Component {
       // markersArr: [],
       modalVisible: false,
     }
-    // this.onChangeRegion = this.onChangeRegion.bind(this)
-    // this.onChangeRegionComplete = this.onChangeRegionComplete.bind(this)
+     this.onChangeRegion = this.onChangeRegion.bind(this)
+     this.onChangeRegionComplete = this.onChangeRegionComplete.bind(this)
   }
 
   onRegionChange = (region) => {
