@@ -208,6 +208,11 @@ export default class Map extends Component {
             this.createMarkersForRegionPlaces()
           }
          </MapView>
+          <SearchModal
+           modalVisible={this.state.modalVisible}
+           onChangeRegionComplete={this.onChangeRegionComplete}
+           setModalVisible={this.setModalVisible}
+         />
       </Container>
     );
   }
