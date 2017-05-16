@@ -17,7 +17,9 @@ import {
 
 export default class Login extends React.Component {
     static navigationOptions = {
+
       header: null
+
     };
 
     constructor(props) {
@@ -51,16 +53,22 @@ export default class Login extends React.Component {
         let userEmail = email;
         let userPassword = password;
         firebaseApp.auth().createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            user = firebaseApp.auth().currentUser;
-            user.sendEmailVerification();
-          })
-          .then(() => {
-            user.updateProfile({
-              displayName: username,
-              photoURL: Faker.Image.avatar()
-            });
-          })
+            .then(() => {
+                user = firebaseApp.auth().currentUser;
+                user.sendEmailVerification();
+                console.log("USER!!!", user);
+            })
+            .then(() => {
+                let places = [];
+                user.updateProfile({
+                    displayName: username,
+                    photoURL: Faker.Image.avatar(),
+                });
+                firebaseApp.database().ref('users/'+ user.uid).set({
+                    displayName: username,
+                    places: places
+                });
+            })
           .catch(err => {
               let errorCode = err.code;
               let errorMessage = err.message;
@@ -91,15 +99,16 @@ export default class Login extends React.Component {
     };
 
     setModalVisible(visible, target) {
-      this.setState({
-        modalVisible: visible,
-        target
-      });
+        this.setState({
+            modalVisible: visible,
+            target
+        });
     }
 
     render() {
         const { email, password, modalVisible, target, username } = this.state
         return (
+
           <View style={styles.container}>
             <Modal
               animationType={"slide"}
@@ -229,8 +238,6 @@ export default class Login extends React.Component {
                 </Button>
               </View>
           </View>
-
-
 
         );
     }
