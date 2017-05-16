@@ -13,7 +13,10 @@ import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
+import MyFeed from './components/MyFeed.js';
+import geofiretest from './geofireTest.js'
 import CameraContainer from './components/camera/CameraContainer.js';
+
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
@@ -77,6 +80,9 @@ export default class Home extends Component {
           LiveViewer: {
               screen: LiveViewer
           },
+          MyFeed: {
+            screen: MyFeed
+          }
       });
       firebaseApp.auth().onAuthStateChanged(user => {
           if (user) {this.setState({
