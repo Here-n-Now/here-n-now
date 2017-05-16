@@ -35,14 +35,14 @@ export default class ViewContainer extends Component {
 
   postToFirebaseDB = () => {
     if (!this.state.comment.length) return;
-    const { id } = this.props.navigation.state.params;
+    const { _id } = this.props.navigation.state.params.post;
     const user = firebase.auth().currentUser;
     const database = firebaseApp.database();
     const firebaseRef = firebase.database().ref()
     const commentId = firebaseRef.push().key
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('CurrentPosts/' + id + '/comments').update({
+        firebaseApp.database().ref('CurrentPosts/' + _id + '/comments').update({
             [commentId]: {
               uid: user.uid,
               photoURL: user.photoURL,
@@ -57,9 +57,9 @@ export default class ViewContainer extends Component {
   }
 
   getFromFirebaseDB = () => {
-    const { id } = this.props.navigation.state.params;
+    const { _id } = this.props.navigation.state.params.post;
     const user = firebase.auth().currentUser;
-    const query = firebase.database().ref('CurrentPosts/' + id + '/comments');
+    const query = firebase.database().ref('CurrentPosts/' + _id + '/comments');
     query.on('value', (snapshot) => {
       let comments = snapshot.val();
       //if not null, comments will get reversed array of comments
