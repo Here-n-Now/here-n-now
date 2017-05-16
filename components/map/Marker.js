@@ -3,34 +3,32 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 
 // import Expo from 'expo';
 const offset_map_small = 0.0001;
-import ImageMarker from '../appicon.png'
+import ImageMarker from '../../marker.png'
 import MapView from 'react-native-maps';
 
 export default class Marker extends React.Component {
-
-  state = {
-    colorByCategory: {
-      A: "violet",
-      B: "yellow",
-      C: "blue",
-      D: "pink",
-      E: "green",
-      "Cluster": "red"
+  constructor(props){
+    super(props)
+    this.state = {
+      colorByCategory: {
+        A: "green",
+        I: "orange",
+        S: "blue",
+        V: "violet",
+        "Cluster": "red"
+      }
     }
   }
 
   onPress() {
     if (!this.props.feature.properties.featureclass) {
-      //  Calculer l'angle
       const { region } = this.props;
       const category = this.props.feature.properties.featureclass || "Cluster";
-      const angle = region.longitudeDelta || 0.0421/1.2;
+      const angle = region.longitudeDelta || 0.0421 / 1.2;
       const result =  Math.round(Math.log(360 / angle) / Math.LN2);
-      //  Chercher les enfants
       const markers = this.props.clusters["places"].getChildren(this.props.feature.properties.cluster_id, result);
       const newRegion = [];
       const smallZoom = 0.05;
-      //  Remap
       markers.map(function (element) {
         newRegion.push({
           latitude: offset_map_small + element.geometry.coordinates[1] - region.latitudeDelta * smallZoom,
@@ -47,12 +45,10 @@ export default class Marker extends React.Component {
           longitude: offset_map_small + element.geometry.coordinates[0] + region.longitudeDelta * smallZoom,
         });
       });
-      //  Préparer the retour
       const options = {
         isCluster: true,
         region: newRegion,
       };
-      //  Ensuite envoyer l'événement
       if (this.props.onPress) {
         this.props.onPress({
           type: category,
@@ -60,6 +56,11 @@ export default class Marker extends React.Component {
           options: options,
         });
       }
+    }
+    else {
+      const post = this.props.feature.properties
+      console.log('post', post)
+      !!post && this.props.navigation('ViewContainer', {post})
     }
   }
 
@@ -77,6 +78,7 @@ export default class Marker extends React.Component {
           longitude,
         }}
         onPress={this.onPress.bind(this)}
+        // onPress={()=> console.log('clicked')}
       >
         <Image
          style={{
@@ -86,31 +88,30 @@ export default class Marker extends React.Component {
           }}
           source={ImageMarker}
         />
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 10,
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            {
-              text
-            }
-          </Text>
+        <View style={styles.view}>
+          <Text style={styles.text}>{text}</Text>
         </View>
       </MapView.Marker>
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  image: {},
+  view: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 10,
+    color: "white",
+    textAlign: "center",
+  }
+})

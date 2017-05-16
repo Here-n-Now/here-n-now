@@ -129,12 +129,8 @@ export default StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  fabVid: {
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    shadowOffset: {
-      width: 10,
-      height: 10,
-    },
+  fabs: {
+    backgroundColor: 'green',
     shadowColor: 'black',
     shadowOpacity: 1.0,
   },

@@ -5,16 +5,13 @@ import FullScreenVideo from './FullScreenVideo.js';
 import Commons from './lib/commons.js';
 import styles from './style/app.js';
 import config from './config/app.js';
+import postToFirebaseDB from '../database/Utils';
 
 const FRONT_CAMERA = true; //dead code right now
 const webRTCServices = require('./lib/services.js');
 const VIDEO_CONFERENCE_ROOM = 'video_conference';
 
 const SELF_STREAM_ID = 'self_stream_id';
-
-import { firebaseApp } from '../Home';
-import * as firebase from 'firebase';
-import GeoFire from 'geofire';
 
 export default class App extends Component {
 
@@ -23,8 +20,6 @@ export default class App extends Component {
     this.state = {
       activeStreamId: SELF_STREAM_ID,
       stream: {},
-      //streamURLs: sampleStreamURLs,
-      broadcast: 'Ready', //Starting, Started
     }
   }
 
@@ -40,69 +35,25 @@ export default class App extends Component {
     });
   }
 
-  postToFirebaseDB = (mediaUrl, text = '') => {
-    const geofireRef = firebase.database().ref('geolocation');
-    const firebaseRef = firebase.database().ref(); //was a '.push()'?
-    const postsRef = firebase.database().ref('posts')
-    const geoFire = new GeoFire(geofireRef);
-    const myId = `Live:${firebaseRef.push().key}`
-    const database = firebaseApp.database();
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
-        firebaseApp.database().ref('posts/' + myId).set({
-          id: myId,
-          coords: {
-            latitude: 40.704611,
-            longitude: -74.008738,
-          },
-          stream: this.state.stream.url
-        })
-      }
-    )
-  }
-
-  render() {
-    return <View style={styles.container}>
-        <FullScreenVideo streamURL={this.state.stream.url} />
-      {this.renderStartContainer()}
-    </View>
-  }
-
-  renderStartContainer = () => {
-    if(this.state.broadcast != 'Started') {
-      return <View style={styles.joinContainer}>
-        <TouchableHighlight style={styles.joinButton}
-            onPress={this.handleStartClick}>
-          <Text style={styles.joinButtonText}>{this.state.broadcast == 'Ready' ? 'Start' : 'Starting...'}</Text>
-        </TouchableHighlight>
-      </View>
-    }
-    return null;
-  }
-
   handleStartClick = () => {
-    if(this.state.broadcast != 'Ready') {
-      return;
-    }
-    //ELSE:
-    this.setState({
-      broadcast: 'Starting'
-    });
+    const {stream} = this.state;
     let callbacks = {
       joined: this.handleStarted,
       dataChannelMessage: this.handleDataChannelMessage
     }
     webRTCServices.join(VIDEO_CONFERENCE_ROOM, null, callbacks);
-    this.postToFirebaseDB()
+    postToFirebaseDB(stream.url, 'stream')
   }
 
-  //----------------------------------------------------------------------------
-  //  WebRTC service callbacks
-  handleStarted = () => {
-    this.setState({
-      broadcast: 'Started'
-    });
+  render() {
+    const {stream} = this.state;
+    const ready = !!Object.keys(stream).length
+    return ready && (
+      <View>
+        <FullScreenVideo stream={stream.url} />
+        {this.handleStartClick()}
+      </View>
+    )
   }
 
 }

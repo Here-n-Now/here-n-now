@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { Modal, StyleSheet, Platform, TouchableOpacity, View } from 'react-native';
 import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-import { firebaseApp } from '../Home';
+import { firebaseApp } from '../../Home';
 import * as firebase from 'firebase';
 
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
-import ViewComments from './ViewComments';
-import styles from './style/app';
+import ViewComments from '../ViewComments';
+import styles from '../style/app';
 
 export default class ViewContainer extends Component {
   static navigationOptions = {
@@ -21,9 +21,17 @@ export default class ViewContainer extends Component {
       modalVisible: false,
       comment: '',
       userName: '',
-      comments: []
+      comments: [],
+      postArr: []
     };
   }
+
+  // componentDidMount() {
+  //   let postArr = []
+  //   console.log(this.props.navigation.state.params)
+  //   this.props.navigation.state.params.post.forEach(post => postArr.push(Object.values(post)[0].properties))
+  //   this.setState({postArr})
+  // }
 
   postToFirebaseDB = () => {
     if (!this.state.comment.length) return;
@@ -34,7 +42,7 @@ export default class ViewContainer extends Component {
     const commentId = firebaseRef.push().key
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('posts/' + id + '/comments').update({
+        firebaseApp.database().ref('CurrentPosts/' + id + '/comments').update({
             [commentId]: {
               uid: user.uid,
               photoURL: user.photoURL,
@@ -51,7 +59,7 @@ export default class ViewContainer extends Component {
   getFromFirebaseDB = () => {
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
-    const query = firebase.database().ref('posts/' + id + '/comments');
+    const query = firebase.database().ref('CurrentPosts/' + id + '/comments');
     query.on('value', (snapshot) => {
       let comments = snapshot.val();
       //if not null, comments will get reversed array of comments
@@ -61,7 +69,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    const { video, image, text } = this.props.navigation.state.params;
+    const { video, image, text } = this.props.navigation.state.params.post;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>

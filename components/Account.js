@@ -99,6 +99,17 @@ export default class Account extends React.Component {
                       <Icon name="arrow-forward" />
                   </Right>
               </ListItem>
+              <ListItem icon onPress={ () => { this.props.navigation.navigate('MyFeed')} }>
+                  <Left>
+                      <Icon name="bookmarks" />
+                  </Left>
+                  <Body>
+                    <Text>My Posts</Text>
+                  </Body>
+                  <Right>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
               <ListItem itemDivider />
                 <ListItem icon onPress={ this.onClickLogout }>
                     <Left>
