@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Content } from 'native-base';
+import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
 import PostCardImage from './PostCardImage'
 import PostCardVideo from './PostCardVideo'
@@ -13,10 +13,10 @@ export default class PostFeed extends Component {
     }
   }
   componentWillMount(){
-    console.log('Selected Posts in PostFeed WillMount: ',this.props.navigation.state.params)
-    if(this.props.navigation.state.params) {
-      console.log('Posts by Current User: ', this.props.navigation.state.params)
-    }
+    // console.log('Selected Posts in PostFeed WillMount: ',this.props.navigation.state.params)
+    // if(this.props.navigation.state.params) {
+    //   console.log('Posts by Current User: ', this.props.navigation.state.params)
+    // }
     this.postRef = firebase.database().ref('CurrentPosts').limitToLast(5);
     this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val()})
@@ -37,16 +37,21 @@ export default class PostFeed extends Component {
     });
   }
   render(){
-    console.log('Selected Posts in PostFeed in Render: ',this.props.navigation.state.params)
+    console.log('Post Cluster', this.props.navigation.state.params)
+    const posts = this.props.navigation.state.params.postCluster
     return (
         <Container>
             <Content onScroll={(e) => this.setCurrentReadOffset(e)}>
-            {/*Object.keys(this.state.posts).map((postId, i) => {
-                let post = this.state.posts[postId]
-                return typeof post.image === 'string' ?
-                <PostCardImage navigation={this.props.navigation} key={i} post={post} />
-                : <PostCardVideo  navigation={this.props.navigation} key={i} post={post} />
-            })*/}
+            {posts.map((post, i) => {
+                if (post) {
+                  let postId = Object.keys(post)[0]
+                  console.log('more', post[postId].properties.image)
+                  console.log('mypostid', postId)
+                  return post[postId].properties.image ?
+                  <PostCardImage navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  : <PostCardVideo  navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                }
+            })}
             </Content>
         </Container>
     );
