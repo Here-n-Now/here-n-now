@@ -26,12 +26,12 @@ export default class ViewContainer extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   let postArr = []
-  //   console.log(this.props.navigation.state.params)
-  //   this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
-  //   this.setState({postArr})
-  // }
+  componentDidMount() {
+    let postArr = []
+    console.log(this.props.navigation.state.params)
+    this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
+    this.setState({postArr})
+  }
 
   postToFirebaseDB = () => {
     if (!this.state.comment.length) return;
@@ -59,8 +59,8 @@ export default class ViewContainer extends Component {
   getFromFirebaseDB = () => {
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
-    this.query = firebase.database().ref('posts/' + id + '/comments');
-    this.query.on('value', (snapshot) => {
+    const query = firebase.database().ref('posts/' + id + '/comments');
+    query.on('value', (snapshot) => {
       let comments = snapshot.val();
       //if not null, comments will get reversed array of comments
       comments = comments && Object.entries(comments).reverse();
@@ -68,12 +68,9 @@ export default class ViewContainer extends Component {
     });
   }
 
-  ComponentWillUnmount(){
-    this.query.off('value')
-  }
-
   render() {
-    const { video, image, text } = this.props.navigation.state.params.post;
+    console.log('postarr', this.state.postArr)
+    const { video, image, text } = this.props.navigation.state.params;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>
