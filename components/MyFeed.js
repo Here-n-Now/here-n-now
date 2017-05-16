@@ -36,20 +36,15 @@ export default class MyFeed extends Component {
 
   render(){
 
-    console.log('State.selected Inside MyFeed in Render: ', this.state.selected)
     return (
         <Container>
             {this.state.selected && this.state.selected.map((post, i) => {
-            console.log('typeof image: ',typeof post.properties.image)
               return typeof post.properties.image === 'string'
                ? <PostCardImage navigation={this.props.navigation} key={i} post={post} />
                : <PostCardVideo  navigation={this.props.navigation} key={i} post={post} />
             })}
         </Container>
     );
-    // return (
-    //    <Text>Empty MyFeed</Text>
-    //         )
   }
 }
 
