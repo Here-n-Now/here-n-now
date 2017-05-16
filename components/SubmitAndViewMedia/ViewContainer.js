@@ -69,7 +69,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    const { video, image, text } = this.props.navigation.state.params;
+    const { video, image, text } = this.props.navigation.state.params.post;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>
