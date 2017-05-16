@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 
 // import Expo from 'expo';
 const offset_map_small = 0.0001;
-import ImageMarker from '../../appicon.png'
+import ImageMarker from '../../marker.png'
 import MapView from 'react-native-maps';
 
 export default class Marker extends React.Component {
@@ -11,11 +11,11 @@ export default class Marker extends React.Component {
     super(props)
     this.state = {
       colorByCategory: {
-        A: "violet",
+        A: "green",
         B: "yellow",
         C: "blue",
         D: "pink",
-        E: "green",
+        E: "violet",
         "Cluster": "red"
       }
     }
@@ -59,8 +59,9 @@ export default class Marker extends React.Component {
       }
     }
     else {
-      const post = this.props.feature
-      !!post && this.props.navigation('ViewContainer', {finalClusterArr: [post]})
+      const post = this.props.feature.properties
+      console.log('post', post)
+      !!post && this.props.navigation('ViewContainer', {post})
     }
   }
 
