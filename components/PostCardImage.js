@@ -3,35 +3,39 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardImage = props => {
-
+    let post = props.post;
+    let time =  new Date(props.post.properties.postedAt);
+    time = time.toString().slice(0,-14);
   return (
     <Card style={{ flex: 0 }}>
         <CardItem>
             <Left>
                 <Body>
-                    <Text>NativeBase</Text>
-                    <Text note>April 15, 2016</Text>
+                    <Text>Caption goes here</Text>
+                    <Text note>{'Posted on ' +  time}</Text>
                 </Body>
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {props.navigation.navigate('ViewPost', {imageURL: props.post.image})}}
+            onPress={() => {props.navigation.navigate('ViewPost', {imageURL: post.properties.image})}}
         >
         <CardItem>
             <Body>
                 <Image
                   style={{width: 300, height: 200}}
-                  source={{uri: props.post.image}}
+                  source={{uri: post.properties.image}}
                 />
-                <Button transparent textStyle={{color: '#87838B'}}
-                  onPress={() => {
-                    props.navigation.navigate('ViewPost', {imageURL: props.post.image})}
-                  }
-                >
-                    <Icon name="logo-github" />
-                    <Text>1,926 stars</Text>
-                </Button>
             </Body>
+        </CardItem>
+        <CardItem>
+            <Button transparent>
+                <Icon active name="thumbs-up" />
+                <Text>12 Likes</Text>
+            </Button>
+            <Button transparent>
+                <Icon active name="chatbubbles" />
+                 <Text>4 Comments</Text>
+            </Button>
         </CardItem>
         </TouchableOpacity>
     </Card>
