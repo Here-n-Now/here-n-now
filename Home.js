@@ -45,7 +45,7 @@ export default class Home extends Component {
       });
       const tabNav = TabNavigator({
           View: {
-              screen: Map
+              screen: MapContainer
           },
           Share: {
               screen: CameraApp

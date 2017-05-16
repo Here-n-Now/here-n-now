@@ -50,13 +50,22 @@ export default class App extends Component {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
-        firebaseApp.database().ref('posts/' + myId).set({
-          id: myId,
-          coords: {
-            latitude: 40.704611,
-            longitude: -74.008738,
-          },
-          stream: this.state.stream.url
+        firebaseApp.database().ref('geoJSON/' + myId).set({
+            "type": "Feature",
+            "properties": {
+              "_id": myId,
+              "featureclass": "A",
+              "stream": this.state.stream.url,
+              "user_id": firebaseApp.auth().currentUser.uid,
+              "postedAt": firebase.database.ServerValue.TIMESTAMP
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                position.coords.longitude,
+                position.coords.latitude
+              ]
+            }
         })
       }
     )
