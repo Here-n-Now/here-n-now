@@ -45,8 +45,6 @@ export default class PostFeed extends Component {
             {posts.map((post, i) => {
                 if (post) {
                   let postId = Object.keys(post)[0]
-                  console.log('more', post[postId].properties.image)
-                  console.log('mypostid', postId)
                   return post[postId].properties.image ?
                   <PostCardImage navigation={this.props.navigation} key={i} post={post[postId].properties} />
                   : <PostCardVideo  navigation={this.props.navigation} key={i} post={post[postId].properties} />
