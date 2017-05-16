@@ -1,13 +1,11 @@
 import { firebaseApp } from '../Home';
-import * as firebase from 'firebase';
 
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
-import PostFeed from './PostFeed'
 
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
-import { Icon, Container, Content, Text, Button, Header, Body, Title, List, ListItem, Badge, Left, Right, Switch,TouchableOpacity } from 'native-base';
+import { Icon, Container, Content, Text, Button, Header, Body, Title, List, ListItem, Badge, Left, Right, Switch } from 'native-base';
 
 import {
     StyleSheet,
@@ -29,8 +27,7 @@ export default class Account extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined,
-            selected: []
+            user: undefined
         };
     }
 
@@ -40,8 +37,6 @@ export default class Account extends React.Component {
             if (user) this.setState({user});
             else this.props.navigation.navigate('Login');
         })
-       // this.fetchMyPosts();
-
     }
 
     onClickEdit = event => {
@@ -55,35 +50,14 @@ export default class Account extends React.Component {
         firebaseApp.auth().signOut()
     }
 
-    fetchMyPosts = () => {
-      const firebaseRef = firebase.database().ref();
-      const userPostsRef = firebase.database().ref('user-posts');
-      const database = firebaseApp.database();
-
-
-      //Query to fetch posts by current User
-      userPostsRef.orderByChild('userId').equalTo('pFbnScDJd7gx7F1PfuHxgvUkLe23').on('value',
-        (snapshot) => {
-
-        var selected = snapshot.val().slice(1);
-         console.log('Snapshot.slice: ', selected);
-
-        this.setState({selected:  selected});
-      });
-      console.log('SELECTED POSTS before navigate: ',this.state.selected);
-     this.props.navigation.navigate('PostFeed', {selectedPosts: this.state.selected})
-     }
-
 
     render() {
-      console.log('POSTS by USER on State: ',this.state.selected);
-
         const { user } = this.state;
         return (
           <Container style={styles.container}>
             <Header>
                 <Body>
-                    <Title>Hi, {this.state.user && this.state.user.email}</Title>
+                    <Title>Hi, {this.state.user && this.state.user.displayName}</Title>
                 </Body>
             </Header>
             <Content>
@@ -125,6 +99,17 @@ export default class Account extends React.Component {
                       <Icon name="arrow-forward" />
                   </Right>
               </ListItem>
+              <ListItem icon onPress={ () => { this.props.navigation.navigate('MyFeed')} }>
+                  <Left>
+                      <Icon name="bookmarks" />
+                  </Left>
+                  <Body>
+                    <Text>My Posts</Text>
+                  </Body>
+                  <Right>
+                      <Icon name="arrow-forward" />
+                  </Right>
+              </ListItem>
               <ListItem itemDivider />
                 <ListItem icon onPress={ this.onClickLogout }>
                     <Left>
@@ -137,19 +122,6 @@ export default class Account extends React.Component {
                         <Icon name="arrow-forward" />
                     </Right>
                 </ListItem>
-                <ListItem icon onPress={ this.fetchMyPosts }>
-                  <Left>
-                      <Icon name="ios-key-outline" />
-                  </Left>
-                  <Body>
-                    <Text>My Posts</Text>
-                  </Body>
-                  <Right>
-                      <Text>••••••</Text>
-                      <Icon name="arrow-forward" />
-                  </Right>
-              </ListItem>
-
             </Content>
           </Container>
         )
