@@ -30,11 +30,11 @@ class GoogleSearch extends Component {
 
                 placeData.on("value", (snapshot) => {
                     snapshot.forEach(child => {
-                        let ckey = child.key;
+                        // let ckey = child.key;
                         let cval = child.val();
-                        let obj = {};
-                        obj[child.key] = child.val();
-                        placesArr.push(obj);
+                        // let obj = {};
+                        // obj[child.key] = child.val();
+                        placesArr.push(cval);
                         this.setState({ places: placesArr });
                     });
                 });
@@ -49,6 +49,7 @@ class GoogleSearch extends Component {
     }
 
     onClickStorePlace = (place) => {
+        let geo = place.geometry.location;
 
         let user = firebaseApp.auth().currentUser;
         random = place;
@@ -56,21 +57,20 @@ class GoogleSearch extends Component {
         console.log("is this going to be printed?: ", random);
 
         firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id).set({
-            [place.description]: random
+            description: place.description,
+            geometry: {
+                location: geo
+            }
         });
 
         let placesArray = this.state.places;
         let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
+        console.log("THIS IS THE MOST IMPORTANT!!!, ", geo);
 
         placeData.on("value", (snapshot) => {
             snapshot.forEach(child => {
-                // placesArray.push(child.key + "");
-                // this.setState({ places: placesArray });
-                let ckey = child.key;
                 let cval = child.val();
-                let obj = {};
-                obj[child.key] = child.val();
-                placesArray.push(obj);
+                placesArray.push(cval);
                 this.setState({ places: placesArray });
             });
         });
@@ -91,8 +91,9 @@ class GoogleSearch extends Component {
                     // 'details' is provided when fetchDetails = true
                     this.props.onSearch(details.geometry.location);
                     this.props.setModalVisible();
-                    this.onClickStorePlace(data);
-                    console.log('places???:  ', data);
+                    this.onClickStorePlace(details);
+                    console.log('places???:  ', details);
+                    console.log("what about this!!!!!!!", details.geometry.location);
 
                 }}
 
@@ -140,7 +141,7 @@ class GoogleSearch extends Component {
 
                 filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                predefinedPlaces={ random }
+                predefinedPlaces={ [random] }
                 // renderLeftButton={() => <Icon name="ios-search-outline" />}
                 // renderRightButton={() => <Text>Cancel</Text>}
             />

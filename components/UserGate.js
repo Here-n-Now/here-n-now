@@ -2,6 +2,8 @@ import { firebaseApp } from '../Home';
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
 import Faker from 'Faker';
+import Login from './Login';
+import Signup from './Signup';
 import React, { Component } from 'react';
 import { Button, Container, Content, Text, Form, Item, Label, Input, Header, Left, Right, Title, Icon, Body } from 'native-base';
 import {
@@ -14,96 +16,24 @@ import {
     Modal
 } from 'react-native';
 
-
-export default class Login extends React.Component {
-    static navigationOptions = {
-        header: null
-    };
+export default class UserGate extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
-            username: '',
-            modalVisible: false,
             target: '',
-            forgotPassword: false
+            isPasswardReset: false
+
         };
     }
 
-    onClickLogin = () => {
-        const { email, password } = this.state;
-        let userEmail = email;
-        let userPassword = password;
-        firebaseApp.auth().signInWithEmailAndPassword(userEmail, userPassword)
-            .then(loggedin => console.log("got here"))
-            .catch(err => {
-                let errorCode = err.code;
-                let errorMessage = err.message;
-                AlertIOS.alert('Uh Oh', errorMessage);
-            });
-    };
-
-    onClickSignup = () => {
-        //to add username http://stackoverflow.com/questions/37798560/how-do-i-add-username-to-user-when-using-firebase-android
-        const { email, password, username } = this.state;
-        let userEmail = email;
-        let userPassword = password;
-        firebaseApp.auth().createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                user = firebaseApp.auth().currentUser;
-                user.sendEmailVerification();
-            })
-            .then(() => {
-                let places = [];
-                user.updateProfile({
-                    displayName: username,
-                    photoURL: Faker.Image.avatar(),
-                });
-                firebaseApp.database().ref('users/'+ user.uid).set({
-                    displayName: username,
-                    places: places
-                });
-            })
-            .catch(err => {
-                let errorCode = err.code;
-                let errorMessage = err.message;
-                AlertIOS.alert('Uh Oh', errorMessage);
-            });
-    };
 
 
-    onClickForgotPassword = () => {
-        console.log('i clicked forgot password');
-        this.setState({
-            forgotPassword: true
-        });
-    };
 
-    onClickResetEmail = () => {
-        firebaseApp.auth().sendPasswordResetEmail(this.state.email)
-            .then (sent => {
-                AlertIOS.alert('Email sent! You can change your password. <3'); })
-            .then(() => this.setState({ forgotPassword: false }))
-            .catch(err => {
-                let errorCode = err.code;
-                let errorMessage = err.message;
-                AlertIOS.alert('Email doesnt exist', errorMessage);
-            });
-
-
-    };
-
-    setModalVisible(visible, target) {
-        this.setState({
-            modalVisible: visible,
-            target
-        });
-    }
 
     render() {
-        const { email, password, modalVisible, target, username } = this.state
+
+        const { email, password, modalVisible, target, isPasswardReset, username } = this.state;
         return (
             <View style={styles.container}>
                 <Modal
@@ -136,37 +66,10 @@ export default class Login extends React.Component {
                                 </Right>
                             </Header>
                             <Content>
-                                <Form>
-                                    {target === 'Signup' &&
-                                    <Item floatingLabel>
-                                        <Icon name='ios-contact-outline' />
-                                        <Label>Username</Label>
-                                        <Input
-                                            autoCorrect={false}
-                                            onChangeText={e => this.setState({username: e})}
-                                        />
-                                        {/*<Icon name='checkmark-circle' />*/}
-                                    </Item>}
-                                    <Item floatingLabel>
-                                        <Icon name='ios-mail-outline' />
-                                        <Label>Email</Label>
-                                        <Input
-                                            autoCorrect={false}
-                                            onChangeText={e => this.setState({email: e})}
-                                        />
-                                        {/*<Icon name='checkmark-circle' />*/}
-                                    </Item>
-                                    <Item floatingLabel>
-                                        <Icon name='ios-key-outline' />
-                                        <Label>Password</Label>
-                                        <Input
-                                            autoCorrect={false}
-                                            onChangeText={e => this.setState({password: e})}
-                                            secureTextEntry={true}
-                                        />
-                                        {/*<Icon name='close-circle' />*/}
-                                    </Item>
-                                </Form>
+                                {
+                                    target == 'login' ?
+                                        <Login /> : <Signup/>
+                                }
                             </Content>
                         </Container>
                     }
@@ -238,5 +141,9 @@ export default class Login extends React.Component {
 
 
         );
+
+
+
     }
+
 }
