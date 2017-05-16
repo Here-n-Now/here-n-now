@@ -77,15 +77,16 @@ export default class PostVideo extends Component {
     // //Points to firebase root
     const firebaseRef = firebase.database().ref(); //was a '.push()'?
     // //Points to posts folder
-    const postsRef = firebase.database().ref('posts')
+    // const postsRef = firebase.database().ref('posts')
     // //Creates new geofire instance
     const geoFire = new GeoFire(geofireRef);
     const myId = `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}:${firebaseRef.push().key}`
     const database = firebaseApp.database();
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log(position.coords)
         geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
-        firebaseApp.database().ref('geoJSON/' + myId).set({
+        firebaseApp.database().ref('CurrentPosts/' + myId).set({
             "type": "Feature",
             "properties": {
               "_id": myId,
@@ -102,12 +103,6 @@ export default class PostVideo extends Component {
                 position.coords.latitude
               ]
             }
-          // id: myId,
-          // coords: {
-          //   latitude: position.coords.latitude,
-          //   longitude: position.coords.longitude
-          // },
-          // [mediaType]: mediaUrl
         })
       }
     )

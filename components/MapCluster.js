@@ -10,6 +10,7 @@ import supercluster from 'supercluster';
 import * as firebase from 'firebase';
 import {geoJSON} from '../database/GeoJSONPoints'
 import Marker from './Marker';
+import GeoFire from 'geofire'
 
 const Points = geoJSON
 const Marseille = {
@@ -128,19 +129,39 @@ export default class MapCluster extends React.Component {
     return [];
   }
 
-    onPressMaker(data) {
-      console.log('data', data)
-    if (data.options.isCluster) {
-      if (data.options.region.length > 0) {
-        console.log('region', data.options.region)
-        this.goToRegion(data.options.region, 100)
-      } else {
-        console.log("We can't move to an empty region");
-      }
-    } else {
+  onPressMaker(data) {
+    const geofirePoints = {}
+    const postIds = []
+    const finalClusterArr = []
+    const limit = data.feature.properties.point_count
 
+    const clusterRef = firebase.database().ref('geolocation');
+    const geoJSONRef = firebase.database().ref('CurrentPosts');
+    const geoFire = new GeoFire(clusterRef)
+    const geoQuery = geoFire.query({
+      center: [40.704980, -74.009],
+      radius: 100
+    })
+    geoQuery.on('key_entered', (key, location, distance) => {
+      if (!geofirePoints[distance]){
+        geofirePoints[distance] = [key]
+      } else {
+        geofirePoints[distance] = [...geofirePoints[distance], key]
+      }
+    })
+    const distanceKeys = Object.keys(geofirePoints)
+    for (let i = 0; i < distanceKeys.length; i++) {
+      postIds.push(...geofirePoints[distanceKeys[i]])
+      if (postIds.length >= limit) {
+        break
+      }
     }
-    return;
+    for (let j = 0; j < postIds.length; j++){
+      geoJSONRef.orderByChild('properties/_id').equalTo(`${postIds[j]}`).on('value', (snapshot) => {
+        finalClusterArr.push(snapshot.val())
+      })
+    }
+    //this.props.navigation.navigate('ViewContainer', {finalClusterArr})
   }
 
 
