@@ -6,7 +6,7 @@ import { Image, Dimensions } from 'react-native';
 
 import SubmitContainer from './components/SubmitContainer.js';
 import ViewContainer from './components/ViewContainer.js';
-import MapContainer from './components/MapContainer';
+import MapContainer from './components/map/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import CameraApp from './components/CameraApp';

@@ -23,12 +23,12 @@ export default class PostFeed extends Component {
     let itemHeight = 328;
     let currentOffset = Math.floor(event.nativeEvent.contentOffset.y);
     let currentItemIndex = Math.ceil((currentOffset / itemHeight) + 1);
-    if (currentItemIndex % 5 === 0) {this.loadNextPage()}
+    if (currentItemIndex % (this.state.pageNum * 5) === 0) {this.loadNextPage()}
   }
   loadNextPage(){
     var postRef = firebase.database().ref('posts').limitToLast(5 * (this.state.pageNum + 1))
       postRef.on('value', (snapshot) => {
-      this.setState({posts: snapshot.val(), pageNum: this.state.pageNum+1})
+      this.setState({posts: snapshot.val(), pageNum: this.state.pageNum + 1})
     });
   }
   render(){
