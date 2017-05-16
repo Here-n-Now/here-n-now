@@ -7,15 +7,17 @@ import ImageMarker from '../../appicon.png'
 import MapView from 'react-native-maps';
 
 export default class Marker extends React.Component {
-
-  state = {
-    colorByCategory: {
-      A: "violet",
-      B: "yellow",
-      C: "blue",
-      D: "pink",
-      E: "green",
-      "Cluster": "red"
+  constructor(props){
+    super(props)
+    this.state = {
+      colorByCategory: {
+        A: "violet",
+        B: "yellow",
+        C: "blue",
+        D: "pink",
+        E: "green",
+        "Cluster": "red"
+      }
     }
   }
 
@@ -23,7 +25,7 @@ export default class Marker extends React.Component {
     if (!this.props.feature.properties.featureclass) {
       const { region } = this.props;
       const category = this.props.feature.properties.featureclass || "Cluster";
-      const angle = region.longitudeDelta || 0.0421/1.2;
+      const angle = region.longitudeDelta || 0.0421 / 1.2;
       const result =  Math.round(Math.log(360 / angle) / Math.LN2);
       const markers = this.props.clusters["places"].getChildren(this.props.feature.properties.cluster_id, result);
       const newRegion = [];
@@ -55,6 +57,10 @@ export default class Marker extends React.Component {
           options: options,
         });
       }
+    }
+    else {
+      const post = this.props.feature
+      !!post && this.props.navigation('ViewContainer', {finalClusterArr: [post]})
     }
   }
 

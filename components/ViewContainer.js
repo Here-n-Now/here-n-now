@@ -69,7 +69,6 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    console.log('postarr', this.state.postArr)
     const { video, image, text } = this.props.navigation.state.params;
     const { modalVisible, comments, comment } = this.state;
     return  (

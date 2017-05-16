@@ -1,53 +1,31 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Linking, Modal} from 'react-native'
+import { View, StyleSheet, Modal} from 'react-native';
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab } from 'native-base';
-import MapView from 'react-native-maps';
 import * as firebase from 'firebase';
-import GoogleSearch from './GoogleSearch'
 import GeoFire from 'geofire'
-import geofire from '../geofireTest'
-//import geofire from '../geofireTest'
-import supercluster from 'supercluster'
-import {geoJSON} from '../database/GeoJSONPoints'
+import MapView from 'react-native-maps';
+import supercluster from 'supercluster';
+import Marker from './Marker';
+import SearchModal from './SearchModal'
 
+const defaultRegion = {
+  latitude: 40.704980,
+  longitude: -74.009133,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.042
+}
 
-export default class MapComp extends Component {
-  static navigationOptions = {
-    header: null,
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios='ios-map-outline' android="ios-map-outline" style={{color: tintColor}} />
-      )
-    }
-  constructor(props) {
+export default class Map extends Component {
+
+  constructor(props){
     super(props)
+    console.log('props', this.props)
     this.state = {
-      markers: {},
-      markersArr: [],
+      region: defaultRegion,
+      mapLock: false,
       modalVisible: false,
-      region: {
-        latitude: 1,
-        longitude: 1,
-        latitudeDelta: 1,
-        longitudeDelta: 1
-      }
     }
-  }
-
-  onRegionChange = (region) => {
-    this.setState({region})
-  }
-
-  setModalVisible = () => {
-    this.setState({modalVisible: !this.state.modalVisible})
-  }
-
-  onSearch = (coords) => {
-    this.setState({region: {
-      latitude: coords.lat,
-      longitude: coords.lng,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001
-    }})
+    // this.props.navigation = this.props.navigation.bind(this)
   }
 
   componentWillMount(){
@@ -66,85 +44,179 @@ export default class MapComp extends Component {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    const markers = this.createMarkersForLocations(nextProps);
+    if (markers && Object.keys(markers)) {
+      const clusters = {};
+      this.setState({
+        mapLock: true
+      });
+      Object.keys(markers).forEach(categoryKey => {
+        // Recalculate cluster trees
+        const cluster = supercluster({
+          radius: 60,
+          maxZoom: 16,
+        });
+        cluster.load(markers[categoryKey]);
+        clusters[categoryKey] = cluster;
+      });
+      this.setState({
+        clusters,
+        mapLock: false
+      });
+    }
+  }
+
   componentDidMount() {
-    var markerRef = firebase.database().ref('posts')
-      markerRef.on('value', (snapshot) => {
-      this.setState({markers: snapshot.val()})
+    this.componentWillReceiveProps(this.props);
+  }
+
+  setModalVisible = () => {
+    this.setState({modalVisible: !this.state.modalVisible})
+  }
+
+  onRegionChange = (region) => {
+   this.setState({region})
+  }
+
+  onChangeRegion = (region) => {
+    this.setState({
+      moving: true,
     });
   }
 
-  render(){
-    const markersArr = []
-    const geofireRef = firebase.database().ref('geolocation');
-    const geoFire = new GeoFire(geofireRef);
-    const geoQuery = geoFire.query({
-      center: [this.state.region.latitude, this.state.region.longitude],
-      radius: 5
+  setRegion(region) {
+    if(Array.isArray(region)) {
+      region.map(function(element) {
+        if (element.hasOwnProperty("latitudeDelta") && element.hasOwnProperty("longitudeDelta")) {
+          region = element;
+          return;
+        }
+      })
+    }
+    if (!Array.isArray(region)) {
+      this.setState({
+        region: region
+      });
+    }
+  }
+
+  onChangeRegionComplete = (coords) => {
+    this.setRegion({latitude: coords.lat,
+      longitude: coords.lng,
+      latitudeDelta: 0.0922 / 1.2,
+      longitudeDelta: 0.0421 / 1.2
+    })
+    this.setState({
+      moving: false,
     });
-    if (this.state.markers){
-      geoQuery.on("key_entered", (key, location, distance)=>{
-          if (this.state.markers[key]){ markersArr.push(this.state.markers[key]) }
-    })}
+  }
 
-  // var index = supercluster({radius: 40, maxZoom: 16}).load(geoJSON);
+  getZoomLevel(region = this.state.region) {
+    const angle = region.longitudeDelta;
+    return Math.round(Math.log(360 / angle) / Math.LN2);
+  }
 
-  // // get GeoJSON clusters given a bounding box and zoom
-  // var clusters = index.getClusters([-180, -85, 180, 85], 2);
+  createMarkersForLocations(props) {
+    return {
+      places: props.mapPoints
+    };
+  }
 
-  // // get a JSON vector tile in the same format as GeoJSON-VT
-  // var tile = index.getTile(7, 523, 125);
+  createMarkersForRegionPlaces() {
+    const padding = 0.25;
+    if (this.state.clusters && this.state.clusters["places"]) {
+      const markers = this.state.clusters["places"].getClusters([
+        this.state.region.longitude - (this.state.region.longitudeDelta * (0.5 + padding)),
+        this.state.region.latitude - (this.state.region.latitudeDelta * (0.5 + padding)),
+        this.state.region.longitude + (this.state.region.longitudeDelta * (0.5 + padding)),
+        this.state.region.latitude + (this.state.region.latitudeDelta * (0.5 + padding)),
+      ], this.getZoomLevel());
+      const returnArray = [];
+      const { clusters, region } = this.state;
+      const onPressMaker = this.onPressMaker.bind(this);
+      const navigation = this.props.navigation
+      markers.map(function(element) {
+        console.log('element', element)
+        returnArray.push(
+            <Marker
+              key={element.properties._id || element.properties.cluster_id}
+              onPress={onPressMaker}
+              feature={element}
+              clusters={clusters}
+              region={region}
+              navigation={navigation}
+            />
+        );
+      });
+      return returnArray;
+    }
+    return [];
+  }
 
+  onPressMaker(data) {
+    // 1. create query to geofire from cluster coordinate
+    const geofireRef = firebase.database().ref('geolocation');
+    const geoFire = new GeoFire(geofireRef)
+    const clusterCoords = data.feature.geometry.coordinates
+    const geoQuery = geoFire.query({
+      center: [clusterCoords[1], clusterCoords[0]],
+      radius: 100
+    })
+    // 2. put returned values on object by "distance" key and "postID" value
+    const geofirePoints = {}
+    geoQuery.on('key_entered', (key, location, distance) => {
+      if (!geofirePoints[distance]){
+        geofirePoints[distance] = [key]
+      } else {
+        geofirePoints[distance] = [...geofirePoints[distance], key]
+      }
+    })
+    // 3. Push values from distance object onto new array limited to original cluster point value
+    const postIds = []
+    const postLimit = data.feature.properties.point_count
+    const distanceKeys = Object.keys(geofirePoints)
+    for (let i = 0; i < distanceKeys.length; i++) {
+      postIds.push(...geofirePoints[distanceKeys[i]])
+      if (postIds.length >= postLimit) {
+        break
+      }
+    }
+    // 4. send firebase query iterated with array with post IDs pushing each returned post onto final array
+    const geoJSONRef = firebase.database().ref('CurrentPosts');
+    const finalClusterArr = []
+    postIds.forEach(id => {
+      geoJSONRef.orderByChild('properties/_id').equalTo(`${id}`).on('value', (snapshot) => {
+        finalClusterArr.push(snapshot.val())
+      })
+    })
+    // 5. Navigate to feed view with final array of posts as props
+    !!finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: finalClusterArr})
+  }
+
+  render() {
     return (
       <Container style={styles.container}>
-            <MapView
-              style={styles.map}
-              region={this.state.region}
-              onRegionChange={this.onRegionChange}
-              showsUserLocation={true}
-              >
-              {
-                markersArr.map(marker => {
-              return (
-                <MapView.Marker
-                  key={marker.id}
-                  coordinate={marker.coords}
-                  onSelect={() => {
-                    if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewContainer', {...marker})
-                    } else this.props.navigation.navigate('LiveViewer', {...marker})
-                  }}
-                  >
-                </MapView.Marker>
-              )
-            })}
-            </MapView>
-            <View>
-              <Fab
-                style={{ backgroundColor: '#5067FF' }}
-                position="topRight"
-                onPress={this.setModalVisible}>
-                <Icon name="ios-search-outline" />
-              </Fab>
-            </View>
-            <Modal
-              animationType={"fade"}
-              transparent={false}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {alert("Modal has been closed.")}}
-            >
-              <GoogleSearch onSearch={this.onSearch} setModalVisible={this.setModalVisible} />
-              <Button
-                full
-                danger
-                onPress={this.setModalVisible}
-              >
-                <Text>Cancel Search</Text>
-              </Button>
-            </Modal>
+        <MapView
+          style={styles.map}
+          showsUserLocation={true}
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+         >
+          {
+            this.createMarkersForRegionPlaces()
+          }
+         </MapView>
+        <SearchModal
+          modalVisible={this.state.modalVisible}
+          onChangeRegionComplete={this.onChangeRegionComplete}
+          setModalVisible={this.setModalVisible}
+        />
       </Container>
-    )
+    );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -167,8 +239,18 @@ const styles = StyleSheet.create({
   }
 })
 
-                  {/*<MapView.Callout>
-                    <Image source={marker.photo} />
-                    <Text>{marker.title}</Text>
-                    <Text>{marker.description}</Text>
-                  </MapView.Callout>*/}
+
+
+
+  // goToRegion(region, padding) {
+  //   this.map.fitToCoordinates(region, {
+  //     edgePadding: { top: padding, right: padding, bottom: padding, left: padding },
+  //     animated: true,
+  //   });
+  // }
+          //ref={ref => { this.map = ref; }}
+
+          // initialRegion={Fullstack}
+          // region={this.state.region}
+          // onRegionChange={this.onChangeRegion.bind(this)}
+          // onRegionChangeComplete={this.onChangeRegionComplete.bind(this)}
