@@ -54,10 +54,7 @@ export default class Home extends Component {
           },
           // LiveViewer: {
           //    screen: LiveViewer
-          // },
-          //Feed: {
-          //    screen: PostFeed
-          //},
+          // }
       })
       const loggedIn = StackNavigator({
           Tabs: {
@@ -80,7 +77,10 @@ export default class Home extends Component {
           },
           MyFeed: {
             screen: MyFeed
-          }
+          },
+          Feed: {
+             screen: PostFeed
+          },
       });
       firebaseApp.auth().onAuthStateChanged(user => {
           if (user) {this.setState({

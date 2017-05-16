@@ -19,7 +19,6 @@ export default class Map extends Component {
 
   constructor(props){
     super(props)
-    console.log('props', this.props)
     this.state = {
       region: defaultRegion,
       mapLock: false,
@@ -154,6 +153,7 @@ export default class Map extends Component {
   }
 
   onPressMaker(data) {
+    console.log('clciked')
     // 1. create query to geofire from cluster coordinate
     const geofireRef = firebase.database().ref('geolocation');
     const geoFire = new GeoFire(geofireRef)
@@ -183,14 +183,15 @@ export default class Map extends Component {
     }
     // 4. send firebase query iterated with array with post IDs pushing each returned post onto final array
     const geoJSONRef = firebase.database().ref('CurrentPosts');
-    const finalClusterArr = []
+    const postCluster = []
     postIds.forEach(id => {
       geoJSONRef.orderByChild('properties/_id').equalTo(`${id}`).on('value', (snapshot) => {
-        finalClusterArr.push(snapshot.val())
+        if (snapshot.val()) postCluster.push(snapshot.val())
       })
     })
     // 5. Navigate to feed view with final array of posts as props
-    !!finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: finalClusterArr})
+    console.log('cluster', postCluster)
+    !!postCluster.length && this.props.navigation('Feed', {postCluster})
   }
   componentWillUnmount(){
     geoQuery.cancel();
