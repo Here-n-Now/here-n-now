@@ -283,7 +283,7 @@ export default class MapCluster extends Component {
             danger
             onPress={this.setModalVisible}
           >
-            <Text>Cancel Search</Text>
+            <Text>Cancel the Search</Text>
           </Button>
         </Modal>
       </Container>
