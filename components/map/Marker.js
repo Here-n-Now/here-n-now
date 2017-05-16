@@ -59,7 +59,6 @@ export default class Marker extends React.Component {
       }
     }
     else {
-      console.log('feature', this.props.feature)
       const post = this.props.feature
       !!post && this.props.navigation('ViewContainer', {finalClusterArr: [post]})
     }
