@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS } from 'react-native';
 import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
-import styles from './style/app'
+import styles from '../style/app'
 import Video from 'react-native-video';
 
 export default class SubmitVideo extends Component {

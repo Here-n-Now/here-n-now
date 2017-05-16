@@ -4,17 +4,15 @@ import * as firebase from 'firebase';
 import { Container, Content, H2 } from 'native-base';
 import { Image, Dimensions } from 'react-native';
 
-import SubmitContainer from './components/SubmitContainer.js';
-import ViewContainer from './components/ViewContainer.js';
+import SubmitContainer from './components/SubmitAndViewMedia/SubmitContainer.js';
+import ViewContainer from './components/SubmitAndViewMedia/ViewContainer.js';
 import MapContainer from './components/map/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import MyFeed from './components/MyFeed.js';
-import geofiretest from './geofireTest.js'
 import CameraContainer from './components/camera/CameraContainer.js';
 
 

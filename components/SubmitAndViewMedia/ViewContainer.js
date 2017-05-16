@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { Modal, StyleSheet, Platform, TouchableOpacity, View } from 'react-native';
 import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-import { firebaseApp } from '../Home';
+import { firebaseApp } from '../../Home';
 import * as firebase from 'firebase';
 
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
-import ViewComments from './ViewComments';
-import styles from './style/app';
+import ViewComments from '../ViewComments';
+import styles from '../style/app';
 
 export default class ViewContainer extends Component {
   static navigationOptions = {
