@@ -3,11 +3,6 @@ import React, { Component } from 'react';
 import { Platform, TouchableOpacity, View, Modal, TextInput } from 'react-native';
 import { Container, Toast } from 'native-base';
 
-import RNFetchBlob from 'react-native-fetch-blob';
-import GeoFire from 'geofire';
-import { firebaseApp } from '../../Home';
-import postToFirebaseDB from '../../database/Utils';
-
 import CloseFab from './CloseFab';
 import SubmitFab from './SubmitFab';
 import CommentsFab from './CommentsFab';
@@ -16,8 +11,8 @@ import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
 import Spin from '../Spin';
 import styles from '../style/app';
+import {uploadMedia, postToFirebaseDB} from '../../database/Utils';
 
-const fs = RNFetchBlob.fs;
 
 export default class PostVideo extends Component {
   static navigationOptions = {
@@ -37,45 +32,12 @@ export default class PostVideo extends Component {
   uploadToStorage = () => {
     this.setState({uploading: true});
     const { video, image } = this.props.navigation.state.params;
-    let mediaLocalUrl = video || image;
-    const Blob = RNFetchBlob.polyfill.Blob;
-    window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-    window.Blob = Blob;
-    const mediaId = Math.random().toString();
-    this.uploadMedia(mediaLocalUrl, mediaId);
-  }
-
-  uploadMedia(mediaLocalUrl, mediaId) {
-    const { video, image } = this.props.navigation.state.params;
-    let mime = video ? 'video/mp4' : 'image/gif';
-    return new Promise((resolve, reject) => {
-      const uploadUri = Platform.OS === 'ios'
-        ? mediaLocalUrl.replace('file://', '')
-        : mediaLocalUrl;
-      let uploadBlob = null;
-      const mediaLocalUrlRef = firebaseApp.storage().ref('posts').child(mediaId);
-      fs.readFile(uploadUri, 'base64').then((data) => {
-        return Blob.build(data, {type: `${mime};BASE64`});
-      }).then(blob => {
-        uploadBlob = blob;
-        return mediaLocalUrlRef.put(blob, {contentType: mime});
-      }).then(() => {
-        uploadBlob.close();
-        return mediaLocalUrlRef.getDownloadURL();
-      }).then(mediaUrl => {
-        resolve(mediaUrl);
-        this.postToFirebase(mediaUrl);
-      }).catch((error) => {
-        reject(error);
-      })
-    })
-  }
-
-  postToFirebase = (mediaUrl) => {
     const { finalText } = this.state
-    const { video, image } = this.props.navigation.state.params;
+    let mediaLocalUrl = video || image;
+    let mime = video ? 'video/mp4' : 'image/gif';
     let mediaType = video ? 'video' : 'image';
-    Promise.resolve(postToFirebaseDB(mediaUrl, mediaType, finalText))
+    const mediaId = Math.random().toString();
+    Promise.resolve(uploadMedia(mediaLocalUrl, mediaId, mime, mediaType, finalText))
     .then(() => {
       this.props.navigation.navigate('View');
       Toast.show({
