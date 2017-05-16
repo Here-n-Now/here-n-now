@@ -14,10 +14,10 @@ import GeoFire from 'geofire'
 
 const Points = geoJSON
 const Marseille = {
-  latitude: 40.704980,
-  longitude: -74.009,
-  latitudeDelta: 0.0922 / 1.2,
-  longitudeDelta: 0.0421 / 1.2,
+  latitude: 40.704611,
+  longitude: -74.008738,
+  latitudeDelta: 0.001,
+  longitudeDelta: 0.001,
 }
 
 
@@ -69,7 +69,7 @@ export default class MapCluster extends React.Component {
         // Recalculate cluster trees
         const cluster = supercluster({
           radius: 60,
-          maxZoom: 16,
+          maxZoom: 20,
         });
 
         cluster.load(markers[categoryKey]);
