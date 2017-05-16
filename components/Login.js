@@ -2,8 +2,8 @@ import { firebaseApp } from '../Home';
 import styles from './style/styles.js';
 import RenderVideoTest from '../FeatureTests/RenderVideoTest'
 import Faker from 'Faker';
-
 import React, { Component } from 'react';
+import { Button, Container, Content, Text, Form, Item, Label, Input, Header, Left, Right, Title, Icon, Body } from 'native-base';
 import {
     TextInput,
     View,
@@ -13,12 +13,12 @@ import {
     AlertIOS,
     Modal
 } from 'react-native';
-import { Button, Container, Content, Text, Form, Item, Label, Input, Header, Left, Right, Title, Icon, Body } from 'native-base';
+
 
 export default class Login extends React.Component {
     static navigationOptions = {
       header: null
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -27,12 +27,13 @@ export default class Login extends React.Component {
             password: '',
             username: '',
             modalVisible: false,
-            target: ''
+            target: '',
+            forgotPassword: false
         };
     }
 
     onClickLogin = () => {
-        const { email, password } = this.state
+        const { email, password } = this.state;
         let userEmail = email;
         let userPassword = password;
         firebaseApp.auth().signInWithEmailAndPassword(userEmail, userPassword)
@@ -42,7 +43,7 @@ export default class Login extends React.Component {
                 let errorMessage = err.message;
                 AlertIOS.alert('Uh Oh', errorMessage);
             });
-    }
+    };
 
     onClickSignup = () => {
         //to add username http://stackoverflow.com/questions/37798560/how-do-i-add-username-to-user-when-using-firebase-android
@@ -65,9 +66,29 @@ export default class Login extends React.Component {
               let errorMessage = err.message;
               AlertIOS.alert('Uh Oh', errorMessage);
           });
-    }
-    // photoURL: user.photoURL || Faker.Image.abstractImage(),
-    // displayName: user.displayName || Faker.Name.firstName(),
+    };
+
+
+    onClickForgotPassword = () => {
+        console.log('i clicked forgot password');
+        this.setState({
+            forgotPassword: true
+        });
+    };
+
+    onClickResetEmail = () => {
+        firebaseApp.auth().sendPasswordResetEmail(this.state.email)
+            .then (sent => {
+                AlertIOS.alert('Email sent! You can change your password. <3'); })
+            .then(() => this.setState({ forgotPassword: false }))
+            .catch(err => {
+                let errorCode = err.code;
+                let errorMessage = err.message;
+                AlertIOS.alert('Email doesnt exist', errorMessage);
+            });
+
+
+    };
 
     setModalVisible(visible, target) {
       this.setState({
@@ -86,6 +107,8 @@ export default class Login extends React.Component {
               visible={modalVisible}
               onRequestClose={() => {alert("Modal has been closed.")}}
               >
+                {
+                    (this.state.forgotPassword == false) &&
               <Container>
                 <Header>
                     <Left>
@@ -141,6 +164,50 @@ export default class Login extends React.Component {
                          </Form>
                      </Content>
                  </Container>
+                }
+                {
+                    (target === 'Login' && this.state.forgotPassword === false) && (
+                        <Button onPress={ this.onClickForgotPassword }>
+                            <Text>Forgot password?</Text>
+                        </Button>
+                    )
+                }
+                {
+                    this.state.forgotPassword == true &&
+
+                    <Container>
+                        <Header>
+                            <Left>
+                                <Button transparent onPress={() => this.setState({modalVisible: false})}>
+                                    <Icon name='close'/>
+                                </Button>
+                            </Left>
+                            <Body>
+                            <Title>Reset Pw!</Title>
+                            </Body>
+                            <Right></Right>
+
+                        </Header>
+                        <Content>
+                            <Form>
+                                <Item floatingLabel>
+                                    <Icon name='ios-mail-outline'/>
+                                    <Label>Email to reset password</Label>
+                                    <Input
+                                        onChangeText={e => this.setState({email: e})}
+                                    />
+                                    {/*<Icon name='checkmark-circle' />*/}
+                                </Item>
+                            </Form>
+                            {
+                                (!!email.length) &&
+                                <Button onPress={this.onClickResetEmail}>
+                                    <Text>Send password reset email!</Text>
+                                </Button>
+                            }
+                        </Content>
+                    </Container>
+                }
             </Modal>
             <RenderVideoTest />
               <View style={{flexDirection: 'row'}}>
@@ -162,6 +229,9 @@ export default class Login extends React.Component {
                 </Button>
               </View>
           </View>
+
+
+
         );
     }
 }
