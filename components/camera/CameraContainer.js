@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import {
-  Image,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { View } from 'react-native';
 import Camera from 'react-native-camera';
-import Video from 'react-native-video';
 import { Icon } from 'native-base';
-import styles from './style/app'
 
-export default class CameraApp extends Component {
+import FlashButton from './FlashButton';
+import PictureButton from './PictureButton';
+import VideoButton from './VideoButton';
+import LiveButton from './LiveButton';
+import LiveStreamer from '../LiveStreamer';
+import StopVideoAndLiveButton from './StopVideoAndLiveButton';
+import styles from '../style/app';
+
+export default class CameraContainer extends Component {
   static navigationOptions = {
     header: null,
     tabBarIcon: ({ tintColor }) => (
@@ -31,6 +33,7 @@ export default class CameraApp extends Component {
         flashMode: Camera.constants.FlashMode.auto,
       },
       isRecording: false,
+      isLive: false,
       image: null,
       video: null
     };
@@ -67,10 +70,23 @@ export default class CameraApp extends Component {
     }
   }
 
+  startLive = () => {
+    this.setState({
+      isLive: true,
+      isRecording: true
+    });
+  }
+
+  stopLive = () => {
+    this.setState({
+      isLive: false,
+      isRecording: false
+    });
+  }
+
   switchType = () => {
     let newType;
     const { back, front } = Camera.constants.Type;
-
     if (this.state.camera.type === back) {
       newType = front;
     } else if (this.state.camera.type === front) {
@@ -90,9 +106,9 @@ export default class CameraApp extends Component {
     const { back, front } = Camera.constants.Type;
 
     if (this.state.camera.type === back) {
-      icon = require('../public/assets/ic_camera_rear_white.png');
+      icon = require('../../public/assets/ic_camera_rear_white.png');
     } else if (this.state.camera.type === front) {
-      icon = require('../public/assets/ic_camera_front_white.png');
+      icon = require('../../public/assets/ic_camera_front_white.png');
     }
 
     return icon;
@@ -123,88 +139,60 @@ export default class CameraApp extends Component {
     const { auto, on, off } = Camera.constants.FlashMode;
 
     if (this.state.camera.flashMode === auto) {
-      icon = require('../public/assets/ic_flash_auto_white.png');
+      icon = require('../../public/assets/ic_flash_auto_white.png');
     } else if (this.state.camera.flashMode === on) {
-      icon = require('../public/assets/ic_flash_on_white.png');
+      icon = require('../../public/assets/ic_flash_on_white.png');
     } else if (this.state.camera.flashMode === off) {
-      icon = require('../public/assets/ic_flash_off_white.png');
+      icon = require('../../public/assets/ic_flash_off_white.png');
     }
 
     return icon;
   }
 
   render() {
+    const {camera, isRecording, isLive} = this.state;
     return (
       <View style={styles.containerCam}>
-        <Camera
-          ref={cam => this.camera = cam }
-          style={styles.previewCam}
-          aspect={this.state.camera.aspect}
-          captureTarget={this.state.camera.captureTarget}
-          type={this.state.camera.type}
-          flashMode={this.state.camera.flashMode}
-          onFocusChanged={() => {}}
-          onZoomChanged={() => {}}
-          defaultTouchToFocus
-          mirrorImage={false}
+        {
+          isLive ?
+          <LiveStreamer />
+          :
+          <Camera
+            ref={cam => this.camera = cam}
+            style={styles.previewCam}
+            aspect={camera.aspect}
+            captureTarget={camera.captureTarget}
+            type={camera.type}
+            flashMode={camera.flashMode}
+            onFocusChanged={() => {}}
+            onZoomChanged={() => {}}
+            defaultTouchToFocus
+            mirrorImage={false}
+          />
+        }
+        <FlashButton
+          typeIcon={this.typeIcon}
+          flashIcon={this.flashIcon}
+          switchType={this.switchType}
+          switchFlash={this.switchFlash}
         />
-      <View style={[styles.overlayCam, styles.topOverlayCam]}>
-          <TouchableOpacity
-            style={styles.typeButtonCam}
-            onPress={this.switchType}
-          >
-            <Image
-              source={this.typeIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.flashButtonCam}
-            onPress={this.switchFlash}
-          >
-            <Image
-              source={this.flashIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={[styles.overlayCam, styles.bottomOverlayCam]}>
-          {
-            !this.state.isRecording
-            &&
-            <TouchableOpacity
-                style={styles.captureButton}
-                onPress={this.takePicture}
-            >
-              <Image
-                  source={require('../public/assets/ic_photo_camera_36pt.png')}
-              />
-            </TouchableOpacity>
-            ||
-            //can we get here? Change to AND statment?
-            null
-          }
-          <View style={styles.buttonsSpaceCam} />
-          {
-              !this.state.isRecording
-              &&
-              <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={this.startRecording}
-              >
-                <Image
-                    source={require('../public/assets/ic_videocam_36pt.png')}
-                />
-              </TouchableOpacity>
-              ||
-              <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={this.stopRecording}
-              >
-                <Image
-                    source={require('../public/assets/ic_stop_36pt.png')}
-                />
-              </TouchableOpacity>
-          }
-        </View>
+        {
+          isRecording ?
+          <View style={[styles.overlayCam, styles.bottomOverlayCam]}>
+            <StopVideoAndLiveButton
+              isLive={isLive}
+              stopLive={this.stopLive}
+              stopRecording={this.stopRecording} />
+          </View>
+          :
+          <View style={[styles.overlayCam, styles.bottomOverlayCam]}>
+            <PictureButton takePicture={this.takePicture} />
+            <View style={styles.buttonsSpaceCam} />
+            <VideoButton startRecording={this.startRecording} />
+            <View style={styles.buttonsSpaceCam} />
+            <LiveButton startLive={this.startLive} />
+          </View>
+        }
       </View>
     );
   }

@@ -6,10 +6,10 @@ import { Icon, Button, Container, Content, Input, Item, Title, Text, Fab, Header
 import Video from 'react-native-video';
 import { NavigationActions } from 'react-navigation';
 
-import { firebaseApp } from '../Home';
-import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import GeoFire from 'geofire';
+import { firebaseApp } from '../Home';
+import postToFirebaseDB from '../database/Utils';
 
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
@@ -63,47 +63,26 @@ export default class PostVideo extends Component {
         return mediaLocalUrlRef.getDownloadURL();
       }).then(mediaUrl => {
         resolve(mediaUrl);
-        this.postToFirebaseDB(mediaUrl);
+        this.postToFirebase(mediaUrl);
       }).catch((error) => {
         reject(error);
       })
     })
   }
 
-  postToFirebaseDB = (mediaUrl, text = '') => {
+  postToFirebase = (mediaUrl) => {
+    const { text } = this.state
     const { video, image } = this.props.navigation.state.params;
     let mediaType = video ? 'video' : 'image';
-    const geofireRef = firebase.database().ref('geolocation');
-    // //Points to firebase root
-    const firebaseRef = firebase.database().ref(); //was a '.push()'?
-    // //Points to posts folder
-    const postsRef = firebase.database().ref('posts')
-    // //Creates new geofire instance
-    const geoFire = new GeoFire(geofireRef);
-    const myId = `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}:${firebaseRef.push().key}`
-    const database = firebaseApp.database();
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        geoFire.set(myId, [position.coords.latitude, position.coords.longitude]);
-        firebaseApp.database().ref('posts/' + myId).set({
-          id: myId,
-          text: this.state.finalText,
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          },
-          [mediaType]: mediaUrl
-        })
-      }
-    )
-    this.forceUpdate()
-    this.props.navigation.navigate('View');
-    this.setState({uploading: false});
-    Toast.show({
-      text: `Yay! Your ${mediaType} is up!`,
-      position: 'bottom',
-      type: 'success',
-      duration: 5000
+    Promise.resolve(postToFirebaseDB(mediaUrl, mediaType, text))
+    .then(() => {
+      this.props.navigation.navigate('View');
+      Toast.show({
+        text: `Yay! Your ${mediaType} is up!`,
+        position: 'bottom',
+        type: 'success',
+        duration: 3000
+      })
     })
   }
 
@@ -111,7 +90,11 @@ export default class PostVideo extends Component {
     const { video, image } = this.props.navigation.state.params
     return(
       <Container>
-        {video ? <ViewVideo video={video} /> : <ViewImage image={image} />}
+        {
+          //this fixes the video playing in the background issue
+          !this.state.uploading &&
+          (video ? <ViewVideo video={video} /> : <ViewImage image={image} />)
+        }
         <Fab
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0)',

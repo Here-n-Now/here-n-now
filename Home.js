@@ -6,16 +6,17 @@ import { Image, Dimensions } from 'react-native';
 
 import SubmitContainer from './components/SubmitContainer.js';
 import ViewContainer from './components/ViewContainer.js';
-import Map from './components/Map';
+import MapContainer from './components/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
-import CameraApp from './components/CameraApp';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import LiveStreamer from './components/LiveStreamer';
 import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import MyFeed from './components/MyFeed.js';
 import geofiretest from './geofireTest.js'
+import CameraContainer from './components/camera/CameraContainer.js';
+
 
 const firebaseConfig = {
     apiKey: 'AIzaSyB8MNYp0Y5U6FztmjVWzILaPnYdKqntPN0',
@@ -45,19 +46,16 @@ export default class Home extends Component {
       });
       const tabNav = TabNavigator({
           View: {
-              screen: Map
+              screen: MapContainer
           },
           Share: {
-              screen: CameraApp
+              screen: CameraContainer
           },
           Account: {
               screen: Account
           },
           // LiveViewer: {
           //    screen: LiveViewer
-          // },
-          // LiveStreamer: {
-          //     screen: LiveStreamer
           // },
           // Feed: {
           //     screen: PostFeed
@@ -81,9 +79,6 @@ export default class Home extends Component {
           },
           LiveViewer: {
               screen: LiveViewer
-          },
-          LiveStreamer: {
-              screen: LiveStreamer
           },
           MyFeed: {
             screen: MyFeed

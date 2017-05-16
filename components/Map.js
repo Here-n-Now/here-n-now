@@ -7,6 +7,9 @@ import GoogleSearch from './GoogleSearch'
 import GeoFire from 'geofire'
 import geofire from '../geofireTest'
 //import geofire from '../geofireTest'
+import supercluster from 'supercluster'
+import {geoJSON} from '../database/GeoJSONPoints'
+
 
 export default class MapComp extends Component {
   static navigationOptions = {
@@ -22,10 +25,10 @@ export default class MapComp extends Component {
       markersArr: [],
       modalVisible: false,
       region: {
-        latitude: 40,
-        longitude: -74,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 1,
+        longitudeDelta: 1
       }
     }
   }
@@ -64,12 +67,10 @@ export default class MapComp extends Component {
   }
 
   componentDidMount() {
-    ////we may not need this??
-    ////we probably only need the delta info from here
-  var markerRef = firebase.database().ref('posts')
-    markerRef.on('value', (snapshot) => {
-    this.setState({markers: snapshot.val()})
-  });
+    var markerRef = firebase.database().ref('posts')
+      markerRef.on('value', (snapshot) => {
+      this.setState({markers: snapshot.val()})
+    });
   }
 
   render(){
@@ -78,12 +79,21 @@ export default class MapComp extends Component {
     const geoFire = new GeoFire(geofireRef);
     const geoQuery = geoFire.query({
       center: [this.state.region.latitude, this.state.region.longitude],
-      radius: .25
+      radius: 5
     });
     if (this.state.markers){
       geoQuery.on("key_entered", (key, location, distance)=>{
           if (this.state.markers[key]){ markersArr.push(this.state.markers[key]) }
     })}
+
+  // var index = supercluster({radius: 40, maxZoom: 16}).load(geoJSON);
+
+  // // get GeoJSON clusters given a bounding box and zoom
+  // var clusters = index.getClusters([-180, -85, 180, 85], 2);
+
+  // // get a JSON vector tile in the same format as GeoJSON-VT
+  // var tile = index.getTile(7, 523, 125);
+
     return (
       <Container style={styles.container}>
             <MapView
@@ -100,8 +110,8 @@ export default class MapComp extends Component {
                   coordinate={marker.coords}
                   onSelect={() => {
                     if (marker.image || marker.video){
-                      this.props.navigation.navigate('ViewContainer', {text: marker.text, image: marker.image, video: marker.video})
-                    } else this.props.navigation.navigate('LiveViewer', {liveVideoURL: marker.stream})
+                      this.props.navigation.navigate('ViewContainer', {...marker})
+                    } else this.props.navigation.navigate('LiveViewer', {...marker})
                   }}
                   >
                 </MapView.Marker>
