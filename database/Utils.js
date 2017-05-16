@@ -16,7 +16,7 @@ export default postToFirebaseDB = (mediaUrl, mediaType, text = '') => {
             "_id": myId,
             "featureclass": "A",
             "text": text,
-            [mediaType]: mediaUrl,
+            [mediaType]: mediaType.slice(0,1).toUpperCase(),
             "user_id": firebaseApp.auth().currentUser.uid,
             "postedAt": firebase.database.ServerValue.TIMESTAMP
           },

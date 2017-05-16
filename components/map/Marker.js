@@ -12,10 +12,9 @@ export default class Marker extends React.Component {
     this.state = {
       colorByCategory: {
         A: "green",
-        B: "yellow",
-        C: "blue",
-        D: "pink",
-        E: "violet",
+        I: "orange",
+        S: "blue",
+        V: "violet",
         "Cluster": "red"
       }
     }
