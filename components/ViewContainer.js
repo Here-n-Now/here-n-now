@@ -37,7 +37,7 @@ export default class ViewContainer extends Component {
     if (!this.state.comment.length) return;
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
-    const database = firebaseApp.database();
+    const database = firebaseApp.database()
     const firebaseRef = firebase.database().ref()
     const commentId = firebaseRef.push().key
     navigator.geolocation.getCurrentPosition(
