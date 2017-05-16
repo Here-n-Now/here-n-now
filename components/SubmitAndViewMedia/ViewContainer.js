@@ -26,12 +26,12 @@ export default class ViewContainer extends Component {
     };
   }
 
-  componentDidMount() {
-    let postArr = []
-    console.log(this.props.navigation.state.params)
-    this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
-    this.setState({postArr})
-  }
+  // componentDidMount() {
+  //   let postArr = []
+  //   console.log(this.props.navigation.state.params)
+  //   this.props.navigation.state.params.post.forEach(post => postArr.push(Object.values(post)[0].properties))
+  //   this.setState({postArr})
+  // }
 
   postToFirebaseDB = () => {
     if (!this.state.comment.length) return;
@@ -42,7 +42,7 @@ export default class ViewContainer extends Component {
     const commentId = firebaseRef.push().key
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        firebaseApp.database().ref('posts/' + id + '/comments').update({
+        firebaseApp.database().ref('CurrentPosts/' + id + '/comments').update({
             [commentId]: {
               uid: user.uid,
               photoURL: user.photoURL,
@@ -59,7 +59,7 @@ export default class ViewContainer extends Component {
   getFromFirebaseDB = () => {
     const { id } = this.props.navigation.state.params;
     const user = firebase.auth().currentUser;
-    const query = firebase.database().ref('posts/' + id + '/comments');
+    const query = firebase.database().ref('CurrentPosts/' + id + '/comments');
     query.on('value', (snapshot) => {
       let comments = snapshot.val();
       //if not null, comments will get reversed array of comments
@@ -69,8 +69,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    console.log('postarr', this.state.postArr)
-    const { video, image, text } = this.props.navigation.state.params;
+    const { video, image, text } = this.props.navigation.state.params.post;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>
