@@ -28,6 +28,7 @@ export default class ViewContainer extends Component {
 
   componentDidMount() {
     let postArr = []
+    console.log(this.props.navigation.state.params)
     this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
     this.setState({postArr})
   }
