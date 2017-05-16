@@ -17,8 +17,8 @@ export default class PostFeed extends Component {
     if(this.props.navigation.state.params) {
       console.log('Posts by Current User: ', this.props.navigation.state.params)
     }
-    var postRef = firebase.database().ref('posts').limitToLast(5);
-      postRef.on('value', (snapshot) => {
+    this.postRef = firebase.database().ref('CurrentPosts').limitToLast(5);
+    this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val()})
     });
   }
@@ -30,8 +30,9 @@ export default class PostFeed extends Component {
     if (currentItemIndex % (this.state.pageNum * 5) === 0) {this.loadNextPage()}
   }
   loadNextPage(){
-    var postRef = firebase.database().ref('posts').limitToLast(5 * (this.state.pageNum + 1))
-      postRef.on('value', (snapshot) => {
+    this.postRef.off('value');
+    this.postRef = firebase.database().ref('posts').limitToLast(5 * (this.state.pageNum + 1))
+    this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val(), pageNum: this.state.pageNum + 1})
     });
   }
@@ -40,12 +41,12 @@ export default class PostFeed extends Component {
     return (
         <Container>
             <Content onScroll={(e) => this.setCurrentReadOffset(e)}>
-            {Object.keys(this.state.posts).map((postId, i) => {
+            {/*Object.keys(this.state.posts).map((postId, i) => {
                 let post = this.state.posts[postId]
                 return typeof post.image === 'string' ?
                 <PostCardImage navigation={this.props.navigation} key={i} post={post} />
                 : <PostCardVideo  navigation={this.props.navigation} key={i} post={post} />
-            })}
+            })*/}
             </Content>
         </Container>
     );

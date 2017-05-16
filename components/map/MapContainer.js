@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 import * as firebase from 'firebase';
-import MapCluster from './MapCluster'
+import Map from './Map'
+import {Icon} from 'native-base'
 
 export default class MapContainer extends Component {
+    static navigationOptions = {
+    header: null,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios='ios-map-outline' android="ios-map-outline" style={{color: tintColor}} />
+      )
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +24,7 @@ export default class MapContainer extends Component {
     }
     render(){
       return(
-        <MapCluster mapOther={this.state.markers} mapPoints={Object.values(this.state.markers)} navigation={this.props.navigation.navigate} />
+        <Map mapPoints={Object.values(this.state.markers)} navigation={this.props.navigation.navigate} />
       )
     }
 }

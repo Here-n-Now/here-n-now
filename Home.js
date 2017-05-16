@@ -55,9 +55,9 @@ export default class Home extends Component {
           // LiveViewer: {
           //    screen: LiveViewer
           // },
-          // Feed: {
-          //     screen: PostFeed
-          // },
+          //Feed: {
+          //    screen: PostFeed
+          //},
       })
       const loggedIn = StackNavigator({
           Tabs: {
