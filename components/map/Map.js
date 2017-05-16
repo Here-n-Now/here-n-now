@@ -137,7 +137,6 @@ export default class Map extends Component {
       const onPressMaker = this.onPressMaker.bind(this);
       const navigation = this.props.navigation
       markers.map(function(element) {
-        console.log('element', element)
         returnArray.push(
             <Marker
               key={element.properties._id || element.properties.cluster_id}

@@ -26,12 +26,12 @@ export default class ViewContainer extends Component {
     };
   }
 
-  componentDidMount() {
-    let postArr = []
-    console.log(this.props.navigation.state.params)
-    this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
-    this.setState({postArr})
-  }
+  // componentDidMount() {
+  //   let postArr = []
+  //   console.log(this.props.navigation.state.params)
+  //   this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
+  //   this.setState({postArr})
+  // }
 
   postToFirebaseDB = () => {
     if (!this.state.comment.length) return;
@@ -69,7 +69,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    const { video, image, text } = this.props.navigation.state.params;
+    const { video, image, text } = this.props.navigation.state.params.post;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>
