@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { firebaseApp } from '../Home';
+import { firebaseApp } from '../../Home';
 import { Text, Icon } from 'native-base'
 
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
