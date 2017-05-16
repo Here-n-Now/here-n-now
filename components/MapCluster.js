@@ -31,6 +31,7 @@ export default class MapCluster extends Component {
     super(props)
     this.state = {
       mapLock: false,
+      finalClusterArr: []
       region: Fullstack,
       // markers: {},
       // markersArr: [],
@@ -95,6 +96,22 @@ export default class MapCluster extends Component {
     }
   }
 
+  componentWillMount(){
+   navigator.geolocation.getCurrentPosition(
+     (position) => {
+       this.setState({region: {
+         latitude: position.coords.latitude,
+         longitude: position.coords.longitude,
+         latitudeDelta: 0.001,
+         longitudeDelta: 0.001
+         }
+       })
+     },
+     (error) => alert(JSON.stringify(error)),
+     {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+   );
+ }
+
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
     console.log('after mount')
@@ -106,6 +123,7 @@ export default class MapCluster extends Component {
       places: props.mapPoints
     };
   }
+
   componentWillReceiveProps(nextProps) {
     const markers = this.createMarkersForLocations(nextProps);
     if (markers && Object.keys(markers)) {
@@ -190,7 +208,6 @@ export default class MapCluster extends Component {
     const finalClusterArr = []
     const limit = data.feature.properties.point_count
     const clusterCoords = data.feature.geometry.coordinates
-
     const clusterRef = firebase.database().ref('geolocation');
     const geoJSONRef = firebase.database().ref('CurrentPosts');
     const geoFire = new GeoFire(clusterRef)
@@ -217,9 +234,11 @@ export default class MapCluster extends Component {
         finalClusterArr.push(snapshot.val())
       })
     }
+    this.setState({
+      finalClusterArr
+    })
     console.log('postIds', postIds, 'distance keys', distanceKeys)
     console.log('final Array', finalClusterArr)
-    //this.props.navigation.navigate('ViewContainer', {finalClusterArr})
   }
 
 
@@ -231,6 +250,7 @@ export default class MapCluster extends Component {
   }
 
   render() {
+    !!this.state.finalClusterArr.length && this.props.navigation('ViewContainer', {finalClusterArr: this.state.finalClusterArr})
     // const markersArr = []
     // const geofireRef = firebase.database().ref('geolocation');
     // const geoFire = new GeoFire(geofireRef);

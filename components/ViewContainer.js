@@ -21,8 +21,15 @@ export default class ViewContainer extends Component {
       modalVisible: false,
       comment: '',
       userName: '',
-      comments: []
+      comments: [],
+      postArr: []
     };
+  }
+
+  componentDidMount() {
+    let postArr = []
+    this.props.navigation.state.params.finalClusterArr.forEach(post => postArr.push(Object.values(post)[0].properties))
+    this.setState({postArr})
   }
 
   postToFirebaseDB = () => {
@@ -61,6 +68,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
+    console.log('postarr', this.state.postArr)
     const { video, image, text } = this.props.navigation.state.params;
     const { modalVisible, comments, comment } = this.state;
     return  (
