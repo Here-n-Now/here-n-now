@@ -5,7 +5,16 @@ import { Text, Icon } from 'native-base'
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 
 // const fullStack = {description: 'FullStack', geometry: { location: { lat: 40.704980, lng: -74.009133 } }};
-var random = {};
+import {
+    TextInput,
+    View,
+    AppRegistry,
+    ListView,
+    TouchableHighlight,
+    AlertIOS,
+    Modal
+} from 'react-native';
+
 
 class GoogleSearch extends Component {
 
@@ -30,17 +39,15 @@ class GoogleSearch extends Component {
 
                 placeData.on("value", (snapshot) => {
                     snapshot.forEach(child => {
-                        // let ckey = child.key;
                         let cval = child.val();
-                        // let obj = {};
-                        // obj[child.key] = child.val();
                         placesArr.push(cval);
                         this.setState({ places: placesArr });
                     });
                 });
 
                 this.setState({ user: user });
-                console.log("place set?? ", this.state.places);
+                // console.log("place set?? ", this.state.places);
+                var placeList = this.state.places;
             } else {
                 console.log('why did this happen... :0');
             }
@@ -48,13 +55,10 @@ class GoogleSearch extends Component {
         });
     }
 
-    onClickStorePlace = (place) => {
-        let geo = place.geometry.location;
+    onClickStorePlace = (place, loc) => {
+        let geo = loc.geometry.location;
 
         let user = firebaseApp.auth().currentUser;
-        random = place;
-        console.log(random);
-        console.log("is this going to be printed?: ", random);
 
         firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id).set({
             description: place.description,
@@ -65,7 +69,6 @@ class GoogleSearch extends Component {
 
         let placesArray = this.state.places;
         let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
-        console.log("THIS IS THE MOST IMPORTANT!!!, ", geo);
 
         placeData.on("value", (snapshot) => {
             snapshot.forEach(child => {
@@ -78,22 +81,27 @@ class GoogleSearch extends Component {
     };
 
     render() {
+        if (this.state.places.length > 0) {
+            console.log("places", this.state.places)
+        }
+        if (this.refs.child) {
+            this.refs.child._disableRowLoaders();
+        }
         return (
-
             <GooglePlacesAutocomplete
+                ref="child"
                 placeholder="Search by location"
                 minLength={2}
                 autoFocus={true}
-                listViewDisplayed="auto"
+                listViewDisplayed={true}
                 fetchDetails={true}
                 renderDescription={row => row.description}
                 onPress={(data, details = null) => {
                     // 'details' is provided when fetchDetails = true
                     this.props.onSearch(details.geometry.location);
                     this.props.setModalVisible();
-                    this.onClickStorePlace(details);
-                    console.log('places???:  ', details);
-                    console.log("what about this!!!!!!!", details.geometry.location);
+                    this.onClickStorePlace(data, details);
+
 
                 }}
 
@@ -127,6 +135,7 @@ class GoogleSearch extends Component {
                     },
                 }}
 
+                predefinedPlacesAlwaysVisible={true}
                 currentLocation={true} // Not currently working... Will add a 'Current location' button at the top of the predefined places list
                 currentLocationLabel="Current location"
                 nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
@@ -141,7 +150,7 @@ class GoogleSearch extends Component {
 
                 filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                predefinedPlaces={ [random] }
+                predefinedPlaces={ this.state.places.length > 0 && this.state.places }
                 // renderLeftButton={() => <Icon name="ios-search-outline" />}
                 // renderRightButton={() => <Text>Cancel</Text>}
             />

@@ -54,6 +54,7 @@ export default class Login extends React.Component {
             .then(() => {
                 user = firebaseApp.auth().currentUser;
                 user.sendEmailVerification();
+                console.log("USER!!!", user);
             })
             .then(() => {
                 let places = [];
