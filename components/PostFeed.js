@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Content } from 'native-base';
+import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
 import PostCardImage from './PostCardImage'
 import PostCardVideo from './PostCardVideo'
+import PostCardLive from './PostCardLive'
 
 export default class PostFeed extends Component {
   constructor(props){
@@ -16,7 +17,6 @@ export default class PostFeed extends Component {
     this.postRef = firebase.database().ref('CurrentPosts').limitToLast(5);
     this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val()})
-      console.log('Posts in postfeed willmount: ', snapshot.val())
     });
   }
   setCurrentReadOffset(event){
@@ -28,25 +28,14 @@ export default class PostFeed extends Component {
   }
   loadNextPage(){
     this.postRef.off('value');
-    this.postRef = firebase.database().ref('currentPosts').limitToLast(5 * (this.state.pageNum + 1))
+    this.postRef = firebase.database().ref('posts').limitToLast(5 * (this.state.pageNum + 1))
     this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val(), pageNum: this.state.pageNum + 1})
     });
   }
   render(){
-    //console.log('Post Cluster', this.props.navigation.state.params)
-    if (this.props.navigation.state.params) {
-    const posts = this.props.navigation.state.params.postCluster;
-    }
-    else {
-      console.log('State.posts in render: ', this.state.posts)
-      const postsObj = this.state.posts;
-      var posts = [];
-      for (post in postsObj) {
-        posts.push(postsObj[post]);
-      }
-      console.log('Posts in postfeed: ', posts)
-    }
+    console.log('Post Cluster', this.props.navigation.state.params)
+    const posts = this.props.navigation.state.params.postCluster
     return (
         <Container>
             <Content onScroll={(e) => this.setCurrentReadOffset(e)}>
@@ -55,7 +44,9 @@ export default class PostFeed extends Component {
                   let postId = Object.keys(post)[0]
                   return post[postId].properties.image ?
                   <PostCardImage navigation={this.props.navigation} key={i} post={post[postId].properties} />
-                  : <PostCardVideo  navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  : post[postId].properties.video ?
+                  <PostCardVideo navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  : <PostCardLive navigation={this.props.navigation} key={i} post={post[postId].properties} />
                 }
             })}
             </Content>
