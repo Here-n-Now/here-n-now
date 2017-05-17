@@ -4,8 +4,8 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardImage = props => {
-    console.log(props)
     let post = props.post;
+    console.log('PCI post', post)
     let time =  new Date(props.post.postedAt);
     time = time.toString().slice(0,-14);
   return (
@@ -19,8 +19,7 @@ const PostCardImage = props => {
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {
-                props.navigation.navigate('ViewContainer', {image: post.image,                                        text: post.text})}}
+            onPress={() => {props.navigation.navigate('ViewContainer', {post})}}
         >
             <CardItem>
                 <Body>

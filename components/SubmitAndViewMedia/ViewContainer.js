@@ -55,6 +55,7 @@ export default class ViewContainer extends Component {
   }
 
   render() {
+
     const navProps = this.props.navigation;
     const { video, image, text, stream } = navProps.state.params.post;
     const backAction = navProps.dispatch;

@@ -6,7 +6,6 @@ import {Card, CardItem, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardVideo = props => {
     let post = props.post;
-    console.log('Post in postcardVideo: ',post)
     let time =  new Date(props.post.postedAt);
     time = time.toString().slice(0,-14);
   return (
@@ -20,8 +19,7 @@ const PostCardVideo = props => {
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {props.navigation.navigate('ViewContainer', {video: post.video,
-                 text: post.text})}}
+            onPress={() => {props.navigation.navigate('ViewContainer', {post})}}
         >
             <CardItem>
                 <Body>
