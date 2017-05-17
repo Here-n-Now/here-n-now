@@ -14,58 +14,39 @@ class GoogleSearch extends Component {
 
         this.state = {
             user: {},
-            places: [],
-            currentLocation: {}
+            places: []
 
         };
     }
 
     componentWillMount() {
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                return this.setState({
-                    currentLocation: {
-                        description: 'Current Location',
-                        geometry: {
-                            location: {
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude
-                            }
-                        }
-                    }
-                }, ()=>{
-                    console.log("location yet?", this.state.currentLocation);
-                    firebaseApp.auth().onAuthStateChanged(user => {
 
-                        if (user) {
-                            let placesArr = [this.state.currentLocation];
-                            let placeData = firebaseApp.database().ref('users/' + user.uid + '/places');
+        firebaseApp.auth().onAuthStateChanged(user => {
 
-                            placeData.on("value", (snapshot) => {
-                                snapshot.forEach(child => {
-                                    let cval = child.val();
-                                    placesArr.push(cval);
-                                    this.setState({places: placesArr});
-                                });
-                            });
+                if (user) {
+                    let placeData = firebaseApp.database().ref('users/' + user.uid + '/places');
 
-                            let cur = this.state.currentLocation;
-                            let pla = this.state.places;
-                            if (pla.length == 0 || pla[0].description != "Current Location") {
-                                pla.unshift(cur);
-
-                            }
-                            this.setState({places: pla});
-                            this.setState({user: user});
-
-                        } else {
-                            console.log('why did this happen... :0');
-                        }
-
+                    placeData.on("value", (snapshot) => {
+                        let placesArr = [];
+                        snapshot.forEach(child => {
+                            let cval = child.val();
+                            placesArr.push(cval);
+                            this.setState({places: placesArr});
+                        });
                     });
-                })
+
+                    let pla = this.state.places;
+
+
+                    this.setState({places: pla});
+                    this.setState({user: user});
+
+                } else {
+                    console.log('why did this happen... :0');
+                }
             }
+
         );
     }
 
@@ -77,19 +58,19 @@ class GoogleSearch extends Component {
 
         let placesRef = firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id);
         placesRef.once("value", function(snapshot) {
+            // if (place.description != "Current Location") {
 
-                placesRef.set({
-                    description: place.description,
-                    geometry: {
-                        location: geo
-                    }
-                });
+            placesRef.set({
+                description: place.description,
+                geometry: {
+                    location: geo
+                }
+            });
 
         });
 
 
         let placesArray = [];
-        placesArray.unshift(this.state.currentLocation);
         let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
 
         placeData.on("value", (snapshot) => {
@@ -109,12 +90,7 @@ class GoogleSearch extends Component {
     };
 
     render() {
-        if (this.state.places.length && this.state.currentLocation) {
-            let temArr = [];
-            temArr.unshift(this.state.currentLocation);
-            let placeArr = this.state.places;
-            temArr.concat(placeArr);
-        }
+
         if (this.refs.child) {
             this.refs.child._disableRowLoaders();
         }
@@ -136,15 +112,14 @@ class GoogleSearch extends Component {
                 }}
 
                 getDefaultValue={() => {
-                    // text input default value
                     return '';
                 }}
 
                 query={{
-                    // available options: https://developers.google.com/places/web-service/autocomplete
-                    key: 'AIzaSyA1-0UvhC1C4ErCbeu01RriQSNrWPX3Wyw', //probably should hide this...
-                    language: 'en', // language of the results
-                    types: 'geocode', // default: 'geocode'
+
+                    key: 'AIzaSyA1-0UvhC1C4ErCbeu01RriQSNrWPX3Wyw',
+                    language: 'en',
+                    types: 'geocode',
                 }}
 
                 styles={{
@@ -166,8 +141,8 @@ class GoogleSearch extends Component {
                 }}
 
                 predefinedPlacesAlwaysVisible={true}
-                currentLocation={false} // Not currently working... Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
+                currentLocation={true}
+                currentLocationLabel="Current Location"
                 nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
                     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
@@ -181,8 +156,7 @@ class GoogleSearch extends Component {
                 filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
                 predefinedPlaces={ this.state.places.length > 0 && this.state.places }
-                // renderLeftButton={() => <Icon name="ios-search-outline" />}
-                // renderRightButton={() => <Text>Cancel</Text>}
+
             />
         );
     }
