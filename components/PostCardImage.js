@@ -2,26 +2,21 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
-import Video from 'react-native-video';
 
-const PostCard = props => {
-    let post = props.post
-    let postType;
-    const {image, video, stream} = props.post
-    if (image){
-        post.uri = image
-        postType = 'image'
-    } else if (video) {
-        post.uri = video
-        postType = 'video'
-    } else {
-        post.uri = require('../../live-stream.jpg')
+export default class PostCardImage extends Component  {
+    constructor(props){
+    super(props)
+    this.state = {
+      likes: this.props.post.likes
     }
-    let commentsNum = 0;
-    if(post.comments)  commentsNum = Object.keys(post.comments).length;
-    let time =  new Date(props.post.postedAt);
-    if (!post.likes){post.likes = 0}
+  }
+componentDidMount(){
+    let post = this.props.post;
+    let time =  new Date(this.props.post.postedAt);
+    if (!post.likes) post.likes = 0;
     time = time.toString().slice(0,-14);
+   }
+  render(){
   return (
     <Card style={{ flex: 0 }}>
         <CardItem>
@@ -33,23 +28,14 @@ const PostCard = props => {
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {props.navigation.navigate('ViewContainer', {post})}}
+            onPress={() => {this.props.navigation.navigate('ViewContainer', {post})}}
         >
             <CardItem>
                 <Body>
-            {
-                postType === 'image' ?
                     <Image
                       style={{width: 300, height: 200}}
-                      source={{uri: post.uri}}
+                      source={{uri: post.image}}
                     />
-                :
-                    <Video
-                    source={{uri: post.uri}}
-                    style={{width: 300, height: 200}}
-                    paused={true}
-                    />
-            }
                 </Body>
             </CardItem>
             <CardItem>
@@ -62,18 +48,19 @@ const PostCard = props => {
                     }
                     }} >
                     <Icon active name="thumbs-up" />
-                    <Text>{post.likes +' Likes'}</Text>
+                    <Text>{this.state.likes +' Likes'}</Text>
                 </Button>
-                <Button transparent>
+                <Button transparent onPress={() => {this.props.navigation.navigate('ViewContainer', {post})}}>
                     <Icon active name="chatbubbles" />
-                     <Text>{commentsNum + 'Comments'}</Text>
+                     <Text>Comments</Text>
                 </Button>
             </CardItem>
+
         </TouchableOpacity>
     </Card>
   );
 }
+}
 
-export default PostCard
 
 
