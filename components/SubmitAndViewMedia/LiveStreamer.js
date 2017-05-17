@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, TouchableHighlight, View, ListView, Image, TextInput} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import FullScreenVideo from './FullScreenVideo.js';
-import Commons from './lib/commons.js';
-import styles from './style/app.js';
-import config from './config/app.js';
-import postToFirebaseDB from '../database/Utils';
+import Commons from '../lib/commons.js';
+import styles from '../style/app.js';
+import config from '../config/app.js';
+import { postToFirebaseDB } from '../../database/Utils';
 
 const FRONT_CAMERA = true; //dead code right now
-const webRTCServices = require('./lib/services.js');
+const webRTCServices = require('../lib/services.js');
 const VIDEO_CONFERENCE_ROOM = 'video_conference';
 
 const SELF_STREAM_ID = 'self_stream_id';
@@ -63,7 +63,7 @@ export default class App extends Component {
 
 // I am a broadcaster
 //// I can close the connection
-///// this should remove the pin
+//// this should remove the pin
 //// I can chose camera front or back
 //// (I can see count of people connected)
 
