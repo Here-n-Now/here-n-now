@@ -47,6 +47,7 @@ export default class App extends Component {
 // MediaStreamTrack.prototype._switchCameras()
   render() {
     const {stream} = this.state;
+    console.log(this.props)
     const ready = !!Object.keys(stream).length
     return ready && (
       <View>

@@ -56,7 +56,7 @@ export const uploadMedia = (mediaLocalUrl, mediaId, mime, mediaType, finalText) 
         return mediaLocalUrlRef.getDownloadURL();
       })
       .then(mediaUrl => {
-        postToFirebaseDB(mediaUrl, mediaType, finalText);
+        return Promise.resolve(postToFirebaseDB(mediaUrl, mediaType, finalText));
       })
       .catch((error) => {
         console.log(error);

@@ -46,8 +46,10 @@ export default class SubmitVideo extends Component {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
     const {video} = this.props;
+    console.log(video)
     return (
-      <Container style={styles.containerVid}>
+      <Container>
+        <Spin />
         <TouchableOpacity style={styles.fullScreenVid} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
             source={{uri: video}}

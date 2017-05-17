@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import {View, StyleSheet, Modal} from 'react-native';
-import {Text, Button, Fab, Icon} from 'native-base';
+import React from 'react';
+import {View, Modal} from 'react-native';
+import {Text, Button, Fab, Icon, Header, Right, Body, Left, Title } from 'native-base';
 import GoogleSearch from './GoogleSearch'
 
 const SearchModal = props => {
@@ -20,16 +20,20 @@ const SearchModal = props => {
         visible={props.modalVisible}
         onRequestClose={() => {alert('Modal has been closed.')}}
       >
+        <Header>
+           <Left>
+               <Button transparent>
+                   <Icon name='ios-close-outline' onPress={props.setModalVisible} />
+               </Button>
+           </Left>
+           <Body>
+               <Title>Search</Title>
+           </Body>
+           <Right />
+        </Header>
         <GoogleSearch
           onSearch={props.onChangeRegionComplete}
           setModalVisible={props.setModalVisible} />
-        <Button
-          full
-          danger
-          onPress={props.setModalVisible}
-        >
-          <Text>Cancel Search</Text>
-        </Button>
       </Modal>
     </View>
   )
