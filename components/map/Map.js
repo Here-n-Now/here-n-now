@@ -189,11 +189,12 @@ export default class Map extends Component {
       })
     })
     // 5. Navigate to feed view with final array of posts as props
+    console.log('clicked')
     !!postCluster.length && this.props.navigation('Feed', {postCluster})
   }
-  componentWillUnmount(){
-    geoQuery.cancel();
-  }
+  // componentWillUnmount(){
+  //   geoQuery.cancel();
+  // }
   render() {
     return (
       <Container style={styles.container}>

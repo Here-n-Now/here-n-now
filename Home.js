@@ -10,8 +10,8 @@ import MapContainer from './components/map/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-import PostFeed from './components/PostFeed.js';
-import MyFeed from './components/MyFeed.js';
+import PostFeed from './components/FeedView/PostFeed.js';
+import MyFeed from './components/FeedView/MyFeed.js';
 import CameraContainer from './components/camera/CameraContainer.js';
 
 

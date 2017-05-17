@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Content } from 'native-base';
+import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
 import PostCardImage from './PostCardImage'
 import PostCardVideo from './PostCardVideo'
+import PostCardLive from './PostCardLive'
 
 export default class PostFeed extends Component {
   constructor(props){
@@ -33,7 +34,7 @@ export default class PostFeed extends Component {
     });
   }
   render(){
-    //console.log('Post Cluster', this.props.navigation.state.params)
+    console.log('Post Cluster', this.props.navigation.state.params)
     const posts = this.props.navigation.state.params.postCluster
     return (
         <Container>
@@ -43,7 +44,9 @@ export default class PostFeed extends Component {
                   let postId = Object.keys(post)[0]
                   return post[postId].properties.image ?
                   <PostCardImage navigation={this.props.navigation} key={i} post={post[postId].properties} />
-                  : <PostCardVideo  navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  : post[postId].properties.video ?
+                  <PostCardVideo navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  : <PostCardLive navigation={this.props.navigation} key={i} post={post[postId].properties} />
                 }
             })}
             </Content>
