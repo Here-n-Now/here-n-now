@@ -170,27 +170,35 @@ export default class Map extends Component {
         geofirePoints[distance] = [...geofirePoints[distance], key]
       }
     })
-    // 3. Push values from distance object onto new array limited to original cluster point value
-    const postIds = []
-    const postLimit = data.feature.properties.point_count
-    const distanceKeys = Object.keys(geofirePoints)
-    for (let i = 0; i < distanceKeys.length; i++) {
-      postIds.push(...geofirePoints[distanceKeys[i]])
-      if (postIds.length >= postLimit) {
-        break
-      }
-    }
-    // 4. send firebase query iterated with array with post IDs pushing each returned post onto final array
-    const geoJSONRef = firebase.database().ref('CurrentPosts');
-    const postCluster = []
-    postIds.forEach(id => {
-      geoJSONRef.orderByChild('properties/_id').equalTo(`${id}`).on('value', (snapshot) => {
-        if (snapshot.val()) postCluster.push(snapshot.val())
+    let pointsPromise = new Promise((resolve,reject) => {
+      geoQuery.on('ready', () => {
+        resolve(geofirePoints)
       })
     })
-    // 5. Navigate to feed view with final array of posts as props
-    console.log('clicked')
-    !!postCluster.length && this.props.navigation('Feed', {postCluster})
+    pointsPromise.then((points => {
+      console.log('data', points)
+      // 3. Push values from distance object onto new array limited to original cluster point value
+      const postIds = []
+      const postLimit = data.feature.properties.point_count
+      const distanceKeys = Object.keys(points)
+      for (let i = 0; i < distanceKeys.length; i++) {
+        postIds.push(...points[distanceKeys[i]])
+        if (postIds.length >= postLimit) {
+          break
+        }
+      }
+      // 4. send firebase query iterated with array with post IDs pushing each returned post onto final array
+      const geoJSONRef = firebase.database().ref('CurrentPosts');
+      const postCluster = []
+      postIds.forEach(id => {
+        geoJSONRef.orderByChild('properties/_id').equalTo(`${id}`).on('value', (snapshot) => {
+          if (snapshot.val()) postCluster.push(snapshot.val())
+        })
+      })
+      // 5. Navigate to feed view with final array of posts as props
+      console.log('clicked')
+      !!postCluster.length && this.props.navigation('Feed', {postCluster})
+    }))
   }
   // componentWillUnmount(){
   //   geoQuery.cancel();
