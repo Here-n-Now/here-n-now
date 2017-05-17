@@ -11,6 +11,7 @@ import Login from './components/Login.js';
 import Account from './components/Account.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
 import PostFeed from './components/PostFeed.js';
+import Feed from './components/Feed.js';
 import MyFeed from './components/MyFeed.js';
 import CameraContainer from './components/camera/CameraContainer.js';
 
@@ -50,6 +51,9 @@ export default class Home extends Component {
           },
           Account: {
               screen: Account
+          },
+          Feed: {
+             screen: Feed
           }
           // LiveViewer: {
           //    screen: LiveViewer
@@ -75,7 +79,7 @@ export default class Home extends Component {
             screen: MyFeed
           },
           Feed: {
-             screen: PostFeed
+             screen: Feed
           },
       });
       firebaseApp.auth().onAuthStateChanged(user => {

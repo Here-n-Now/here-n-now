@@ -16,6 +16,7 @@ export default class PostFeed extends Component {
     this.postRef = firebase.database().ref('CurrentPosts').limitToLast(5);
     this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val()})
+      console.log('Posts in postfeed willmount: ', snapshot.val())
     });
   }
   setCurrentReadOffset(event){
@@ -27,14 +28,25 @@ export default class PostFeed extends Component {
   }
   loadNextPage(){
     this.postRef.off('value');
-    this.postRef = firebase.database().ref('posts').limitToLast(5 * (this.state.pageNum + 1))
+    this.postRef = firebase.database().ref('currentPosts').limitToLast(5 * (this.state.pageNum + 1))
     this.postRef.on('value', (snapshot) => {
       this.setState({posts: snapshot.val(), pageNum: this.state.pageNum + 1})
     });
   }
   render(){
     //console.log('Post Cluster', this.props.navigation.state.params)
-    const posts = this.props.navigation.state.params.postCluster
+    if (this.props.navigation.state.params) {
+    const posts = this.props.navigation.state.params.postCluster;
+    }
+    else {
+      console.log('State.posts in render: ', this.state.posts)
+      const postsObj = this.state.posts;
+      var posts = [];
+      for (post in postsObj) {
+        posts.push(postsObj[post]);
+      }
+      console.log('Posts in postfeed: ', posts)
+    }
     return (
         <Container>
             <Content onScroll={(e) => this.setCurrentReadOffset(e)}>

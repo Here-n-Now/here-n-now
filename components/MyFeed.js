@@ -16,7 +16,8 @@ export default class MyFeed extends Component {
 
     const firebaseRef = firebase.database().ref();
     const userPostsRef = firebase.database().ref('CurrentPosts');
-    let userId = firebaseApp.auth().currentUser.uid;
+    //let userId = firebaseApp.auth().currentUser.uid;
+    let userId = 'Myrp4CNCtqeDXxc5keJBJSN5Lc03';
       //Query to fetch posts by current User
       userPostsRef.orderByChild('properties/user_id').equalTo(userId)
       .on('value', (snapshot) => {
