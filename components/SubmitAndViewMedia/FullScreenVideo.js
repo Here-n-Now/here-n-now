@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TouchableHighlight, View, ListView, Image} from 'react-native';
+import {View, Image} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
-import config from "./config/app.js";
-import styles from "./style/fullScreenVideo.js";
+import config from '../config/app.js';
+import styles from '../style/fullScreenVideo.js';
 
 export default class FullScreenVideo extends Component{
 
@@ -14,7 +14,7 @@ export default class FullScreenVideo extends Component{
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({stream: this.props.stream}), 1000)
+    setTimeout(() => this.setState({stream: this.props.stream}), 1000);
   }
 
   render() {
@@ -24,9 +24,9 @@ export default class FullScreenVideo extends Component{
           config.useRCTView ?
           <RTCView streamURL={this.state.stream} style={styles.video} />
           :
-          <Image source={this.state.stream} style={styles.video} resizeMode={"contain"} />
+          <Image source={this.state.stream} style={styles.video} resizeMode={'contain'} />
         }
       </View>
-    )
+    );
   }
 }

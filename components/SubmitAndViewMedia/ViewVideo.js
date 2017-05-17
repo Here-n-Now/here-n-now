@@ -1,14 +1,11 @@
 'use strict';
 import React, { Component } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View, AlertIOS } from 'react-native';
-import { Icon, Header, Left, Text, Button, Right, Body, Title, Container, Content, Input, Item, Fab, Footer } from 'native-base';
+import { TouchableOpacity } from 'react-native';
+import { Container } from 'native-base';
 import styles from '../style/app'
 import Video from 'react-native-video';
 
 export default class SubmitVideo extends Component {
-  static navigationOptions = {
-    header: null
-  }
   constructor(props) {
     super(props);
     this.state = {
@@ -71,8 +68,3 @@ export default class SubmitVideo extends Component {
     )
   }
 }
-// <View style={styles.form}>
-//   <Item>
-//       <Input placeholder='Add a caption' style={styles.form}/>
-//   </Item>
-// </View>
