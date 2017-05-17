@@ -7,6 +7,7 @@ const PostCardImage = props => {
     let post = props.post;
     console.log('PCI post', post)
     let time =  new Date(props.post.postedAt);
+    if (!post.likes) post.likes = 0;
     time = time.toString().slice(0,-14);
   return (
     <Card style={{ flex: 0 }}>
@@ -41,7 +42,7 @@ const PostCardImage = props => {
                     <Icon active name="thumbs-up" />
                     <Text>{post.likes +' Likes'}</Text>
                 </Button>
-                <Button transparent>
+                <Button transparent onPress={() => {props.navigation.navigate('ViewContainer', {post})}}>
                     <Icon active name="chatbubbles" />
                      <Text>Comments</Text>
                 </Button>
