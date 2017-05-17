@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
-import PostCardImage from './PostCardImage'
-import PostCardVideo from './PostCardVideo'
+import PostCard from './PostCard'
 import { firebaseApp } from '../../Home';
 
 export default class MyFeed extends Component {
@@ -36,9 +35,7 @@ export default class MyFeed extends Component {
         <Container>
             {this.state.selected && this.state.selected.map((post, i) => {
               if (post) {
-                return  post.properties.image
-               ? <PostCardImage navigation={this.props.navigation} key={i} post={post.properties} />
-               : <PostCardVideo  navigation={this.props.navigation} key={i} post={post.properties} />
+                return <PostCard navigation={this.props.navigation} key={i} post={post.properties} />
               }
             })}
         </Container>
