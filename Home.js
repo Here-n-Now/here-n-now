@@ -51,10 +51,10 @@ export default class Home extends Component {
           },
           Account: {
               screen: Account
-          },
-          Feed: {
-             screen: Feed
-          }
+           },
+          // Feed: {
+          //    screen: Feed
+          // }
           // LiveViewer: {
           //    screen: LiveViewer
           // }
@@ -77,9 +77,9 @@ export default class Home extends Component {
           },
           MyFeed: {
             screen: MyFeed
-          },
+           },
           Feed: {
-             screen: Feed
+             screen: PostFeed
           },
       });
       firebaseApp.auth().onAuthStateChanged(user => {

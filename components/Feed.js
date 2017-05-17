@@ -34,6 +34,7 @@ export default class MyFeed extends Component {
   render(){
     return (
         <Container>
+          <Content>
             {this.state.posts && this.state.posts.map((post, i) => {
               if (post) {
                 return  post.properties.image
@@ -41,6 +42,7 @@ export default class MyFeed extends Component {
                : <PostCardVideo  navigation={this.props.navigation} key={i} post={post.properties} />
               }
             })}
+          </Content>
         </Container>
     );
   }
