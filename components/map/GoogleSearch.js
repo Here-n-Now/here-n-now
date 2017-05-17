@@ -106,7 +106,6 @@ class GoogleSearch extends Component {
                     this.props.onSearch(details.geometry.location);
                     this.props.setModalVisible();
                     this.onClickStorePlace(data, details);
-                    console.log("data: ", data);
 
                 }}
 
