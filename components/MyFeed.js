@@ -17,10 +17,12 @@ export default class MyFeed extends Component {
     const firebaseRef = firebase.database().ref();
     const userPostsRef = firebase.database().ref('CurrentPosts');
    // const database = firebaseApp.database();
-    let userId = firebaseApp.auth().currentUser.uid;
+   let userId = 'Myrp4CNCtqeDXxc5keJBJSN5Lc03'
+   //****commented out line 22 just for testing
+    //let userId = firebaseApp.auth().currentUser.uid;
     console.log('USER: ', userId)
       //Query to fetch posts by current User
-      userPostsRef.orderByChild('properties/user_id').equalTo('hNJJCINySdZCFYXSv5VeIKTGLPT2')
+      userPostsRef.orderByChild('properties/user_id').equalTo(userId)
       .on('value', (snapshot) => {
 
         let selected = [];
@@ -39,9 +41,13 @@ export default class MyFeed extends Component {
     return (
         <Container>
             {this.state.selected && this.state.selected.map((post, i) => {
-              return typeof post.properties.image === 'string'
-               ? <PostCardImage navigation={this.props.navigation} key={i} post={post} />
-               : <PostCardVideo  navigation={this.props.navigation} key={i} post={post} />
+              if (post) {
+                console.log('Post in Myfeed: ',post)
+                //let postId = Object.keys(post)[0];
+                return  post.properties.image
+               ? <PostCardImage navigation={this.props.navigation} key={i} post={post.properties} />
+               : <PostCardVideo  navigation={this.props.navigation} key={i} post={post.properties} />
+              }
             })}
         </Container>
     );
