@@ -4,16 +4,6 @@ import { Text, Icon } from 'native-base'
 
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 
-// const fullStack = {description: 'FullStack', geometry: { location: { lat: 40.704980, lng: -74.009133 } }};
-import {
-    TextInput,
-    View,
-    AppRegistry,
-    ListView,
-    TouchableHighlight,
-    AlertIOS,
-    Modal
-} from 'react-native';
 
 
 class GoogleSearch extends Component {
@@ -25,64 +15,105 @@ class GoogleSearch extends Component {
         this.state = {
             user: {},
             places: [],
+            currentLocation: {}
 
         };
     }
 
     componentWillMount() {
 
-        firebaseApp.auth().onAuthStateChanged(user => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                return this.setState({
+                    currentLocation: {
+                        description: 'Current Location',
+                        geometry: {
+                            location: {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            }
+                        }
+                    }
+                }, ()=>{
+                    console.log("location yet?", this.state.currentLocation);
+                    firebaseApp.auth().onAuthStateChanged(user => {
 
-            if (user) {
-                let placesArr = [];
-                let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
+                        if (user) {
+                            let placesArr = [this.state.currentLocation];
+                            let placeData = firebaseApp.database().ref('users/' + user.uid + '/places');
 
-                placeData.on("value", (snapshot) => {
-                    snapshot.forEach(child => {
-                        let cval = child.val();
-                        placesArr.push(cval);
-                        this.setState({ places: placesArr });
+                            placeData.on("value", (snapshot) => {
+                                snapshot.forEach(child => {
+                                    let cval = child.val();
+                                    placesArr.push(cval);
+                                    this.setState({places: placesArr});
+                                });
+                            });
+
+                            let cur = this.state.currentLocation;
+                            let pla = this.state.places;
+                            if (pla.length == 0 || pla[0].description != "Current Location") {
+                                pla.unshift(cur);
+
+                            }
+                            this.setState({places: pla});
+                            this.setState({user: user});
+
+                        } else {
+                            console.log('why did this happen... :0');
+                        }
+
                     });
-                });
-
-                this.setState({ user: user });
-                // console.log("place set?? ", this.state.places);
-                var placeList = this.state.places;
-            } else {
-                console.log('why did this happen... :0');
+                })
             }
-
-        });
+        );
     }
+
 
     onClickStorePlace = (place, loc) => {
         let geo = loc.geometry.location;
 
         let user = firebaseApp.auth().currentUser;
 
-        firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id).set({
-            description: place.description,
-            geometry: {
-                location: geo
+        let placesRef = firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id);
+        placesRef.once("value", function(snapshot) {
+            if (!(snapshot.exists)){
+                placesRef.set({
+                    description: place.description,
+                    geometry: {
+                        location: geo
+                    }
+                });
             }
         });
 
-        let placesArray = this.state.places;
+
+        let placesArray = [];
+        placesArray.unshift(this.state.currentLocation);
         let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
 
         placeData.on("value", (snapshot) => {
             snapshot.forEach(child => {
                 let cval = child.val();
-                placesArray.push(cval);
-                this.setState({ places: placesArray });
+                for (let place in placesArray) {
+                    if (!placesArray.hasOwnProperty(place.description)) {
+                        placesArray.push(cval);
+                        this.setState({ places: placesArray });
+
+                    }
+
+                }
             });
         });
 
     };
 
     render() {
-        if (this.state.places.length > 0) {
-            console.log("places", this.state.places)
+        if (this.state.places.length && this.state.currentLocation) {
+            let temArr = [];
+            temArr.unshift(this.state.currentLocation);
+            let placeArr = this.state.places;
+            temArr.concat(placeArr);
         }
         if (this.refs.child) {
             this.refs.child._disableRowLoaders();
@@ -97,11 +128,10 @@ class GoogleSearch extends Component {
                 fetchDetails={true}
                 renderDescription={row => row.description}
                 onPress={(data, details = null) => {
-                    // 'details' is provided when fetchDetails = true
+
                     this.props.onSearch(details.geometry.location);
                     this.props.setModalVisible();
                     this.onClickStorePlace(data, details);
-
 
                 }}
 
@@ -136,7 +166,7 @@ class GoogleSearch extends Component {
                 }}
 
                 predefinedPlacesAlwaysVisible={true}
-                currentLocation={true} // Not currently working... Will add a 'Current location' button at the top of the predefined places list
+                currentLocation={false} // Not currently working... Will add a 'Current location' button at the top of the predefined places list
                 currentLocationLabel="Current location"
                 nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
