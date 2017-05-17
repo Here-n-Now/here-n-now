@@ -16,7 +16,7 @@ const PostCardVideo = props => {
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {props.navigation.navigate('ViewContainer', {videoURL: post.video})}}
+            onPress={() => {props.navigation.navigate('ViewContainer', {post})}}
         >
             <CardItem>
                 <Body>

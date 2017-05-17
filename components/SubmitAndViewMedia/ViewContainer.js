@@ -69,12 +69,12 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-    console.log('VC props', this.props.navigation.state)
-    const { videoURL, imageURL, text } = this.props.navigation.state.params;
+    console.log('VC props', this.props.navigation.state.params.post)
+    const { video, image, text } = this.props.navigation.state.params.post;
     const { modalVisible, comments, comment } = this.state;
     return  (
       <View style={{flex: 1}}>
-        {videoURL ? <ViewVideo video={videoURL} /> : <ViewImage image={imageURL} />}
+        {video ? <ViewVideo video={video} /> : <ViewImage image={image} />}
         <Fab
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0)',
