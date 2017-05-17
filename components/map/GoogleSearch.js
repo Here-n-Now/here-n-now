@@ -77,14 +77,14 @@ class GoogleSearch extends Component {
 
         let placesRef = firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id);
         placesRef.once("value", function(snapshot) {
-            if (!(snapshot.exists)){
+
                 placesRef.set({
                     description: place.description,
                     geometry: {
                         location: geo
                     }
                 });
-            }
+
         });
 
 
