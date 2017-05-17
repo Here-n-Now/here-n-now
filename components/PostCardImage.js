@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as firebase from 'firebase';
 import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
@@ -19,9 +20,7 @@ const PostCardImage = props => {
         </CardItem>
         <TouchableOpacity
             onPress={() => {
-                console.log('image URL: ',post.image)
-                props.navigation.navigate('ViewContainer', {image: post.image,
-                                                            text: post.text})}}
+                props.navigation.navigate('ViewContainer', {image: post.image,                                        text: post.text})}}
         >
         <CardItem>
             <Body>
@@ -32,13 +31,20 @@ const PostCardImage = props => {
             </Body>
         </CardItem>
         <CardItem>
-            <Button transparent onPress={() => {console.log('Go increment likes in DB!')}}>
+            <Button transparent onPress={() => {
+                const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
+                if (!post.likes) {
+                    thisPostsRef.update({likes: 1});
+                } else {
+                    thisPostsRef.update({likes: post.likes + 1})
+                }
+                }} >
                 <Icon active name="thumbs-up" />
                 <Text>{post.likes +' Likes'}</Text>
             </Button>
             <Button transparent>
                 <Icon active name="chatbubbles" />
-                 <Text>4 Comments</Text>
+                 <Text>Comments</Text>
             </Button>
         </CardItem>
         </TouchableOpacity>
