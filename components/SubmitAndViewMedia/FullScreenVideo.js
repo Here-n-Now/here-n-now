@@ -18,14 +18,10 @@ export default class FullScreenVideo extends Component{
   }
 
   render() {
+    console.log(this.state.stream)
     return (
       <View>
-        {
-          config.useRCTView ?
           <RTCView streamURL={this.state.stream} style={styles.video} />
-          :
-          <Image source={this.state.stream} style={styles.video} resizeMode={'contain'} />
-        }
       </View>
     );
   }

@@ -67,7 +67,7 @@ export const postCommentToFirebaseDB = (id, comment) => {
   const user = firebase.auth().currentUser;
   const firebaseRef = firebase.database().ref();
   const commentId = firebaseRef.push().key;
-  return firebaseApp.database().ref('CurrentPosts/' + id + '/comments').update({
+  return firebaseApp.database().ref('CurrentPosts/' + id + '/properties/comments').update({
       [commentId]: {
         uid: user.uid,
         photoURL: user.photoURL,
