@@ -5,7 +5,7 @@ import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'nativ
 
 const PostCardImage = props => {
     let post = props.post;
-    console.log('Post in postcardImage: ',post)
+    console.log('Post in postcard from postfeed: ',post)
     let time =  new Date(props.post.postedAt);
     time = time.toString().slice(0,-14);
   return (
@@ -22,31 +22,31 @@ const PostCardImage = props => {
             onPress={() => {
                 props.navigation.navigate('ViewContainer', {image: post.image,                                        text: post.text})}}
         >
-        <CardItem>
-            <Body>
-                <Image
-                  style={{width: 300, height: 200}}
-                  source={{uri: post.image}}
-                />
-            </Body>
-        </CardItem>
-        <CardItem>
-            <Button transparent onPress={() => {
-                const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
-                if (!post.likes) {
-                    thisPostsRef.update({likes: 1});
-                } else {
-                    thisPostsRef.update({likes: post.likes + 1})
-                }
-                }} >
-                <Icon active name="thumbs-up" />
-                <Text>{post.likes +' Likes'}</Text>
-            </Button>
-            <Button transparent>
-                <Icon active name="chatbubbles" />
-                 <Text>Comments</Text>
-            </Button>
-        </CardItem>
+            <CardItem>
+                <Body>
+                    <Image
+                      style={{width: 300, height: 200}}
+                      source={{uri: post.image}}
+                    />
+                </Body>
+            </CardItem>
+            <CardItem>
+                <Button transparent onPress={() => {
+                    const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
+                    if (!post.likes) {
+                        thisPostsRef.update({likes: 1});
+                    } else {
+                        thisPostsRef.update({likes: post.likes + 1})
+                    }
+                    }} >
+                    <Icon active name="thumbs-up" />
+                    <Text>{post.likes +' Likes'}</Text>
+                </Button>
+                <Button transparent>
+                    <Icon active name="chatbubbles" />
+                     <Text>Comments</Text>
+                </Button>
+            </CardItem>
         </TouchableOpacity>
     </Card>
   );
