@@ -7,7 +7,8 @@ import MapView from 'react-native-maps';
 import supercluster from 'supercluster';
 import Marker from './Marker';
 import SearchModal from './SearchModal'
-
+import Faker from 'Faker'
+import seedToFirebaseDB from '../../database/seed'
 const defaultRegion = {
   latitude: 40.704980,
   longitude: -74.009133,
@@ -24,6 +25,10 @@ export default class Map extends Component {
       mapLock: false,
       modalVisible: false,
     }
+  const fakeImage = 'https://loremflickr.com/400/600'//'https://lorempixel.com/400/600' //'https://unsplash.it/400/600/?random'
+  for (let i = 0; i < 10; i++){
+    // seedToFirebaseDB(fakeImage, 'image')
+  }
     // this.props.navigation = this.props.navigation.bind(this)
   }
 
@@ -157,13 +162,15 @@ export default class Map extends Component {
     const geofireRef = firebase.database().ref('geolocation');
     const geoFire = new GeoFire(geofireRef)
     const clusterCoords = data.feature.geometry.coordinates
+    console.log('clusterCoords', clusterCoords)
     const geoQuery = geoFire.query({
       center: [clusterCoords[1], clusterCoords[0]],
-      radius: 100
+      radius: 5000
     })
     // 2. put returned values on object by "distance" key and "postID" value
     const geofirePoints = {}
     geoQuery.on('key_entered', (key, location, distance) => {
+      console.log('key', key)
       if (!geofirePoints[distance]){
         geofirePoints[distance] = [key]
       } else {
@@ -172,6 +179,7 @@ export default class Map extends Component {
     })
     let pointsPromise = new Promise((resolve,reject) => {
       geoQuery.on('ready', () => {
+        console.log('geofirePoints', geofirePoints)
         resolve(geofirePoints)
       })
     })
@@ -180,7 +188,9 @@ export default class Map extends Component {
       // 3. Push values from distance object onto new array limited to original cluster point value
       const postIds = []
       const postLimit = data.feature.properties.point_count
-      const distanceKeys = Object.keys(points)
+      const distanceKeys = Object.keys(points).sort()
+      // console.log('ids', postIds,)
+      console.log('distanceKeys', distanceKeys,)
       for (let i = 0; i < distanceKeys.length; i++) {
         postIds.push(...points[distanceKeys[i]])
         if (postIds.length >= postLimit) {
@@ -196,7 +206,6 @@ export default class Map extends Component {
         })
       })
       // 5. Navigate to feed view with final array of posts as props
-      console.log('clicked')
       !!postCluster.length && this.props.navigation('Feed', {postCluster})
     }))
   }
