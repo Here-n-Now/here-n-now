@@ -2,11 +2,24 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
+import Video from 'react-native-video';
 
-const PostCardImage = props => {
-    let post = props.post;
-    console.log('PCI post', post)
+const PostCard = props => {
+    let post = props.post
+    let postType;
+    const {image, video, stream} = props.post
+    if (image){
+        post.uri = image
+        postType = 'image'
+    } else if (video) {
+        post.uri = video
+        postType = 'video'
+    } else {
+        post.uri = require('../../live-stream.jpg')
+    }
+    console.log('post type', image, video, stream)
     let time =  new Date(props.post.postedAt);
+    if (!post.likes){post.likes = 0}
     time = time.toString().slice(0,-14);
   return (
     <Card style={{ flex: 0 }}>
@@ -23,10 +36,19 @@ const PostCardImage = props => {
         >
             <CardItem>
                 <Body>
+            {
+                postType === 'image' ?
                     <Image
                       style={{width: 300, height: 200}}
-                      source={{uri: post.image}}
+                      source={{uri: post.uri}}
                     />
+                :
+                    <Video
+                    source={{uri: post.uri}}
+                    style={{width: 300, height: 200}}
+                    paused={true}
+                    />
+            }
                 </Body>
             </CardItem>
             <CardItem>
@@ -46,12 +68,11 @@ const PostCardImage = props => {
                      <Text>Comments</Text>
                 </Button>
             </CardItem>
-
         </TouchableOpacity>
     </Card>
   );
 }
 
-export default PostCardImage
+export default PostCard
 
 
