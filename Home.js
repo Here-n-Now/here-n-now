@@ -10,7 +10,6 @@ import MapContainer from './components/map/MapContainer';
 import Login from './components/Login.js';
 import Account from './components/Account.js';
 import RenderVideoTest from './FeatureTests/RenderVideoTest';
-import LiveViewer from './components/LiveViewer';
 import PostFeed from './components/PostFeed.js';
 import MyFeed from './components/MyFeed.js';
 import CameraContainer from './components/camera/CameraContainer.js';
@@ -71,9 +70,6 @@ export default class Home extends Component {
           },
           ViewContainer: {
             screen: ViewContainer
-          },
-          LiveViewer: {
-              screen: LiveViewer
           },
           MyFeed: {
             screen: MyFeed

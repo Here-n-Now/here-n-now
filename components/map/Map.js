@@ -153,7 +153,6 @@ export default class Map extends Component {
   }
 
   onPressMaker(data) {
-    console.log('clciked')
     // 1. create query to geofire from cluster coordinate
     const geofireRef = firebase.database().ref('geolocation');
     const geoFire = new GeoFire(geofireRef)
@@ -190,7 +189,6 @@ export default class Map extends Component {
       })
     })
     // 5. Navigate to feed view with final array of posts as props
-    console.log('cluster', postCluster)
     !!postCluster.length && this.props.navigation('Feed', {postCluster})
   }
   componentWillUnmount(){

@@ -7,7 +7,7 @@ import FlashButton from './FlashButton';
 import PictureButton from './PictureButton';
 import VideoButton from './VideoButton';
 import LiveButton from './LiveButton';
-import LiveStreamer from '../LiveStreamer';
+import LiveStreamer from '../SubmitAndViewMedia/LiveStreamer';
 import StopVideoAndLiveButton from './StopVideoAndLiveButton';
 import styles from '../style/app';
 

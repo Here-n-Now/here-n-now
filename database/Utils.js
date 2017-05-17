@@ -9,7 +9,6 @@ window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 window.Blob = Blob;
 
 export const postToFirebaseDB = (mediaUrl, mediaType, text = '') => {
-  console.log('asdfsfdsfdsfsd', mediaUrl, mediaType)
   const geofireRef = firebase.database().ref('geolocation');
   const firebaseRef = firebase.database().ref();
   const geoFire = new GeoFire(geofireRef);
@@ -40,7 +39,6 @@ export const postToFirebaseDB = (mediaUrl, mediaType, text = '') => {
 };
 
 export const uploadMedia = (mediaLocalUrl, mediaId, mime, mediaType, finalText) => {
-  console.log("mediaLocalUrl", mediaLocalUrl, 'mediaId', mediaId, 'mime', mime, 'mediaType', mediaType, 'finalText', finalText)
       const uploadUri = Platform.OS === 'ios'
         ? mediaLocalUrl.replace('file://', '')
         : mediaLocalUrl;
@@ -64,3 +62,27 @@ export const uploadMedia = (mediaLocalUrl, mediaId, mime, mediaType, finalText) 
         console.log(error);
       });
   };
+
+export const postCommentToFirebaseDB = (id, comment) => {
+  const user = firebase.auth().currentUser;
+  const firebaseRef = firebase.database().ref();
+  const commentId = firebaseRef.push().key;
+  return firebaseApp.database().ref('CurrentPosts/' + id + '/comments').update({
+      [commentId]: {
+        uid: user.uid,
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        comment: comment,
+        postedAt: firebase.database.ServerValue.TIMESTAMP
+    }
+  });
+};
+
+// export const getCommentsFromFirebaseDB = (id) => {
+//   const query = firebase.database().ref('CurrentPosts/' + id + '/comments');
+//   query.on('value', (snapshot) => {
+//     let comments = snapshot.val();
+//     //if not null, comments will get reversed array of comments
+//     return comments && Object.entries(comments).reverse();
+//   });
+// }
