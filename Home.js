@@ -50,7 +50,7 @@ export default class Home extends Component {
           },
           Account: {
               screen: Account
-          },
+          }
           // LiveViewer: {
           //    screen: LiveViewer
           // }
