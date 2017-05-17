@@ -1,7 +1,7 @@
 import {MediaStreamTrack, getUserMedia} from 'react-native-webrtc';
 import config from "../config/app.js";
 
-function getLocalStream(isFront, callback) {
+function getLocalStream(isFront, hasSound, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
     console.log(sourceInfos);
     let videoSourceId;
@@ -11,7 +11,7 @@ function getLocalStream(isFront, callback) {
       }
     });
     getUserMedia({
-      audio: true,
+      audio: hasSound,
       video: {
         mandatory: {
           minWidth: config.video.minWidth,

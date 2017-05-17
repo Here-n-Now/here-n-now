@@ -41,7 +41,7 @@ export default class ViewContainer extends Component {
 
   getFromFirebaseDB = () => {
     const { _id } = this.props.navigation.state.params.post;
-    window.query = firebase.database().ref('CurrentPosts/' + _id + '/comments');
+    window.query = firebase.database().ref('CurrentPosts/' + _id + '/properties/comments');
     query.on('value', (snapshot) => {
       let comments = snapshot.val();
       //if not null, comments will get reversed array of comments

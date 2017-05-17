@@ -23,9 +23,9 @@ export default class LiveViewer extends Component {
   }
 
   componentDidMount() {
-    webRTCServices.getLocalStream(true, false, (stream) => {});
+    webRTCServices.getLocalStream(false, false, (stream) => {});
   }
-
+// to user speaker https://github.com/zxcpoiu/react-native-incall-manager
   render() {
       const { stream } = this.props
       return (

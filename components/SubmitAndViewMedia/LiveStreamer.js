@@ -24,7 +24,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    webRTCServices.getLocalStream(true, true, (stream) => {
+    webRTCServices.getLocalStream(false, true, (stream) => {
       this.setState({
         //sets your own id  and your url that you are streaming
         stream: {
@@ -44,7 +44,7 @@ export default class App extends Component {
     webRTCServices.join(VIDEO_CONFERENCE_ROOM, null, callbacks);
     postToFirebaseDB(stream.url, 'stream')
   }
-
+// MediaStreamTrack.prototype._switchCameras()
   render() {
     const {stream} = this.state;
     const ready = !!Object.keys(stream).length
