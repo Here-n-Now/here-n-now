@@ -3,7 +3,7 @@ import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
 import PostCardImage from './PostCardImage'
 import PostCardVideo from './PostCardVideo'
-import { firebaseApp } from '../Home';
+import { firebaseApp } from '../../Home';
 
 export default class MyFeed extends Component {
   constructor(props){
