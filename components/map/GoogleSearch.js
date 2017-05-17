@@ -55,34 +55,32 @@ class GoogleSearch extends Component {
         let geo = loc.geometry.location;
 
         let user = firebaseApp.auth().currentUser;
-
+        let placeCheck = firebaseApp.database().ref('users/'+ user.uid);
         let placesRef = firebaseApp.database().ref('users/'+ user.uid + '/places/' + place.id);
-        placesRef.once("value", function(snapshot) {
-            // if (place.description != "Current Location") {
-
-            placesRef.set({
-                description: place.description,
-                geometry: {
-                    location: geo
-                }
-            });
+        placeCheck.once("value", (snapshot) => {
+            if (!snapshot.hasChild(place.description) && place.id) {
+                placesRef.set({
+                    description: place.description,
+                    geometry: {
+                        location: geo
+                    }
+                });
+            }
 
         });
 
 
         let placesArray = [];
-        let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
+        // let placeData =  firebaseApp.database().ref('users/' + user.uid + '/places');
 
-        placeData.on("value", (snapshot) => {
+        placesRef.on("value", (snapshot) => {
             snapshot.forEach(child => {
                 let cval = child.val();
                 for (let place in placesArray) {
-                    if (!placesArray.hasOwnProperty(place.description)) {
+                    if (!(place.description == cval.description)) {
                         placesArray.push(cval);
                         this.setState({ places: placesArray });
-
                     }
-
                 }
             });
         });
@@ -108,6 +106,7 @@ class GoogleSearch extends Component {
                     this.props.onSearch(details.geometry.location);
                     this.props.setModalVisible();
                     this.onClickStorePlace(data, details);
+                    console.log("data: ", data);
 
                 }}
 
