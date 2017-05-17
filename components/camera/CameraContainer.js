@@ -155,7 +155,7 @@ export default class CameraContainer extends Component {
       <View style={styles.containerCam}>
         {
           isLive ?
-          <LiveStreamer />
+          <LiveStreamer isFront={camera.type}/>
           :
           <Camera
             ref={cam => this.camera = cam}
@@ -170,12 +170,12 @@ export default class CameraContainer extends Component {
             mirrorImage={false}
           />
         }
-        <FlashButton
-          typeIcon={this.typeIcon}
-          flashIcon={this.flashIcon}
-          switchType={this.switchType}
-          switchFlash={this.switchFlash}
-        />
+          <FlashButton
+            typeIcon={this.typeIcon}
+            flashIcon={this.flashIcon}
+            switchType={this.switchType}
+            switchFlash={this.switchFlash}
+          />
         {
           isRecording ?
           <View style={[styles.overlayCam, styles.bottomOverlayCam]}>

@@ -121,7 +121,7 @@ class GoogleSearch extends Component {
         return (
             <GooglePlacesAutocomplete
                 ref="child"
-                placeholder="Search by location"
+                placeholder="Enter an address..."
                 minLength={2}
                 autoFocus={true}
                 listViewDisplayed={true}

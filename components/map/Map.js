@@ -53,8 +53,8 @@ export default class Map extends Component {
       Object.keys(markers).forEach(categoryKey => {
         // Recalculate cluster trees
         const cluster = supercluster({
-          radius: 60,
-          maxZoom: 16,
+          radius: 35,
+          maxZoom: 20,
         });
         cluster.load(markers[categoryKey]);
         clusters[categoryKey] = cluster;
