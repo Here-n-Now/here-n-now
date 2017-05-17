@@ -4,8 +4,8 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 const PostCardImage = props => {
+    console.log(props)
     let post = props.post;
-    console.log('Post in postcard from postfeed: ',post)
     let time =  new Date(props.post.postedAt);
     time = time.toString().slice(0,-14);
   return (
@@ -47,6 +47,7 @@ const PostCardImage = props => {
                      <Text>Comments</Text>
                 </Button>
             </CardItem>
+
         </TouchableOpacity>
     </Card>
   );
