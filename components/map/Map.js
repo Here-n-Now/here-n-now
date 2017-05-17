@@ -11,8 +11,8 @@ import SearchModal from './SearchModal'
 const defaultRegion = {
   latitude: 40.704980,
   longitude: -74.009133,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.042
+  latitudeDelta: 0.001,//0.0922,
+  longitudeDelta: 0.001 //0.042
 }
 
 export default class Map extends Component {
@@ -201,7 +201,7 @@ export default class Map extends Component {
       <Container style={styles.container}>
         <MapView
           style={styles.map}
-          showsUserLocation={true}
+          //showsUserLocation={true}
           region={this.state.region}
           onRegionChange={this.onRegionChange}
          >

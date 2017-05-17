@@ -18,7 +18,7 @@ const PostCardImage = props => {
             </Left>
         </CardItem>
         <TouchableOpacity
-            onPress={() => {props.navigation.navigate('ViewPost', {imageURL: post.image})}}
+            onPress={() => {props.navigation.navigate('ViewContainer', {imageURL: post.image})}}
         >
         <CardItem>
             <Body>
