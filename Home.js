@@ -76,7 +76,7 @@ export default class Home extends Component {
           },
           Feed: {
              screen: PostFeed
-          },
+          }
       });
       firebaseApp.auth().onAuthStateChanged(user => {
           if (user) {this.setState({
