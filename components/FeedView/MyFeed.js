@@ -33,11 +33,13 @@ export default class MyFeed extends Component {
   render(){
     return (
         <Container>
+          <Content>
             {this.state.selected && this.state.selected.map((post, i) => {
               if (post) {
                 return <PostCard navigation={this.props.navigation} key={i} post={post.properties} />
               }
             })}
+          </Content>
         </Container>
     );
   }

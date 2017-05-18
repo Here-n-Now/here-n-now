@@ -3,6 +3,8 @@ import * as firebase from 'firebase';
 import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 import Video from 'react-native-video';
+import ViewContainer from '../SubmitAndViewMedia/ViewContainer';
+
 
 const PostCard = props => {
     let post = props.post
@@ -64,7 +66,8 @@ const PostCard = props => {
                     <Icon active name="thumbs-up" />
                     <Text>{post.likes +' Likes'}</Text>
                 </Button>
-                <Button transparent>
+                <Button transparent
+                    onPress={() => {props.navigation.navigate('ViewContainer', {post})}} >
                     <Icon active name="chatbubbles" />
                      <Text>{commentsNum + 'Comments'}</Text>
                 </Button>
