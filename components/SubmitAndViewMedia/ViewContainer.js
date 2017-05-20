@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { Modal, StyleSheet, Platform, TouchableOpacity, View } from 'react-native';
-import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col } from 'native-base';
+import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col,Toast } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { firebaseApp } from '../../Home';
 import * as firebase from 'firebase';
@@ -55,7 +55,9 @@ export default class ViewContainer extends Component {
   }
 
   render() {
-
+    let post = this.props.navigation.state.params.post;
+    let mediaType = video ? 'video' : 'image';
+    if (!post.likes){post.likes = 0}
     const navProps = this.props.navigation;
     const { video, image, text, stream } = navProps.state.params.post;
     const backAction = navProps.dispatch;
@@ -78,10 +80,24 @@ export default class ViewContainer extends Component {
           position="bottomRight"
           onPress={
             () => {
-              console.log('Trying to like this post')
+
+              console.log('Post in single view: ', post);
+              const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
+                    if (!post.likes) {
+                        thisPostsRef.update({likes: 1});
+                    } else {
+                        thisPostsRef.update({likes: post.likes + 1})
+                    }
+                    Toast.show({
+        text: `${post.likes} like this ${mediaType}!`,
+        position: 'bottom',
+        type: 'success',
+        duration: 3000
+      })
             }
           }>
             <Icon active name="thumbs-up" />
+
         </Fab>
         <ViewCommentsFab
           getFromFirebaseDB={this.getFromFirebaseDB}
