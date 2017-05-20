@@ -7,10 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
-
+    "Faker": "^0.7.2",
     "bluebird": "^3.5.0",
     "expo": "^16.0.0",
-    "Faker": "^0.7.2",
     "firebase": "^3.9.0",
     "geofire": "^4.1.2",
     "impagination": "^1.0.0-alpha.3",
@@ -20,6 +19,7 @@
     "react-native-camera": "^0.8.0",
     "react-native-fetch-blob": "^0.10.5",
     "react-native-google-maps": "^1.0.0",
+    "react-native-google-places-autocomplete": "^1.2.12",
     "react-native-maps": "^0.14.0",
     "react-native-timeago": "^0.3.0",
     "react-native-vector-icons": "^4.1.1",

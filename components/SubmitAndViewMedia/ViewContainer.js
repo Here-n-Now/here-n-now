@@ -74,6 +74,15 @@ export default class ViewContainer extends Component {
         <CloseFab
           backAction={backAction}
         />
+        <Fab
+          position="bottomRight"
+          onPress={
+            () => {
+              console.log('Trying to like this post')
+            }
+          }>
+            <Icon active name="thumbs-up" />
+        </Fab>
         <ViewCommentsFab
           getFromFirebaseDB={this.getFromFirebaseDB}
           setState={this.setState}
@@ -90,13 +99,4 @@ export default class ViewContainer extends Component {
   }
 }
 
-// <Fab
-//   style={{
-//     backgroundColor: 'rgba(0, 0, 0, 0)',
-//     shadowColor: 'black',
-//     shadowOpacity: 1.0,
-//   }}
-//   position="topRight"
-//   onPress={this.setModalVisible}>
-// <Icon name="ios-happy-outline" />
-// </Fab>
+
