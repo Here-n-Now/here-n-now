@@ -6,7 +6,8 @@ import { NavigationActions } from 'react-navigation';
 import { firebaseApp } from '../../Home';
 import * as firebase from 'firebase';
 
-import { postCommentToFirebaseDB } from '../../database/Utils'
+import { postCommentToFirebaseDB } from '../../database/Utils';
+import { addLikeToPost } from '../../database/Utils';
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
 import LiveViewer from './LiveViewer'
@@ -50,18 +51,32 @@ export default class ViewContainer extends Component {
     });
   }
 
+  addLike = (post) => {
+    const { video, image } = this.props.navigation.state.params.post;
+    const mediaType = video ? 'video' : 'image';
+    addLikeToPost(post)
+     .then( () => {
+      Toast.show({
+        text: `${post.likes.length} people like this ${mediaType}!`,
+        position: 'bottom',
+        type: 'success',
+        duration: 3000
+      })
+    })
+     }
+
+
   componentWillUnmount = () => {
     window.query && window.query.off();
   }
 
   render() {
-    let post = this.props.navigation.state.params.post;
-    let mediaType = video ? 'video' : 'image';
-    if (!post.likes){post.likes = 0}
+    const post  = this.props.navigation.state.params.post;
     const navProps = this.props.navigation;
     const { video, image, text, stream } = navProps.state.params.post;
     const backAction = navProps.dispatch;
     const { modalVisible, comments, comment } = this.state;
+
     return  (
       <View style={{flex: 1}}>
         {
@@ -78,25 +93,9 @@ export default class ViewContainer extends Component {
         />
         <Fab
           position="bottomRight"
-          onPress={
-            () => {
-
-              console.log('Post in single view: ', post);
-              const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
-                    if (!post.likes) {
-                        thisPostsRef.update({likes: 1});
-                    } else {
-                        thisPostsRef.update({likes: post.likes + 1})
-                    }
-                    Toast.show({
-        text: `${post.likes} like this ${mediaType}!`,
-        position: 'bottom',
-        type: 'success',
-        duration: 3000
-      })
-            }
-          }>
-            <Icon active name="thumbs-up" />
+          onPress={() => this.addLike(post)}
+        >
+          <Icon active name="thumbs-up" />
 
         </Fab>
         <ViewCommentsFab

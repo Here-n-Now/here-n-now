@@ -3,6 +3,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import GeoFire from 'geofire';
 import * as firebase from 'firebase';
 import { firebaseApp } from '../Home';
+import { Toast } from 'native-base';
 const fs = RNFetchBlob.fs;
 const Blob = RNFetchBlob.polyfill.Blob;
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
@@ -77,6 +78,22 @@ export const postCommentToFirebaseDB = (id, comment) => {
     }
   });
 };
+
+export const addLikeToPost = (post) => {
+  const user = firebase.auth().currentUser;
+  let likes;
+  if(!post.likes || !Array.isArray(post.likes)) likes = [];
+  else {
+    likes = post.likes;
+  }
+  if (!likes.includes(user.uid)) {
+    likes.push(user.uid);
+  }
+  return firebaseApp.database().ref('CurrentPosts/' + post._id + '/properties').update({
+      likes: likes });
+
+};
+
 
 // export const getCommentsFromFirebaseDB = (id) => {
 //   const query = firebase.database().ref('CurrentPosts/' + id + '/comments');
