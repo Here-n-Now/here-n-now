@@ -4,6 +4,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 import Video from 'react-native-video';
 import ViewContainer from '../SubmitAndViewMedia/ViewContainer';
+import { addLikeToPost } from '../../database/Utils';
 
 
 const PostCard = props => {
@@ -22,7 +23,7 @@ const PostCard = props => {
     let commentsNum = 0;
     if(post.comments)  commentsNum = Object.keys(post.comments).length;
     let time =  new Date(props.post.postedAt);
-    if (!post.likes){post.likes = 0}
+    if(!post.likes || !Array.isArray(post.likes)) post.likes = [];
     time = time.toString().slice(0,-14);
   return (
     <Card style={{ flex: 0 }}>
@@ -55,16 +56,9 @@ const PostCard = props => {
                 </Body>
             </CardItem>
             <CardItem>
-                <Button transparent onPress={() => {
-                    const thisPostsRef = firebase.database().ref('CurrentPosts/' + post._id + '/properties');
-                    if (!post.likes) {
-                        thisPostsRef.update({likes: 1});
-                    } else {
-                        thisPostsRef.update({likes: post.likes + 1})
-                    }
-                    }} >
+                <Button transparent onPress={() => addLikeToPost(post)} >
                     <Icon active name="thumbs-up" />
-                    <Text>{post.likes +' Likes'}</Text>
+                    <Text>{post.likes.length +' Likes'}</Text>
                 </Button>
                 <Button transparent
                     onPress={() => {props.navigation.navigate('ViewContainer', {post})}} >

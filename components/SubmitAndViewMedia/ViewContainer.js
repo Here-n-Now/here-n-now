@@ -1,12 +1,13 @@
 'use strict';
 import React, { Component } from 'react';
 import { Modal, StyleSheet, Platform, TouchableOpacity, View } from 'react-native';
-import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col } from 'native-base';
+import { Icon, Button, Container, Content, Input, Item, Fab, Header, Title, Left, Right, Body, Text, ListItem, Footer, Grid, Col,Toast } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { firebaseApp } from '../../Home';
 import * as firebase from 'firebase';
 
-import { postCommentToFirebaseDB } from '../../database/Utils'
+import { postCommentToFirebaseDB } from '../../database/Utils';
+import { addLikeToPost } from '../../database/Utils';
 import ViewVideo from './ViewVideo';
 import ViewImage from './ViewImage';
 import LiveViewer from './LiveViewer'
@@ -50,16 +51,32 @@ export default class ViewContainer extends Component {
     });
   }
 
+  addLike = (post) => {
+    const { video, image } = this.props.navigation.state.params.post;
+    const mediaType = video ? 'video' : 'image';
+    addLikeToPost(post)
+     .then( () => {
+      Toast.show({
+        text: `${post.likes.length} people like this ${mediaType}!`,
+        position: 'bottom',
+        type: 'success',
+        duration: 3000
+      })
+    })
+     }
+
+
   componentWillUnmount = () => {
     window.query && window.query.off();
   }
 
   render() {
-
+    const post  = this.props.navigation.state.params.post;
     const navProps = this.props.navigation;
     const { video, image, text, stream } = navProps.state.params.post;
     const backAction = navProps.dispatch;
     const { modalVisible, comments, comment } = this.state;
+
     return  (
       <View style={{flex: 1}}>
         {
@@ -74,6 +91,13 @@ export default class ViewContainer extends Component {
         <CloseFab
           backAction={backAction}
         />
+        <Fab
+          position="bottomRight"
+          onPress={() => this.addLike(post)}
+        >
+          <Icon active name="thumbs-up" />
+
+        </Fab>
         <ViewCommentsFab
           getFromFirebaseDB={this.getFromFirebaseDB}
           setState={this.setState}
@@ -90,13 +114,4 @@ export default class ViewContainer extends Component {
   }
 }
 
-// <Fab
-//   style={{
-//     backgroundColor: 'rgba(0, 0, 0, 0)',
-//     shadowColor: 'black',
-//     shadowOpacity: 1.0,
-//   }}
-//   position="topRight"
-//   onPress={this.setModalVisible}>
-// <Icon name="ios-happy-outline" />
-// </Fab>
+
