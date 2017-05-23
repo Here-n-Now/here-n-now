@@ -59,7 +59,6 @@ export default class Marker extends React.Component {
     }
     else {
       const post = this.props.feature.properties
-      console.log(post)
       !!post && this.props.navigation('ViewContainer', {post})
     }
   }

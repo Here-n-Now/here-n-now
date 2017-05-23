@@ -32,7 +32,6 @@ export default class PostFeed extends Component {
     });
   }
   render(){
-    console.log('Post Cluster', this.props.navigation.state.params)
     const posts = this.props.navigation.state.params.postCluster
     return (
         <Container>
