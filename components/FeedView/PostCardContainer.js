@@ -10,7 +10,6 @@ import * as firebase from 'firebase';
 import { postCommentToFirebaseDB } from '../../database/Utils';
 import { addLikeToPost } from '../../database/Utils';
 import ViewCommentsModal from '../SubmitAndViewMedia/ViewCommentsModal';
-import PostCard from './PostCard'
 import styles from '../style/app';
 
 export default class PostCardContainer extends Component {
