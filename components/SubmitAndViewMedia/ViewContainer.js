@@ -35,7 +35,7 @@ export default class ViewContainer extends Component {
   postComment = () => {
     const { comment } = this.state;
     if (!comment.length) return;
-    const { _id } = this.props.navigation.state.params.post;
+    const { _id } = this.props.post;
     postCommentToFirebaseDB(_id, comment)
     .then(() => this.setState({comment: ''}))
   }

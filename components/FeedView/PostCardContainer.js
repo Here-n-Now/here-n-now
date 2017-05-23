@@ -32,7 +32,7 @@ export default class PostCardContainer extends Component {
   postComment = () => {
     const { comment } = this.state;
     if (!comment.length) return;
-    const { _id } = this.props.navigation.state.params.post;
+    const { _id } = this.props.post;
     postCommentToFirebaseDB(_id, comment)
     .then(() => this.setState({comment: ''}))
   }
@@ -127,7 +127,7 @@ export default class PostCardContainer extends Component {
                       this.setState({modalVisible: true});
                       this.props.navigation.navigate('ViewCommentsModal', {post})}} >
                     <Icon active name="chatbubbles" />
-                     <Text>{commentsNum + ' Comments'}</Text>
+                     <Text>{comments ? comments.length > 1 ? `${comments.length} comments` : `${comments.length} comment` : 'No comments'}</Text>
                 </Button>
             </CardItem>
             <ViewCommentsModal
