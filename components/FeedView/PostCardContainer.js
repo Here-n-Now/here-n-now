@@ -28,6 +28,19 @@ export default class PostCardContainer extends Component {
       };
     this.setState = this.setState.bind(this);
   }
+  componentDidMount(){
+
+    let likes;
+    if(!this.props.post.likes || !Array.isArray(this.props.post.likes)) likes = [];
+    else likes = this.props.post.likes;
+    let comments;
+    if(!this.props.post.comments ) comments = [];
+    else comments = Object.entries(this.props.post.comments).reverse();
+    this.setState({likes:likes
+                  ,comments: comments
+  });
+
+  }
 
   postComment = () => {
     const { comment } = this.state;
@@ -51,8 +64,7 @@ export default class PostCardContainer extends Component {
   addLike = (post) => {
     addLikeToPost(post)
      .then( () => {
-        console.log('Adding like')
-        //this.setState()
+        this.setState({likes: post.likes})
     })
      }
 
@@ -63,12 +75,9 @@ export default class PostCardContainer extends Component {
   render() {
 
     const post  = this.props.post;
-     console.log('Post in postcardcontainer',post)
     const navProps = this.props.navigation;
-   // const { video, image, text, stream } = post;
     const backAction = navProps.dispatch;
-    const { modalVisible, comments, comment } = this.state;
-
+    const { modalVisible, comments, comment, likes } = this.state;
 
     let postType;
     const {image, video, stream,text} = this.props.post
@@ -119,7 +128,7 @@ export default class PostCardContainer extends Component {
             <CardItem>
                 <Button transparent onPress={() => this.addLike(post)} >
                     <Icon active name="thumbs-up" />
-                    <Text>{post.likes.length +' Likes'}</Text>
+                    <Text>{likes ? likes.length > 1 ? `${likes.length} likes` : `${likes.length} like` : 'No likes'}</Text>
                 </Button>
                 <Button transparent
                     onPress={() => {
