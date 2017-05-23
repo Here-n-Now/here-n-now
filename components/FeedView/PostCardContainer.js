@@ -127,7 +127,7 @@ export default class PostCardContainer extends Component {
                       this.setState({modalVisible: true});
                       this.props.navigation.navigate('ViewCommentsModal', {post})}} >
                     <Icon active name="chatbubbles" />
-                     <Text>{commentsNum + 'Comments'}</Text>
+                     <Text>{commentsNum + ' Comments'}</Text>
                 </Button>
             </CardItem>
             <ViewCommentsModal
