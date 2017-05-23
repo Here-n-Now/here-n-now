@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
-import PostCard from './PostCard'
+import PostCardContainer from './PostCardContainer'
 
 export default class PostFeed extends Component {
   constructor(props){
@@ -40,7 +40,7 @@ export default class PostFeed extends Component {
             {posts.map((post, i) => {
                 if (post) {
                   let postId = Object.keys(post)[0]
-                  return <PostCard navigation={this.props.navigation} key={i} post={post[postId].properties} />
+                  return <PostCardContainer navigation={this.props.navigation} key={i} post={post[postId].properties} />
                 }
             })}
             </Content>

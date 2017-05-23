@@ -5,6 +5,7 @@ import ViewComments from './ViewComments';
 
 export default ViewCommentsModal = (props) => {
   const { modalVisible, comments, comment, text } = props;
+  console.log('props Inside ViewCommentsModal: ',props)
   return (
     <Modal
       animationType={'slide'}

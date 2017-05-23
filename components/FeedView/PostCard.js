@@ -8,6 +8,7 @@ import { addLikeToPost } from '../../database/Utils';
 
 
 const PostCard = props => {
+    console.log('props inside Postcard',props)
     let post = props.post
     let postType;
     const {image, video, stream} = props.post
@@ -61,7 +62,7 @@ const PostCard = props => {
                     <Text>{post.likes.length +' Likes'}</Text>
                 </Button>
                 <Button transparent
-                    onPress={() => {props.navigation.navigate('ViewContainer', {post})}} >
+                    onPress={() => {props.navigation.navigate('ViewCommentsModal', {post})}} >
                     <Icon active name="chatbubbles" />
                      <Text>{commentsNum + 'Comments'}</Text>
                 </Button>

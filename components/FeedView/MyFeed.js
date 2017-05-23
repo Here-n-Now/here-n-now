@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Content, Text } from 'native-base';
 import * as firebase from 'firebase';
-import PostCard from './PostCard'
+import PostCardContainer from './PostCardContainer'
 import { firebaseApp } from '../../Home';
 
 export default class MyFeed extends Component {
@@ -36,7 +36,7 @@ export default class MyFeed extends Component {
           <Content>
             {this.state.selected && this.state.selected.map((post, i) => {
               if (post) {
-                return <PostCard navigation={this.props.navigation} key={i} post={post.properties} />
+                return <PostCardContainer navigation={this.props.navigation} key={i} post={post.properties} />
               }
             })}
           </Content>
