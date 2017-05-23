@@ -170,7 +170,7 @@ export default class Map extends Component {
     // 2. put returned values on object by "distance" key and "postID" value
     const geofirePoints = {}
     geoQuery.on('key_entered', (key, location, distance) => {
-      console.log('key', key)
+      //console.log('key', key)
       if (!geofirePoints[distance]){
         geofirePoints[distance] = [key]
       } else {
@@ -179,18 +179,18 @@ export default class Map extends Component {
     })
     let pointsPromise = new Promise((resolve,reject) => {
       geoQuery.on('ready', () => {
-        console.log('geofirePoints', geofirePoints)
+       // console.log('geofirePoints', geofirePoints)
         resolve(geofirePoints)
       })
     })
     pointsPromise.then((points => {
-      console.log('data', points)
+     // console.log('data', points)
       // 3. Push values from distance object onto new array limited to original cluster point value
       const postIds = []
       const postLimit = data.feature.properties.point_count
       const distanceKeys = Object.keys(points).sort()
       // console.log('ids', postIds,)
-      console.log('distanceKeys', distanceKeys,)
+     // console.log('distanceKeys', distanceKeys,)
       for (let i = 0; i < distanceKeys.length; i++) {
         postIds.push(...points[distanceKeys[i]])
         if (postIds.length >= postLimit) {
